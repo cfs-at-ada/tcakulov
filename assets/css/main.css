@@ -2999,6 +2999,8 @@ input, select, textarea {
 
 		#hero-image img {
 			height: 40vh !important; 
+			
+
 		}
 
 		.banner-name {
@@ -3007,6 +3009,7 @@ input, select, textarea {
 
 		#hero-image {
 			padding-bottom: 1em !important;
+			
 		}
 
 		#handle {
@@ -3491,12 +3494,18 @@ html {
 	margin-top: -3.25em !important;
   } 
 
+  #platzhalter12{
+	margin-top: 1em !important;
+  } 
+  
+
   #platzhalter11{
 	white-space: nowrap;
 	font-size: 1.85em;
 	margin-bottom: 1em !important;
 	margin-top: -1.65em;
   } 
+
 
   
 }
