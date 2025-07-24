@@ -9,7 +9,6 @@
 		<title>German Tcakulov</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<style>
 			@media (max-width: 768px) {
@@ -20,15 +19,85 @@
 		</style>
 	</head>
 	<body class="is-preload">
-		<div id="logo" style="display: none; font-family: 'Source Sans Pro', sans-serif;"">German Tcakulov</div>
+		<div id="logo" style="display: none; font-family: 'Source Sans 3', sans-serif;"">GERMAN TCAKULOV</div>
 		<div id="page-wrapper">
 
-			<section id="hero-image" style="margin: 0; padding-bottom: 4em;">
+			<!-- <section id="hero-image" style="margin: 0; padding-bottom: 4em;">
 				<img  src="images/4.1.png" alt="Hero Image" style="width: 100%; height: 100vh; object-fit: cover;" >
 				<div class="banner-name" >
 					German <br>Tcakulov
 				</div>
-			</section>
+			</section> -->
+
+			<style>
+				.bild {
+					height: 100vh;
+					background-image: url('images/4.2.jpg');
+					background-size: cover;
+					background-position: 50% 30%;
+					background-attachment: scroll;
+					position: relative;
+					overflow: hidden;
+					margin-bottom: 3em;
+
+					
+					
+				}
+
+				.name {
+					position: fixed;
+					top: 40vh; /* statt % → stabiler bei verschiedenen Bildschirmhöhen */
+					right: 3.1vw;
+					transition: opacity 0.25s ease;
+					color: #003049;
+					font-size: 5em;
+					z-index: 0;
+					text-align: right;
+					line-height: 0.9em;
+					letter-spacing: -0.05em;
+					
+				}
+
+				.bild::before {
+					content: "";
+					position: absolute;
+					inset: 0;
+					
+				}
+
+				@media (max-width: 736px) {
+				.bild{
+			
+					max-height: 60vh !important;
+					bottom: 0 !important;
+					width: auto !important ;
+					background-size: cover !important;
+					background-repeat: no-repeat ;
+					background-position: 36% top !important;
+					background-attachment: scroll;
+					
+				}
+				}
+
+				@media (min-width: 737px) and (max-width: 1080px){
+				.bild{
+			
+					
+					bottom: 0 !important;
+					width: auto !important ;
+					background-size: cover !important;
+					background-repeat: no-repeat ;
+					background-position: 40% top !important;
+					background-attachment: scroll;
+					
+				}
+				}
+			</style>
+
+			<div class="bild">
+				<div class="name">GERMAN <br> TCAKULOV</div>
+				
+			</div>
 
 			
 
@@ -51,19 +120,19 @@
 			<!-- Main -->
 				<section id="main" >
 					<div class="container">
-						<div class="row">
-							<div class="col-12">
+						<div class="row" style="margin-top: 0;">
+							<div class="col-12" style="padding-top: 0px;">
 								<div class="content">
 
 									<!-- Content -->
 									 
 
-										<article class="box page-content" style="margin-bottom: -1.15em; padding: 0; margin-top: 0.8em">
+										<article class="box page-content" style="margin-bottom: -0.1em; padding: 0; margin-top: 0.55em">
 
 											<section id="" style="color: #A78768; margin-bottom: 0em; margin: 0; ">
 												<div style="display: flex; justify-content: space-between; align-items: baseline;">
 													<!-- Linksbündige Hauptüberschrift -->
-													<h2 id="jumphere" class="scroll-offset-tpage" style="color: #A78768; font-size: 3.15em; font-weight: 400; margin: 0;">
+													<h2 id="jumphere" class="scroll-offset-tpage" style="color: #A78768; font-size: 3em; font-weight: 400; margin-top: 0.35em;">
 													Contact
 													</h2>
 
@@ -73,8 +142,7 @@
 													</h3>
 												</div>
 
-												<!-- optionaler Abstand unten -->
-												<div style="padding-bottom: 0.8em;"></div>
+												
 											</section>
 										</article>
 									
@@ -92,15 +160,15 @@
 			<!-- Footer-->
 
 			<footer id="footer">
-				<div id="platzhalter7" class="container" >
-					<hr id="Fußzeile" style="margin-top: 4.25em; margin-bottom: 4.25em;">
+				<div class="container" >
+					<hr id="Fußzeile" style="margin-top: 3.15em; margin-bottom: 4.25em;">
 				</div>
 				<div class="container">
 					<div class="footer-flex">
 						<div class="footer-left">
-							<a href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100;"></a>
+							<a id="insta-icon" href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100; margin-right: 0em;"> <span class="mail-link" id="insta-tag-side" style="font-weight: 100; color: #A78768; cursor: pointer; font-size: 0.375em; margin-left: -0.8em;" href="https://www.instagram.com/tcakulov/" >@tcakulov</span> </a>
 								
-							<a id="handle" href="https://www.instagram.com/tcakulov/" class="mail-link" target="_blank" style="font-weight: 100; color: #A78768;">@tcakulov</a>
+							
 						</div>
 						<div class="footer-right">
 							<p style="line-height: 1.25; color: #A78768; margin-top: 0; margin-bottom: 3.15em; font-weight: 100;">
@@ -117,7 +185,7 @@
 				<div id = "jumphere"class="container">
 					<p style="text-align: center; font-size: 0.9em; font-weight: 100; color: #A78768;">
 						© 2025 German Tcakulov ·
-						<a href="Impressum&Datenschutz.html" class= "mail-link" style=" text-decoration: none;">Legal Notice & Privacy</a> 
+						<a href="Impressum_Datenschutz-en.html" class= "mail-link" style=" text-decoration: none;">Legal Notice & Privacy</a> 
 						
 					</p>
 				</div>
@@ -161,8 +229,31 @@
 						button.style.display = "block";
 					}
 				}
+
+				window.addEventListener('scroll', function () {
+					const name = document.querySelector('.name');
+					const hero = document.querySelector('.bild');
+					const scrollY = window.scrollY;
+					const heroHeight = hero.offsetHeight;
+					const fadePoint = heroHeight * 0.3; // ← hier kannst du 0.2, 0.4 usw. probieren
+
+					if (scrollY > fadePoint) {
+					name.style.opacity = '0';
+					} else {
+					name.style.opacity = '1';
+					}
+				});
 			</script>
+
+
+			
+
+
+
+
+
+	
+
+
 	</body>
 </html>
-
-

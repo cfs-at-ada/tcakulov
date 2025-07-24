@@ -9,20 +9,111 @@
 		<title>German Tcakulov</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="assets/css/main.css" />
 		
 	</head>
 	<body class="is-preload">
-		<div id="logo" style="display: none; font-family: 'Source Sans Pro', sans-serif;"">German Tcakulov</div>
+		<div id="logo" style="display: none; font-family: 'Source Sans 3', sans-serif;"">GERMAN TCAKULOV</div>
 		<div id="page-wrapper">
 
-			<section id="hero-image" style="margin: 0; padding-bottom: 5em;">
+			<!-- <section id="hero-image" style="margin: 0; padding-bottom: 5em;">
 				<img src="images/7.jpg" alt="Hero Image"  style="width: 100%; height: 100vh; object-fit: cover; object-position: right 95%;">
 				<div class="banner-name" style="font-size: 5em; font-weight: 400;">
 					German <br>Tcakulov
 				</div>
-			</section>
+			</section> -->
+
+			<style>
+				.bild {
+					height: 100vh;
+					background-image: url('images/Lehre.jpg');
+					background-size: cover;
+					background-size: 120%;
+					background-position: 90% 65% ;
+					background-attachment: fixed;
+					position: relative;
+					overflow: hidden;
+					margin-bottom: 45px;
+				}
+
+				.name {
+					position: fixed;
+					top: 40vh; /* statt % → stabiler bei verschiedenen Bildschirmhöhen */
+					right: 3.1vw;
+					transition: opacity 0.25s ease;
+					color: #003049;
+					font-size: 4.0em;
+					z-index: 0;
+					text-align: right;
+					line-height: 0.9em;
+					letter-spacing: -0.05em;
+					
+				}
+
+				.bild::before {
+					content: "";
+					position: absolute;
+					inset: 0;
+					
+				}
+
+				@media (max-width: 550px) {
+				.bild {
+					
+					background-size: 200% !important; /* Bild etwas herangezoomt */
+					background-position: 65% 70% !important; /* z. B. Fokus weiter oben */
+					background-repeat: no-repeat;
+					background-attachment: scroll;
+					max-height: 60vh !important;
+				}
+				}
+
+				@media (min-width: 551px) and (max-width: 736px) {
+				.bild {
+					
+					background-size: 150% !important; /* Bild etwas herangezoomt */
+					background-position: 65% 70% !important; /* z. B. Fokus weiter oben */
+					background-repeat: no-repeat;
+					background-attachment: scroll;
+					max-height: 60vh !important;
+				}
+				}
+
+				@media (min-width: 737px) and (max-width: 1000px) {
+				.bild {
+					
+					background-size: 100% !important; /* Bild etwas herangezoomt */
+					background-position: 65% 90% !important; /* z. B. Fokus weiter oben */
+					background-repeat: no-repeat;
+					background-attachment: scroll;
+					max-height: 60vh !important;
+				}
+				}
+
+				@media (min-width: 1000px) and (max-width: 1080px) {
+				.bild {
+					
+					background-size: 100% !important; /* Bild etwas herangezoomt */
+					background-position: 65% 80% !important; /* z. B. Fokus weiter oben */
+					background-repeat: no-repeat;
+					background-attachment: scroll;
+					max-height: 60vh !important;
+				}
+				}
+
+				@media (min-width: 1081px) and (max-width: 1180px) {
+				.name{
+					font-size: 3.75em;
+				}
+				}
+
+
+			</style>
+
+			<div class="bild">
+				<div class="name">GERMAN <br> TCAKULOV</div>
+				
+			</div>
 
 			
 
@@ -45,42 +136,43 @@
 			<!-- Main -->
 				<section id="main" >
 					<div class="container">
-						<div class="row">
-							<div class="col-12">
+						<div class="row" style="margin-top: 0;">
+							<div class="col-12" style="padding-top: 0px;">
 								<div class="content">
 
 									<!-- Content -->
-									 <section id="kurzvita-section" style="color: #E3C29E; margin-bottom: 4.15em;">
-											<h2 id="jumphere" class="scroll-offset-tpage" style="color: #A78768; margin-bottom: 0.75em; font-size: 3.15em; font-weight: 400;">Lehre</h2>
+									 <section id="kurzvita-section" style="color: #E3C29E; margin-bottom: 62px;">
+											<h2 id="jumphere" class="scroll-offset-tpage" style="color: #A78768; margin-bottom: 1.325em; font-size: 3.0em; font-weight: 400; margin-top: 0.625em;">Lehre</h2>
 											<p style="text-align: justify; font-weight: 100; color: #FEF1D5"><em>>> Als größte Bereicherung in meinem beruflichen, künstlerischen Leben empfinde ich die Lehrtätigkeit und pädagogische Verantwortung für den Nachwuchs. Es erfüllt mich mit größter Freude, die Kenntnisse und das Wissen wie auch die Leidenschaft für die Musik, welche mir durch meine fantastischen Professor*innen stets vermittelt wurden, nun selber an die jungen Generationen weiterzugeben.</em> <<
 
 											</p>
 									</section>
 									
-									<hr style="margin-bottom: 4.25em;"> 
+									<hr style="margin-bottom: 4.0em; padding-bottom: 0;"> 
 
-										<article class="box page-content" style="margin:0; padding:0">
+										<article class="box page-content" style="margin: 0; padding: 0;">
 
 											
 
-											<div class="row">
+											<div class="row" style="padding-top: 0; margin-top: 0;">
 												<!-- Linke Spalte -->
-												<div class="col-6 col-12-small textblock-links">
-													<p style="color: #FEF1D5; text-align: justify; margin-bottom: 0.5em; font-weight: 100;">
+												<div  class="col-7 col-12-small textblock-links" style="padding-top: 0px; margin-top: 0; margin-bottom: 4em;">
+													<p style="color: #FEF1D5; text-align: justify; font-weight: 100; margin-top: 0; padding: 0; margin-bottom: 0;">
 													German Tcakulov ist ein renommierter Bratschist mit einer tiefen Hingabe zur Lehre und seit Oktober 2024 Professor für Bratsche an der Universität Mozarteum in Salzburg. Diese neue Position markiert einen bedeutenden Meilenstein in seiner pädagogischen Laufbahn. Zuvor war er ab 2022 Professor an der Hochschule für Musik in Karlsruhe und leitete bis 2023 seine eigene Bratschenklasse an der Hochschule für Musik und Theater in München. Von 2017 bis 2022 wirkte er als Lehrbeauftragter an der Hochschule für Musik Hanns Eisler in Berlin und war Assistent von Tabea Zimmermann. Darüber hinaus vermittelt er sein Wissen und seine Expertise an der Scuola di Musica di Fiesole/Florenz. Das Engagement Tcakulovs für die Förderung der nächsten Musiker-Generationen zeigt sich in seiner herausragenden Lehrtätigkeit in ganz Europa und in seinen weltweiten Meisterkursen.
 													</p>
 												</div>
 
 												<!-- Rechte Spalte -->
-												<div class="col-6 col-12-small kurse-spalte">
-													<h3 class="kurse-titel" style="color: #A78768; font-size: 3.15em; font-weight: 100; margin-top: 0.25em; margin-bottom: 1em;">MEISTERKURSE</h3>
+												<div class="col-5 col-12-small kurse-spalte" style="margin-top: 0em; padding-top: 0; margin-bottom: 2.2em; padding-bottom: 0;">
+													<h3 class="kurse-titel" style="color: #A78768; font-size: 3.5em; font-weight: 100; margin-top: 0.25em; margin-bottom: 0em;">MEISTERKURSE</h3>
 
 													<div class="kurs-eintrag">
 														<div class="datum">
 															<div class="tag">21.07–26.07</div>
 															<div class="jahr">2025</div>
 														</div>
-														<div class="kursname">Sommerakademie <br> Mozarteum Salzburg</div>
+														<div class="kurs-trenner-dark" style="background-color: #A78768;"></div>
+														<div  class="kursname" >Sommerakademie <br style="display: block;"> Mozarteum Salzburg</div>
 														
 													</div>
 
@@ -90,7 +182,8 @@
 														<div class="tag">31.07–10.08</div>
 														<div class="jahr">2025</div>
 													</div>
-													<div class="kursname">AIMS Foundation <br>Strings Academy</div>
+													<div class="kurs-trenner-dark" style="background-color: #A78768;"></div>
+													<div  class="kursname">AIMS Foundation <br style="display: block;">Strings Academy</div>
 													</div>
 
 													<div class="kurs-eintrag">
@@ -98,15 +191,16 @@
 														<div class="tag">16.08–29.08</div>
 														<div class="jahr">2025</div>
 													</div>
-													<div class="kursname">Musique à Flaine <br>Summer Academy</div>
+													<div class="kurs-trenner-dark" style="background-color: #A78768;"></div>
+													<div  class="kursname" >Musique à Flaine <br style="display: block;"> Summer Academy</div>
 													</div>
 												</div>
 											</div>
 
 
-											<div style="flex: 1 1 45%; text-align: center; padding: 0; margin-top: 3.75em; margin-bottom: 0;" id="Mozarteum" >
+											<div style="flex: 1 1 45%; text-align: center; padding: 0; margin-top: 0em; margin-bottom: 0;" id="Mozarteum" >
 													<img src="images/Mozarteum.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto; height: 100%; max-height: 250px; object-fit: cover; object-position: center 85%">
-													<div style="font-size: 0.5em; color: #A78768; margin-top: 0.2em; line-height: 1;"> © Mozarteum Salzburg</div>
+													<div style="font-size: 0.5em; color: #A78768; margin-top: 0.4em; line-height: 1;"> © Mozarteum Salzburg</div>
 											</div>
 
 										</article>
@@ -126,14 +220,14 @@
 
 			<footer id="footer">
 				<div class="container" >
-					<hr id="Fußzeile" style="margin-top: 4.25em; margin-bottom: 4.25em;">
+					<hr id="Fußzeile" style="margin-top: 3.75em; margin-bottom: 4.25em;">
 				</div>
 				<div class="container">
 					<div class="footer-flex">
 						<div class="footer-left">
-							<a href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100;"></a>
+							<a id="insta-icon" href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100; margin-right: 0em;"> <span class="mail-link" id="insta-tag-side" style="font-weight: 100; color: #A78768; cursor: pointer; font-size: 0.375em; margin-left: -0.8em;" href="https://www.instagram.com/tcakulov/" >@tcakulov</span> </a>
 								
-							<a id="handle" href="https://www.instagram.com/tcakulov/" class="mail-link" target="_blank" style="font-weight: 100; color: #A78768;">@tcakulov</a>
+							
 						</div>
 						<div class="footer-right">
 							<p style="line-height: 1.25; color: #A78768; margin-top: 0; margin-bottom: 3.15em; font-weight: 100;">
@@ -150,7 +244,7 @@
 				<div id = "jumphere"class="container">
 					<p style="text-align: center; font-size: 0.9em; font-weight: 100; color: #A78768;">
 						© 2025 German Tcakulov ·
-						<a href="Impressum&Datenschutz.html" class= "mail-link" style=" text-decoration: none;">Impressum & Datenschutz</a> 
+						<a href="Impressum_Datenschutz.html" class= "mail-link" style=" text-decoration: none;">Impressum & Datenschutz</a> 
 						
 					</p>
 				</div>
@@ -194,6 +288,20 @@
 						button.style.display = "block";
 					}
 				}
+
+				window.addEventListener('scroll', function () {
+					const name = document.querySelector('.name');
+					const hero = document.querySelector('.bild');
+					const scrollY = window.scrollY;
+					const heroHeight = hero.offsetHeight;
+					const fadePoint = heroHeight * 0.3; // ← hier kannst du 0.2, 0.4 usw. probieren
+
+					if (scrollY > fadePoint) {
+					name.style.opacity = '0';
+					} else {
+					name.style.opacity = '1';
+					}
+				});
 			</script>
 
 

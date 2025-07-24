@@ -9,19 +9,85 @@
 		<title>German Tcakulov</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
 	<body class="is-preload">
-		<div id="logo" style="display: none; font-family: 'Source Sans Pro', sans-serif;"">German Tcakulov</div>
+		<div id="logo" style="display: none; font-family: 'Source Sans 3', sans-serif;"">GERMAN TCAKULOV</div>
 		<div id="page-wrapper">
 
-			<section id="hero-image" style="margin: 0; padding-bottom: 5em;">
+			<!-- <section id="hero-image" style="margin: 0; padding-bottom: 5em;">
 				<img src="images/8.jpg" alt="Hero Image"  style="width: 100%; height: 100vh; object-fit: cover; object-position: right bottom;">
 				<div class="banner-name" style="font-size: 5em; font-weight: 400; transform: translateY(-130%);">
 					German <br>Tcakulov
 				</div>
-			</section>
+			</section> -->
+
+			<style>
+				.bild {
+					height: 100vh;
+					background-image: url('images/Media-spiegel.jpg');
+					background-size: cover;
+					background-position: center;
+					background-attachment: fixed;
+					position: relative;
+					overflow: hidden;
+					margin-bottom: 3em;
+				}
+
+				.name {
+					position: fixed;
+					top: 40vh; /* statt % → stabiler bei verschiedenen Bildschirmhöhen */
+					right: 3.1vw;
+					transition: opacity 0.25s ease;
+					color: #003049;
+					font-size: 5em;
+					z-index: 0;
+					text-align: right;
+					line-height: 0.9em;
+					letter-spacing: -0.05em;
+					
+				}
+
+				.bild::before {
+					content: "";
+					position: absolute;
+					inset: 0;
+					
+				}
+
+				@media (max-width: 736px) {
+				.bild {
+					
+					background-size: 200% !important; /* Bild etwas herangezoomt */
+					background-position: 40% 70% !important; /* z. B. Fokus weiter oben */
+					background-repeat: no-repeat;
+					background-attachment: scroll;
+					max-height: 60vh !important;
+				}
+				}
+
+				@media (min-width: 736px) and (max-width: 1080px){
+					.bild{
+						background-position: 35% 70%;
+						background-repeat: no-repeat;
+					}
+				}
+
+
+
+				@media (min-width: 1080px) and (max-width: 1180px){
+					.name{
+						font-size: 4.3em !important;
+					}
+				}
+
+				
+			</style>
+
+			<div class="bild">
+				<div class="name">GERMAN <br> TCAKULOV</div>
+				
+			</div>
 
 			
 
@@ -43,15 +109,15 @@
 			<!-- Main -->
 				<section id="main" >
 					<div class="container">
-						<div class="row">
-							<div class="col-12">
+						<div class="row" style="margin-top: 0;">
+							<div class="col-12" style="padding-top: 0px;">
 								<div class="content">
 
 									<!-- Content -->
 									 <section id="platzhalter4" style="color: #A78768; margin-bottom: 2em; margin-top: 0.65em;">
 										<div id="platzhalter5" style="display: flex; justify-content: space-between; align-items: baseline; margin-top: -1em;">
 											<!-- Linksbündige Hauptüberschrift -->
-											<h2  class="scroll-offset-tpage" style="color: #A78768; font-size: 3.15em; font-weight: 400; ">
+											<h2  class="scroll-offset-tpage" style="color: #A78768; font-size: 3em; font-weight: 400; margin-top: 0.725em; margin-bottom: 0.5em;">
 											Media
 											</h2>
 
@@ -68,41 +134,41 @@
 											<div  class="row" style="margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 3em 3.8em">
 
 												<!-- 1. Bild -->
-												<div style="flex: 1 1 45%; text-align: center; padding: 0">
-													<img src="images/2.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
-													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.2em; line-height: 1;"> © Irène Zandel</div>
+												<div href="images/Eins.jpg" class="lightbox" style="flex: 1 1 45%; text-align: center; padding: 0">
+													<img class="galerie-bild" src="images/Eins.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
+													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.4em; line-height: 1;"> © Irène Zandel</div>
 												</div>
 
 												<!-- 2. Bild -->
-												<div style="flex: 1 1 45%; text-align: center;padding: 0 ">
-													<img src="images/3.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
-													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.2em; line-height: 1;"> © Irène Zandel</div>
+												<div href="images/Zwei.jpg" class="lightbox" style="flex: 1 1 45%; text-align: center;padding: 0 ">
+													<img class="galerie-bild" src="images/Zwei.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
+													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.4em; line-height: 1;"> © Irène Zandel</div>
 												</div>
 
 												<!-- 3. Bild -->
-												<div style="flex: 1 1 45%; text-align: center;padding: 0">
-													<img src="images/6.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
-													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.2em; line-height: 1;"> © Irène Zandel</div>
+												<div href="images/Media.jpg" class="lightbox" style="flex: 1 1 45%; text-align: center;padding: 0">
+													<img class="galerie-bild" src="images/Media.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
+													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.4em; line-height: 1;"> © Irène Zandel</div>
 												</div>
 
 												<!-- 4. Bild -->
-												<div style="flex: 1 1 45%; text-align: center; padding: 0">
-													<img src="images/10.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
-													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.2em; line-height: 1;"> © Irène Zandel</div>
+												<div href="images/Vier.jpg" class="lightbox" style="flex: 1 1 45%; text-align: center; padding: 0">
+													<img class="galerie-bild" src="images/Vier.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
+													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.4em; line-height: 1;"> © Irène Zandel</div>
 												</div>
 
 
 												<!-- 5. Bild -->
-												<div style="flex: 1 1 45%; text-align: center; padding: 0">
-													<img src="images/9.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
-													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.2em; line-height: 1;"> © Irène Zandel</div>
+												<div href="images/Funf.jpg" class="lightbox" style="flex: 1 1 45%; text-align: center; padding: 0">
+													<img class="galerie-bild" src="images/Funf.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
+													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.4em; line-height: 1;"> © Irène Zandel</div>
 												</div>
 
 
 												<!-- 6. Bild -->
-												<div style="flex: 1 1 45%; text-align: center; padding: 0">
-													<img src="images/1.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
-													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.2em; line-height: 1;"> © Irène Zandel</div>
+												<div href="images/Sechs.jpg" class="lightbox" style="flex: 1 1 45%; text-align: center; padding: 0">
+													<img class="galerie-bild" src="images/Sechs.jpg" style="width: 100%; height: auto; display: block; margin: 0 auto;">
+													<div style="font-size: 0.8em; color: #A78768; margin-top: 0.4em; line-height: 1;"> © Irène Zandel</div>
 												</div>
 
 												<!-- 1. Video -->
@@ -137,7 +203,7 @@
 												</div>
 
 												<!-- 1. Spotify Album -->
-												<div style="flex: 1 1 45%; text-align: center; padding: 0; padding-bottom: 0; margin-bottom: -8.9em; padding-right: 0.1em;">
+												<div style="flex: 1 1 45%; text-align: center; padding: 0; padding-bottom: 0; margin-bottom: -0em; padding-right: 0.1em; max-height: 150px;">
 													<iframe 
 														src="https://open.spotify.com/embed/album/2YSu8lSscziK7Jr5bgTyYl"
 														style="width: 100%; height: 300px; border: none; display: block; margin: 0 auto;"
@@ -148,9 +214,9 @@
 
 
 												<!-- 2. Spotify Album -->
-												<div style="flex: 1 1 45%; text-align: center; padding: 0; padding-bottom: 0; margin-bottom: -8.9em; padding-left: 0.1em; visibility: hidden;">
+												<div style=" display: none ;flex: 1 1 45%; text-align: center; padding: 0; padding-bottom: 0; margin-bottom: -0em; padding-right: 0.1em; max-height: 150px;">
 													<iframe 
-														src="https://open.spotify.com/embed/album/1DFixLWuPkv3KT3TnV35m3?utm_source=generator"
+														src="https://open.spotify.com/embed/album/2YSu8lSscziK7Jr5bgTyYl"
 														style="width: 100%; height: 300px; border: none; display: block; margin: 0 auto;"
 														allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
 														loading="lazy">
@@ -178,15 +244,15 @@
 			<!-- Footer-->
 
 			<footer id="footer">
-				<div id="platzhalter6" class="container" >
-					<hr id="Fußzeile" style="margin-top: 4.25em; margin-bottom: 4.25em;">
+				<div class="container" >
+					<hr id="Fußzeile" style="margin-top: 4.65em; margin-bottom: 4.25em;">
 				</div>
 				<div class="container">
 					<div class="footer-flex">
 						<div class="footer-left">
-							<a href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100;"></a>
+							<a id="insta-icon" href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100; margin-right: 0em;"> <span class="mail-link" id="insta-tag-side" style="font-weight: 100; color: #A78768; cursor: pointer; font-size: 0.375em; margin-left: -0.8em;" href="https://www.instagram.com/tcakulov/" >@tcakulov</span> </a>
 								
-							<a id="handle" href="https://www.instagram.com/tcakulov/" class="mail-link" target="_blank" style="font-weight: 100; color: #A78768;">@tcakulov</a>
+							
 						</div>
 						<div class="footer-right">
 							<p style="line-height: 1.25; color: #A78768; margin-top: 0; margin-bottom: 3.15em; font-weight: 100;">
@@ -203,7 +269,7 @@
 				<div id = "jumphere"class="container">
 					<p style="text-align: center; font-size: 0.9em; font-weight: 100; color: #A78768;">
 						© 2025 German Tcakulov ·
-						<a href="Impressum&Datenschutz.html" class= "mail-link" style=" text-decoration: none;">Legal Notice & Privacy</a> 
+						<a href="Impressum_Datenschutz-en.html" class= "mail-link" style=" text-decoration: none;">Legal Notice & Privacy</a> 
 						
 					</p>
 				</div>
@@ -247,7 +313,43 @@
 						button.style.display = "block";
 					}
 				}
+
+				window.addEventListener('scroll', function () {
+					const name = document.querySelector('.name');
+					const hero = document.querySelector('.bild');
+					const scrollY = window.scrollY;
+					const heroHeight = hero.offsetHeight;
+					const fadePoint = heroHeight * 0.3; // ← hier kannst du 0.2, 0.4 usw. probieren
+
+					if (scrollY > fadePoint) {
+					name.style.opacity = '0';
+					} else {
+					name.style.opacity = '1';
+					}
+				});
+
+				document.querySelectorAll('.lightbox').forEach(link => {
+					link.addEventListener('click', e => {
+						e.preventDefault();
+						const src = link.getAttribute('href');
+						const overlay = document.createElement('div');
+						overlay.classList.add('lightbox-overlay');
+						overlay.innerHTML = `<img src="${src}">`;
+						overlay.addEventListener('click', () => document.body.removeChild(overlay));
+						document.body.appendChild(overlay);
+					});
+				});
 			</script>
+
+
+			
+
+
+
+
+
+	
+
 
 	</body>
 </html>

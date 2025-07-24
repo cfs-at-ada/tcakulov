@@ -9,7 +9,6 @@
 		<title>German Tcakulov</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<style>
 			@media (max-width: 768px) {
@@ -21,18 +20,88 @@
 
 	</head>
 	<body class="is-preload">
-		<div id="logo" style="display: none; font-family: 'Source Sans Pro', sans-serif;"">German Tcakulov</div>
+		<div id="logo" style="display: none; font-family: 'Source Sans 3', sans-serif;"">GERMAN TCAKULOV</div>
 		<div id="page-wrapper">
 
 			
-			<section id="hero-image" style="margin: 0; padding-bottom: 4em;">
+			<!--<section id="hero-image" style="margin: 0; padding-bottom: 4em; ">
 				<img  src="images/4.1.png" alt="Hero Image" style="width: 100%; height: 100vh; object-fit: cover;">
 				<div class="banner-name" >
 					German <br>Tcakulov
 				</div>
-			</section>
+			</section>-->
 
+			<style>
+				.bild {
+					height: 100vh;
+					background-image: url('images/4.2.jpg');
+					background-size: cover;
+					background-position: 50% 30%;
+					background-attachment: fixed;
+					position: relative;
+					overflow: hidden;
+					margin-bottom: 30px;
+					
+				}
+
+				.name {
+					position: fixed;
+					top: 40vh; /* statt % → stabiler bei verschiedenen Bildschirmhöhen */
+					right: 3.1vw;
+					transition: opacity 0.25s ease;
+					color: #003049;
+					font-size: 5em;
+					z-index: 0;
+					text-align: right;
+					line-height: 0.9em;
+					letter-spacing: -0.05em;
+					
+				}
+
+				.bild::before {
+					content: "";
+					position: absolute;
+					inset: 0;
+					
+				}
+
+				@media (max-width: 736px) {
+				.bild{
 			
+					max-height: 60vh !important;
+					bottom: 0 !important;
+					width: auto !important ;
+					background-size: cover !important;
+					background-repeat: no-repeat ;
+					background-position: 36% top !important;
+					background-attachment: scroll;
+					
+				}
+				}
+
+				@media (min-width: 737px) and (max-width: 1080px){
+				.bild{
+			
+					
+					bottom: 0 !important;
+					width: auto !important ;
+					background-size: cover !important;
+					background-repeat: no-repeat ;
+					background-position: 40% top !important;
+					background-attachment: scroll;
+					
+				}
+
+
+				}
+			</style>
+
+			<div class="bild">
+				<div class="name">GERMAN <br> TCAKULOV</div>
+				
+			</div>
+
+
 
 			<!-- Nav -->
 						<nav id="nav">
@@ -53,15 +122,15 @@
 			<!-- Main -->
 				<section id="main" class="wrapper">
 					<div class="container">
-						<div class="row">
-							<div class="col-12">
+						<div class="row" style="margin-top: 0;">
+							<div class="col-12" style="padding-top: 0px;">
 								<div class="content">
 
 									<!-- Content -->
-									 <section id="meisterkurs" class="box highlight" style="padding-bottom: 4em; margin: 0;">
-										<div class="row">
-											<div class="col-6 col-12-small">
-												<h3 style="text-align: left; color: #A78768; font-size: 1.5em; padding-bottom: 0; font-weight: 400; margin-bottom: 1em;">NÄCHSTER MEISTERKURS</h3>
+									 <section class="box highlight" style="padding-bottom: 4em; margin: 0;">
+										<div class="row" style="margin-top: -20px;">
+											<div style="padding-top: 55px;" >
+												<h3  style="text-align: left; color: #A78768; font-size: 1.5em; padding-bottom: 0; font-weight: 400; margin-bottom: 1em;">NÄCHSTER MEISTERKURS</h3>
 												<p style="text-align: left; color: #FEF1D5; padding: 0; margin: 0; font-weight: 700;">
 													
 													Österreich, Salzburg, 21.07.–26.07.25
@@ -76,7 +145,7 @@
 												</p>
 												
 											</div>
-											<div id="platzhalter12" class="col-6 col-12-small" style="text-align: right; color: #FEF1D5; margin-top: 3em;">
+											<div class="col-6 col-12-small" style="text-align: right; color: #FEF1D5; margin-top: 44px; padding-top: 50px;">
 												<p style="text-align: right; padding: 0; margin: 0; font-weight: 400;"><em>„Musik existiert als Ziel.</em></p>
 												<p style="text-align: right; padding: 0; margin: 0; font-weight: 400;"><em>Erst dann komme ich selbst als Person.“</em></p>
 											</div>
@@ -87,9 +156,9 @@
 										<article class="box page-content" style="margin-bottom: 0; padding: 0;">
 
 											<section id="kurzvita-section" style="color: #FEF1D5; margin:0">
-												<h2 id="vita" style="color: #A78768; margin-bottom: 0em; font-weight: 400;">VITA</h2>
+												<h2 id="vita" style="color: #A78768; margin-bottom: 0em; font-weight: 400; font-size: 3em;">VITA</h2>
 
-												<p style="text-align: justify; margin-bottom: 5.15em; margin-top: 2.15em; font-weight: 100;">
+												<p style="text-align: justify; margin-bottom: 3.55em; margin-top: 4.0em; font-weight: 100;">
 													Nur selten bilden Klang und künstlerisches Sein und Wollen eine deckungsgleiche Einheit. Bei German Tcakulov ist das der Fall. Sein großherziger und großzügiger, überaus seelenvoller, warmer, erdiger, farbenreicher Bratschen-Klang spiegelt zugleich eine unerhört vielfältige Geisteshaltung wider. Dieses breite Profil lebt German Tcakulov nicht nur als Musiker auf der Bühne, sondern vermittelt es genauso als Bratschen-Professor am Salzburger Mozarteum.<br>
 													Ob Orchester, Kammermusik oder Solo, Barock, Klassik und Romantik, zeitgenössische Musik oder andere Künste: Für German Tcakulov gehört das alles ganz organisch zusammen. Als Künstler lebt er den Dialog zwischen Zeiten, Stilen und Genres. Dieses Sein und Wollen bestimmt von Anfang an seinen Werdegang. In Wladikawkas/Russland geboren, setzt er mit 15 Jahren das Viola-Studium an der Musik-Spezialschule des Konservatoriums bei Wladimir Stopitschew fort.<br>
 													Bei ihm studiert German Tcakulov anschließend am Petersburger Konservatorium, um mit 21 Jahren nach Deutschland überzusiedeln. Sein Bachelor- und Master-Studium schließt er bei Tabea Zimmerman an der Hochschule für Musik „Hanns Eisler“ in Berlin ab. Er ist Stipendiat der Lucia-Loeser-Stiftung, gewinnt zudem Preise bei internationalen Wettbewerben und wird zu renommierten Festivals eingeladen. Von 2018 bis 2022 wirkt er als festes Mitglied beim Symphonieorchesters des Bayerischen Rundfunks (BR).<br>
@@ -197,14 +266,14 @@
 
 			<footer id="footer">
 				<div class="container" >
-					<hr id="Fußzeile" style="margin-top: 3.15em; margin-bottom: 4.25em;">
+					<hr id="Fußzeile" style="margin-top: 2.65em; margin-bottom: 4.25em;">
 				</div>
 				<div class="container">
 					<div class="footer-flex">
 						<div class="footer-left">
-							<a href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100;"></a>
+							<a id="insta-icon" href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100; margin-right: 0em;"> <span class="mail-link" id="insta-tag-side" style="font-weight: 100; color: #A78768; cursor: pointer; font-size: 0.375em; margin-left: -0.8em;" href="https://www.instagram.com/tcakulov/" >@tcakulov</span> </a>
 								
-							<a id="handle" href="https://www.instagram.com/tcakulov/" class="mail-link" target="_blank" style="font-weight: 100; color: #A78768;">@tcakulov</a>
+							
 						</div>
 						<div class="footer-right">
 							<p style="line-height: 1.25; color: #A78768; margin-top: 0; margin-bottom: 3.15em; font-weight: 100;">
@@ -221,7 +290,7 @@
 				<div id = "jumphere"class="container">
 					<p style="text-align: center; font-size: 0.9em; font-weight: 100; color: #A78768;">
 						© 2025 German Tcakulov ·
-						<a href="Impressum&Datenschutz.html" class= "mail-link" style=" text-decoration: none;">Impressum & Datenschutz</a> 
+						<a href="Impressum_Datenschutz.html" class= "mail-link" style=" text-decoration: none;">Impressum & Datenschutz</a> 
 						
 					</p>
 				</div>
@@ -265,6 +334,21 @@
 						button.style.display = "block";
 					}
 				}
+
+
+				window.addEventListener('scroll', function () {
+					const name = document.querySelector('.name');
+					const hero = document.querySelector('.bild');
+					const scrollY = window.scrollY;
+					const heroHeight = hero.offsetHeight;
+					const fadePoint = heroHeight * 0.3; // ← hier kannst du 0.2, 0.4 usw. probieren
+
+					if (scrollY > fadePoint) {
+					name.style.opacity = '0';
+					} else {
+					name.style.opacity = '1';
+					}
+				});
 			</script>
 
 

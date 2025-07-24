@@ -9,30 +9,99 @@
 		<title>German Tcakulov</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<style>
 			@media (max-width: 768px) {
 			#hero-image img {
-				object-position: 30% center;
+				object-position: 20% center;
 			}
 			}
 		</style>
 
 	</head>
 	<body class="is-preload">
-		<div id="logo" style="display: none; font-family: 'Source Sans Pro', sans-serif;"">German Tcakulov</div>
+		<div id="logo" style="display: none; font-family: 'Source Sans 3', sans-serif;"">GERMAN TCAKULOV</div>
 		<div id="page-wrapper">
 
 			
-			<section id="hero-image" style="margin: 0; padding-bottom: 4em;">
-				<img  src="images/4.1.png" alt="Hero Image" style="width: 100%; height: 100vh; object-fit: cover;" >
+			<!--<section id="hero-image" style="margin: 0; padding-bottom: 4em; ">
+				<img  src="images/4.1.png" alt="Hero Image" style="width: 100%; height: 100vh; object-fit: cover;">
 				<div class="banner-name" >
 					German <br>Tcakulov
 				</div>
-			</section>
+			</section>-->
 
+			<style>
+				.bild {
+					height: 100vh;
+					background-image: url('images/4.2.jpg');
+					background-size: cover;
+					background-position: 50% 30%;
+					background-attachment: fixed;
+					position: relative;
+					overflow: hidden;
+					margin-bottom: 30px;
+					
+				}
+
+				.name {
+					position: fixed;
+					top: 40vh; /* statt % → stabiler bei verschiedenen Bildschirmhöhen */
+					right: 3.1vw;
+					transition: opacity 0.25s ease;
+					color: #003049;
+					font-size: 5em;
+					z-index: 0;
+					text-align: right;
+					line-height: 0.9em;
+					letter-spacing: -0.05em;
+					
+				}
+
+				.bild::before {
+					content: "";
+					position: absolute;
+					inset: 0;
+					
+				}
+
+				@media (max-width: 736px) {
+				.bild{
 			
+					max-height: 60vh !important;
+					bottom: 0 !important;
+					width: auto !important ;
+					background-size: cover !important;
+					background-repeat: no-repeat ;
+					background-position: 36% top !important;
+					background-attachment: scroll;
+					
+				}
+				}
+
+				@media (min-width: 737px) and (max-width: 1080px){
+				.bild{
+			
+					
+					bottom: 0 !important;
+					width: auto !important ;
+					background-size: cover !important;
+					background-repeat: no-repeat ;
+					background-position: 40% top !important;
+					background-attachment: scroll;
+					
+				}
+
+
+				}
+			</style>
+
+			<div class="bild">
+				<div class="name">GERMAN <br> TCAKULOV</div>
+				
+			</div>
+
+
 
 			<!-- Nav -->
 						<nav id="nav">
@@ -46,40 +115,39 @@
 								
 							</ul>
 						</nav>
-
 		
 			
 
 			<!-- Main -->
 				<section id="main" class="wrapper">
 					<div class="container">
-						<div class="row">
-							<div class="col-12">
+						<div class="row" style="margin-top: 0;">
+							<div class="col-12" style="padding-top: 0px;">
 								<div class="content">
 
 									<!-- Content -->
-									 <section id="meisterkurs" class="box highlight" style="padding-bottom: 4em; margin: 0;">
-										<div class="row">
-											<div class="col-6 col-12-small">
-												<h3 style="text-align: left; color: #A78768; font-size: 1.5em; padding-bottom: 0; font-weight: 400; margin-bottom: 1.2em;">upcoming masterclass</h3>
+									 <section class="box highlight" style="padding-bottom: 4em; margin: 0;">
+										<div class="row" style="margin-top: -20px;">
+											<div style="padding-top: 55px;" >
+												<h3  style="text-align: left; color: #A78768; font-size: 1.5em; padding-bottom: 0; font-weight: 400; margin-bottom: 1em;">upcoming masterclass</h3>
 												<p style="text-align: left; color: #FEF1D5; padding: 0; margin: 0; font-weight: 700;">
 													
 													Austria, Salzburg, 21/07–26/07/25
 												</p>
 												<p style="text-align: left; color: #FEF1D5; padding: 0; margin: 0; font-weight: 100;">
 													
-													Interantional Summer Academy at
+													International Summer Academy at 
 												</p>
 												<p style="text-align: left; color: #FEF1D5; padding: 0; margin: 0; font-weight: 100;">
 													
 													Mozarteum Salzburg
 												</p>
+												
 											</div>
-											<div id="platzhalter12" class="col-6 col-12-small" style="text-align: right; color: #FEF1D5; margin-top: 3em;">
+											<div class="col-6 col-12-small" style="text-align: right; color: #FEF1D5; margin-top: 44px; padding-top: 50px;">
 												<p style="text-align: right; padding: 0; margin: 0; font-weight: 400;"><em>„Music exists as a destination.</em></p>
 												<p style="text-align: right; padding: 0; margin: 0; font-weight: 400;"><em>Only then do I come as a person.“</em></p>
 											</div>
-											
 										</div>
 									</section>
 									<hr id ="jumphere" class ="scroll-offset" style="margin-bottom: 4.65em;"> 
@@ -87,9 +155,9 @@
 										<article class="box page-content" style="margin-bottom: 0; padding: 0;">
 
 											<section id="kurzvita-section" style="color: #FEF1D5; margin:0">
-												<h2 id="vita" style="color: #A78768; margin-bottom: 0em; font-weight: 400;">VITA</h2>
+												<h2 id="vita" style="color: #A78768; margin-bottom: 0em; font-weight: 400; font-size: 3em;">VITA</h2>
 
-												<p style="text-align: justify; margin-bottom: 5.15em; margin-top: 2.15em; font-weight: 100;">
+												<p style="text-align: justify; margin-bottom: 3.55em; margin-top: 4.0em; font-weight: 100;">
 													It is rare for sound and artistic being and intention to form a perfectly congruent whole. This is the case with German Tcakulov. His generous and expansive, deeply soulful, warm, earthy, and colorful viola sound reflects an incredibly diverse mindset. German Tcakulov not only embodies this broad profile as a musician on stage but also conveys it as a viola professor at the Mozarteum in Salzburg.
 													Whether orchestra, chamber music or solo, Baroque, Classical and Romantic, contemporary music or other arts: for German Tcakulov, it all fits together organically. As an artist, he lives the dialogue between eras, styles and genres. This being and wanting has determined his career from the very beginning. Born in Vladikavkaz, Russia, he began studying the viola at the age of 15 at the Special Music School of the Conservatory with Vladimir Stopitschew.
 													German Tcakulov then studied with him at the St. Petersburg Conservatory before moving to Germany at the age of 21. He completed his bachelor's and master's degrees with Tabea Zimmerman at the Hanns Eisler Academy of Music in Berlin. He is a scholarship holder of the Lucia Loeser Foundation, has won prizes at international competitions, and has been invited to renowned festivals. From 2018 to 2022, he is a permanent member of the Bavarian Radio Symphony Orchestra (BR).
@@ -140,9 +208,9 @@
 
 														<h3 style="color: #A78768; margin-bottom: 0.3em; font-weight: 100;">From Vladikavkaz to St. Petersburg</h3>
 														<p style="margin-bottom: 2.15em; text-align: justify;">
-															At the age of 13, German first thought about going to St. Petersburg. He knew the city well, especially since relatives of his family lived there. "Of course, the music school at the St. Petersburg Conservatory came to mind, but I didn't think I was good enough." After all, it is a school for highly gifted students. Mariss Jansons, Grigori Sokolov, and Mischa Maisky also studied there. "We didn't even consider it. I went to St. Petersburg with my mother to visit a college when I was 14. We applied for the entrance exam and also spoke with the director."
+															At the age of 13, German first thought about going to St. Petersburg. He knows the city well, especially since relatives of his family lived there. "Of course, the music school at the St. Petersburg Conservatory came to mind, but I didn't think I was good enough." After all, it is a school for highly gifted students. Mariss Jansons, Grigori Sokolov, and Mischa Maisky also studied there. "We didn't even consider it. I went to St. Petersburg with my mother to visit a college when I was 14. We applied for the entrance exam and also spoke with the director."
 															But German is still too young for college. He needs more support, like at the special music school next door, which has a boarding school. German's aunt in St. Petersburg knows a teacher at the special music school and gets involved. The entrance exams for the special music school are already over, but German plays the violin for one of the teachers. She says her violin class is already full. "Actually, I'd like to play the viola," German blurts out.
-															The teacher is amazed and enthusiastic. "We have the best viola professor here, from the St. Petersburg Conservatory," she says, speaking to Vladimir Stopitschew. German plays for him, his mother is there. He says nothing, shows no reaction. That's his reserved nature. His mother calls the professor in the evening, talks to him, begs him. He accepts German, probably wanting to see how important it is to him and how much his family supports him. German buys a simple " " viola for less than 100 euros. Life in St. Petersburg can begin.
+															The teacher is amazed and enthusiastic. "We have the best viola professor here, from the St. Petersburg Conservatory," she says, speaking to Vladimir Stopitschew. German plays for him, his mother is there. He says nothing, shows no reaction. That's his reserved nature. His mother calls the professor in the evening, talks to him, begs him. He accepts German, probably wanting to see how important it is to him and how much his family supports him. German buys a simple viola for less than 100 euros. Life in St. Petersburg can begin.
 														</p>
 
 														<h3 style="color: #A78768; margin-bottom: 0.3em; font-weight: 100;">Special music school and conservatory</h3>
@@ -195,14 +263,14 @@
 
 			<footer id="footer">
 				<div class="container" >
-					<hr id="Fußzeile" style="margin-top: 3.15em; margin-bottom: 4.25em;">
+					<hr id="Fußzeile" style="margin-top: 2.65em; margin-bottom: 4.25em;">
 				</div>
 				<div class="container">
 					<div class="footer-flex">
 						<div class="footer-left">
-							<a href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100;"></a>
+							<a id="insta-icon" href="https://www.instagram.com/tcakulov/" class="icon brands fa-instagram footer-instagram" target="_blank" style="font-size: 3em; padding-bottom: 0.15em; margin-top: 0.21em ;font-weight: 100; margin-right: 0em;"> <span class="mail-link" id="insta-tag-side" style="font-weight: 100; color: #A78768; cursor: pointer; font-size: 0.375em; margin-left: -0.8em;" href="https://www.instagram.com/tcakulov/" >@tcakulov</span> </a>
 								
-							<a id="handle" href="https://www.instagram.com/tcakulov/" class="mail-link" target="_blank" style="font-weight: 100; color: #A78768;">@tcakulov</a>
+							
 						</div>
 						<div class="footer-right">
 							<p style="line-height: 1.25; color: #A78768; margin-top: 0; margin-bottom: 3.15em; font-weight: 100;">
@@ -219,7 +287,7 @@
 				<div id = "jumphere"class="container">
 					<p style="text-align: center; font-size: 0.9em; font-weight: 100; color: #A78768;">
 						© 2025 German Tcakulov ·
-						<a href="Impressum&Datenschutz.html" class= "mail-link" style=" text-decoration: none;">Legal Notice & Privacy</a> 
+						<a href="Impressum_Datenschutz-en.html" class= "mail-link" style=" text-decoration: none;">Legal Notice & Privacy</a> 
 						
 					</p>
 				</div>
@@ -263,6 +331,32 @@
 						button.style.display = "block";
 					}
 				}
+
+
+				window.addEventListener('scroll', function () {
+					const name = document.querySelector('.name');
+					const hero = document.querySelector('.bild');
+					const scrollY = window.scrollY;
+					const heroHeight = hero.offsetHeight;
+					const fadePoint = heroHeight * 0.3; // ← hier kannst du 0.2, 0.4 usw. probieren
+
+					if (scrollY > fadePoint) {
+					name.style.opacity = '0';
+					} else {
+					name.style.opacity = '1';
+					}
+				});
 			</script>
+
+
+			
+
+
+
+
+
+	
+
+
 	</body>
 </html>
