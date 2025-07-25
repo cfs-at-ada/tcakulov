@@ -107,6 +107,13 @@
 					}
 				}
 
+				@media only screen and (orientation: landscape) {
+					html.is-mobile .bild {
+						background-size: contain;
+						background-position: center top;
+					}
+				}
+
 				
 			</style>
 
@@ -375,17 +382,17 @@
 					document.documentElement.classList.add('is-ipad');
 					}
 				})();
+
+				(function() {
+					// Erkennen von Smartphone‑User‑Agents:
+					// - "Mobi" deckt die meisten mobilen Browser ab
+					// - plus gängige Keywords für iPhone, iPod, Android, Windows Phone, Opera Mini
+					var isMobile = /Mobi|Android|iPhone|iPod|IEMobile|Opera Mini|BlackBerry/.test(navigator.userAgent);
+
+					if (isMobile) {
+					document.documentElement.classList.add('is-mobile');
+					}
+				})();
 			</script>
-
-
-			
-
-
-
-
-
-	
-
-
 	</body>
 </html>
