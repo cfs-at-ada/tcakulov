@@ -3648,12 +3648,12 @@ br {
 
 /*BACkGROUND FIX; LÖSCHEN FÜR ORIGINALVERSION; SONST KEINE ÄDNERUNGEN BZGL BACKGROUND-IMG*/
 
+/* ➤ Hero‑Image als echtes fixed <img> */
 .bild {
-  height: 100vh;          /* bleibt so */
-  position: relative;     /* damit das <img> dahinter sitzt */
-  overflow: hidden;
-  margin-bottom: 30px;
-  /* hier die bisherigen background-… Zeilen löschen */
+  position: relative;     /* Bezugspunkt für .hero__fixed */
+  height: 100vh;          /* volle Viewport‑Höhe */
+  overflow: hidden;       /* Beschneidung an den Rändern */
+  margin-bottom: 30px;    /* wie vorher */
 }
 
 .hero__fixed {
@@ -3662,18 +3662,20 @@ br {
   left: 0;
   width: 100vw;           /* volle Breite */
   height: 100vh;          /* volle Höhe */
-  object-fit: cover;      /* skaliert wie background-size: cover */
-  object-position: 50% 30%; /* dein Ausschnitt */
-  z-index: -1;            /* hinter dem Text */
+  object-fit: cover;      /* wie background-size: cover */
+  object-position: 50% 30%; /* default Fokus, anpassbar */
+  z-index: -1;            /* hinter allen Inhalten */
+  pointer-events: none;   /* klick‑transparent */
 }
 
+/* ➤ Deine Media‑Queries übernehmen */
 @media (max-width: 736px) {
   .hero__fixed {
-    object-position: 36% top;
+    object-position: 36% top !important;
   }
 }
 @media (min-width: 737px) and (max-width: 1080px) {
   .hero__fixed {
-    object-position: 40% top;
+    object-position: 40% top !important;
   }
 }
