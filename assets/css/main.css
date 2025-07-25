@@ -3646,4 +3646,26 @@ br {
   }
 }
 
+/*BACkGROUND FIX; LÖSCHEN FÜR ORIGINALVERSION; SONST KEINE ÄDNERUNGEN BZGL BACKGROUND-IMG*/
 
+/* 1. .bild weiter nutzen, aber fixed abschalten */
+.bild {
+  background-attachment: scroll !important;
+  position: relative;  /* für das Pseudo-Element als Bezug */
+}
+
+/* 2. Pseudo-Element nur auf iOS‑Safari (inkl. iPad) aktivieren */
+@supports not (background-attachment: fixed) {
+  .bild::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100vh;                    /* volle Höhe */
+    background-image: inherit;        /* Bild aus .bild übernehmen */
+    background-size: inherit;         /* cover oder was du gesetzt hast */
+    background-position: inherit;     /* deine Position aus .bild */
+    z-index: -1;                      /* hinter den Content */
+    pointer-events: none;             /* kein Click-Interferenzen */
+  }
+}
