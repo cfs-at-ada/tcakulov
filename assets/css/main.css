@@ -3658,28 +3658,4 @@ br {
   }
 }
 
-/* ─── Portrait (Smartphone) ───────────────────────────────────────────── */
-@media only screen
-  and (orientation: portrait)
-  and (max-width: 736px) {
-  .bild {
-    max-height: 60vh !important;
-    background-position: 36% top !important;
-    background-attachment: scroll !important;
-  }
-}
 
-/* ─── Portrait (Tablet) ───────────────────────────────────────────────── */
-@media only screen
-  and (orientation: portrait)
-  and (min-width: 737px)
-  and (max-width: 1080px) {
-  .bild {
-    background-position: 40% top !important;
-    background-attachment: scroll !important;
-  }
-}
-
-/* ─── Landscape (quer): Keine der Portrait‑Regeln greift,
-     also bleibt dein Default: background-attachment: fixed;
-     background-size: cover; background-position: 50% 30%; ─── */
