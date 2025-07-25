@@ -3646,36 +3646,14 @@ br {
   }
 }
 
-/*BACkGROUND FIX; LÖSCHEN FÜR ORIGINALVERSION; SONST KEINE ÄDNERUNGEN BZGL BACKGROUND-IMG*/
-
-/* ➤ Hero‑Image als echtes fixed <img> */
-.bild {
-  position: relative;     /* Bezugspunkt für .hero__fixed */
-  height: 100vh;          /* volle Viewport‑Höhe */
-  overflow: hidden;       /* Beschneidung an den Rändern */
-  margin-bottom: 30px;    /* wie vorher */
-}
-
-.hero__fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;           /* volle Breite */
-  height: 100vh;          /* volle Höhe */
-  object-fit: cover;      /* wie background-size: cover */
-  object-position: 50% 30%; /* default Fokus, anpassbar */
-  z-index: -1;            /* hinter allen Inhalten */
-  pointer-events: none;   /* klick‑transparent */
-}
-
-/* ➤ Deine Media‑Queries übernehmen */
-@media (max-width: 736px) {
-  .hero__fixed {
-    object-position: 36% top !important;
+@supports not (background-attachment: fixed) {
+  .bild {
+    background-attachment: scroll !important;
   }
 }
-@media (min-width: 737px) and (max-width: 1080px) {
-  .hero__fixed {
-    object-position: 40% top !important;
+
+@media only screen and (orientation: landscape) {
+  html.is-ipad .bild {
+    background-attachment: scroll !important;
   }
 }
