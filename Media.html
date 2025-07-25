@@ -85,9 +85,21 @@
 					html.is-ipad .bild {
 						background-attachment: scroll !important;
 						background-size: 110% !important;
-						background-position: left top !important;
+						background-position: right top !important;
 						background-repeat: no-repeat  !important;
-						margin-bottom: -25px;
+						
+						max-width: 100vw !important;
+						max-height: 100vh !important;
+					}
+				}
+
+				@media only screen and (orientation: portrait) {
+					html.is-ipad .bild {
+						background-attachment: scroll !important;
+						background-size: 150% !important;
+						background-position: center center !important;
+						background-repeat: no-repeat  !important;
+						
 						max-width: 100vw !important;
 						max-height: 100vh !important;
 					}
