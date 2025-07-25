@@ -339,6 +339,15 @@
 						document.body.appendChild(overlay);
 					});
 				});
+				(function() {
+					// iPad vor iOS 13 hat navigator.userAgent mit "iPad"
+					// iPadOS ≥ 13 meldet sich als "MacIntel" mit Touchpoints > 1
+					var isiPad = /iPad/.test(navigator.userAgent) ||
+								(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+					if (isiPad) {
+					document.documentElement.classList.add('is-ipad');
+					}
+				})();
 			</script>
 
 
