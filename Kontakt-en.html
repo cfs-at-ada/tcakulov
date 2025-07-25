@@ -92,6 +92,16 @@
 					
 				}
 				}
+
+				@media only screen and (orientation: landscape) {
+					html.is-mobile .bild {
+						background-size: 100% !important;
+						background-position: center top !important;
+						width: 100vw !important;
+						height: 100vh !important;
+						max-height: 100vh !important;
+					}
+				}
 			</style>
 
 			<div class="bild">
@@ -243,17 +253,28 @@
 					name.style.opacity = '1';
 					}
 				});
+
+				(function() {
+					// iPad vor iOS 13 hat navigator.userAgent mit "iPad"
+					// iPadOS ≥ 13 meldet sich als "MacIntel" mit Touchpoints > 1
+					var isiPad = /iPad/.test(navigator.userAgent) ||
+								(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+					if (isiPad) {
+					document.documentElement.classList.add('is-ipad');
+					}
+				})();
+
+				
+				(function() {
+					// Erkennen von Smartphone‑User‑Agents:
+					// - "Mobi" deckt die meisten mobilen Browser ab
+					// - plus gängige Keywords für iPhone, iPod, Android, Windows Phone, Opera Mini
+					var isMobile = /Mobi|Android|iPhone|iPod|IEMobile|Opera Mini|BlackBerry/.test(navigator.userAgent);
+
+					if (isMobile) {
+					document.documentElement.classList.add('is-mobile');
+					}
+				})();
 			</script>
-
-
-			
-
-
-
-
-
-	
-
-
 	</body>
 </html>

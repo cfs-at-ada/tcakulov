@@ -81,6 +81,42 @@
 					}
 				}
 
+				@media only screen and (orientation: landscape) {
+					html.is-ipad .bild {
+						background-attachment: scroll !important;
+						background-size: 110% !important;
+						background-position: right top !important;
+						background-repeat: no-repeat  !important;
+						
+						max-width: 100vw !important;
+						max-height: 100vh !important;
+					}
+
+					
+				}
+
+				@media only screen and (orientation: portrait) {
+					html.is-ipad .bild {
+						background-attachment: scroll !important;
+						background-size: 190% !important;
+						background-position: 55% top !important;
+						background-repeat: no-repeat  !important;
+						margin-bottom: -46px !important;
+						max-width: 100vw !important;
+						max-height: 100vh !important;
+					}
+				}
+
+				@media only screen and (orientation: landscape) {
+					html.is-mobile .bild {
+						background-size: 100% !important;
+						background-position: center top !important;
+						width: 100vw !important;
+						height: 100vh !important;
+						max-height: 100vh !important;
+					}
+				}
+
 				
 			</style>
 
@@ -339,6 +375,7 @@
 						document.body.appendChild(overlay);
 					});
 				});
+				
 				(function() {
 					// iPad vor iOS 13 hat navigator.userAgent mit "iPad"
 					// iPadOS ≥ 13 meldet sich als "MacIntel" mit Touchpoints > 1
@@ -346,6 +383,17 @@
 								(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 					if (isiPad) {
 					document.documentElement.classList.add('is-ipad');
+					}
+				})();
+
+				(function() {
+					// Erkennen von Smartphone‑User‑Agents:
+					// - "Mobi" deckt die meisten mobilen Browser ab
+					// - plus gängige Keywords für iPhone, iPod, Android, Windows Phone, Opera Mini
+					var isMobile = /Mobi|Android|iPhone|iPod|IEMobile|Opera Mini|BlackBerry/.test(navigator.userAgent);
+
+					if (isMobile) {
+					document.documentElement.classList.add('is-mobile');
 					}
 				})();
 			</script>
