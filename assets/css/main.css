@@ -3648,24 +3648,25 @@ br {
 
 /*BACkGROUND FIX; LÖSCHEN FÜR ORIGINALVERSION; SONST KEINE ÄDNERUNGEN BZGL BACKGROUND-IMG*/
 
-/* 1. .bild weiter nutzen, aber fixed abschalten */
+/* 1) Basis: auf iOS‑Safari immer scrollen */
 .bild {
   background-attachment: scroll !important;
-  position: relative;  /* für das Pseudo-Element als Bezug */
+  position: relative !important;
 }
 
-/* 2. Pseudo-Element nur auf iOS‑Safari (inkl. iPad) aktivieren */
-@supports not (background-attachment: fixed) {
+/* 2) Im Querformat auf iPad(!) zusätzlich das Fixed‑Pseudo‑Element aufsetzen */
+@media only screen and (orientation: landscape) and (max-device-width: 1024px) {
   .bild::before {
     content: "";
     position: fixed;
     top: 0; left: 0;
     width: 100%;
-    height: 100vh;                    /* volle Höhe */
-    background-image: inherit;        /* Bild aus .bild übernehmen */
-    background-size: inherit;         /* cover oder was du gesetzt hast */
-    background-position: inherit;     /* deine Position aus .bild */
-    z-index: -1;                      /* hinter den Content */
-    pointer-events: none;             /* kein Click-Interferenzen */
+    /* dvh = dynamic viewport height, passt sich an URL‑Bar an */
+    height: 100dvh;                  
+    background-image: inherit;
+    background-size: inherit;
+    background-position: inherit;
+    z-index: -1;
+    pointer-events: none;
   }
 }

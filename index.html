@@ -349,6 +349,19 @@
 					name.style.opacity = '1';
 					}
 				});
+
+				// Browser-Neuberechnung anstoßen
+				function forceRepaint() {
+					window.dispatchEvent(new Event('resize'));
+				}
+
+				// Bei Drehung
+				window.addEventListener('orientationchange', forceRepaint);
+
+				// Und beim Klick auf "Mehr anzeigen"
+				document.querySelectorAll('.mehr-anzeigen-btn').forEach(btn =>
+					btn.addEventListener('click', forceRepaint)
+				);
 			</script>
 
 
