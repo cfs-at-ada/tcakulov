@@ -3648,25 +3648,32 @@ br {
 
 /*BACkGROUND FIX; LÖSCHEN FÜR ORIGINALVERSION; SONST KEINE ÄDNERUNGEN BZGL BACKGROUND-IMG*/
 
-/* 1) Basis: auf iOS‑Safari immer scrollen */
 .bild {
-  background-attachment: scroll !important;
-  position: relative !important;
+  height: 100vh;          /* bleibt so */
+  position: relative;     /* damit das <img> dahinter sitzt */
+  overflow: hidden;
+  margin-bottom: 30px;
+  /* hier die bisherigen background-… Zeilen löschen */
 }
 
-/* 2) Im Querformat auf iPad(!) zusätzlich das Fixed‑Pseudo‑Element aufsetzen */
-@media only screen and (orientation: landscape) and (max-device-width: 1024px) {
-  .bild::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    /* dvh = dynamic viewport height, passt sich an URL‑Bar an */
-    height: 100dvh;                  
-    background-image: inherit;
-    background-size: inherit;
-    background-position: inherit;
-    z-index: -1;
-    pointer-events: none;
+.hero__fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;           /* volle Breite */
+  height: 100vh;          /* volle Höhe */
+  object-fit: cover;      /* skaliert wie background-size: cover */
+  object-position: 50% 30%; /* dein Ausschnitt */
+  z-index: -1;            /* hinter dem Text */
+}
+
+@media (max-width: 736px) {
+  .hero__fixed {
+    object-position: 36% top;
+  }
+}
+@media (min-width: 737px) and (max-width: 1080px) {
+  .hero__fixed {
+    object-position: 40% top;
   }
 }
