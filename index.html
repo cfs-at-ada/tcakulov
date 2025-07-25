@@ -25,7 +25,7 @@
 				</div>
 			</section>-->
 
-			<style>
+			<!--<style>
 				.bild {
 					height: 100vh;
 					background-image: url('images/4.2.jpg');
@@ -87,6 +87,67 @@
 				}
 
 
+
+				}
+			</style>-->
+
+			<style>
+				/* Basis‑Styles für .bild und .name (wie gehabt) */
+				.bild {
+				height: 100vh;
+				background-image: url('images/4.2.jpg');
+				background-size: cover;
+				background-position: 50% 30%;
+				background-attachment: fixed;
+				position: relative;
+				overflow: hidden;
+				margin-bottom: 30px;
+				}
+
+				.name {
+				position: fixed;
+				top: 40vh;
+				right: 3.1vw;
+				transition: opacity 0.25s ease;
+				color: #003049;
+				font-size: 5em;
+				z-index: 0;
+				text-align: right;
+				line-height: 0.9em;
+				letter-spacing: -0.05em;
+				}
+
+				/* Portrait (Smartphone) */
+				@media only screen
+				and (orientation: portrait)
+				and (max-width: 736px) {
+				.bild {
+					max-height: 60vh !important;
+					background-position: 36% top !important;
+					background-attachment: scroll !important;
+				}
+				}
+
+				/* Portrait (Tablet) */
+				@media only screen
+				and (orientation: portrait)
+				and (min-width: 737px)
+				and (max-width: 1080px) {
+				.bild {
+					background-position: 40% top !important;
+					background-attachment: scroll !important;
+				}
+				}
+
+				/* Landscape (Querformat) */
+				@media only screen
+				and (orientation: landscape) {
+				.bild {
+					background-attachment: fixed   !important;
+					background-size: cover        !important;
+					background-position: 50% 30%  !important;
+					max-height: none              !important;
+				}
 				}
 			</style>
 
@@ -342,7 +403,7 @@
 					name.style.opacity = '1';
 					}
 				});
-				
+
 
 				(function() {
 					// iPad vor iOS 13 hat navigator.userAgent mit "iPad"
