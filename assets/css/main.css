@@ -3464,6 +3464,10 @@ html {
   margin-top: 0;
 }
 
+.datum{
+	margin-top: 0.5em;
+}
+
 .kurs-eintrag .kursname {
   flex: 1;
   line-height: 1.4em;
@@ -3482,29 +3486,56 @@ html {
 	font-size: clamp(1.5em, 2.55em, 2.55em) !important;
 }
 
+.kurse-titel-en {
+	color: #A78768;
+	white-space: wrap;
+	display: inline-block;
+	max-width: 100%;
+	transform: scale(1);        
+	transform-origin: left;
+	font-size: clamp(1.5em, 2.5em, 2.5em) ;
+}
+
+@media screen and (min-width: 737px) and (max-width: 980px) {
+	.kurse-titel-en {
+		font-size: clamp(1.5em, 2.3em, 2.3em) !important;
+	}
+}
+
+
 .kurs-trenner-light {
 	width: 2px;
 	background-color: #E3C29E;  
-	margin-top: 0.2em;
-	margin-bottom: -0.2em;
+	margin-top: 0.4em;
+	margin-bottom: 0.2em;
 	display: block !important;
-	height: 50px;
+	height: 68px;
 }
 
 .kurs-trenner-dark {
 	width: 2px;
 	background-color: #FEF1D5;  
-	margin-top: 0.2em;
+	margin-top: 0.4em;
 	margin-bottom: 0.2em;
 	display: block !important;
-	height: 50px;
+	height: 68px;
 	
+}
+
+@media screen and (max-width: 1280px) {
+  .kurs-trenner-dark {
+	height: 63px !important;
+  }
+  .kurs-trenner-light {
+	height: 63px !important;
+  }
 }
 
 @media screen and (max-width: 736px){
   #kursplatzhalter1 {
 	margin-top: 0.2em;
   }
+
 
   @media screen and (max-width: 1080){
   #kursplatzhalter1 {
@@ -3533,7 +3564,7 @@ html {
   }
 
   .datum{
-	margin-top: 0.1em;
+	margin-top: 0.4em !important;
   }
 
   .textblock-links p{
@@ -3657,5 +3688,4 @@ br {
     background-attachment: scroll !important;
   }
 }
-
 
