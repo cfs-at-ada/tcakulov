@@ -10,6 +10,26 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+
+		<!-- Preconnects -->
+		<link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin>
+		<link rel="preconnect" href="https://i.ytimg.com"           crossorigin>
+		<link rel="preconnect" href="https://open.spotify.com"       crossorigin>
+
+		<link rel="prefetch" href="https://open.spotify.com/embed/album/2YSu8lSscziK7Jr5bgTyYl" as="document" crossorigin>
+		<link rel="prefetch" href="https://www.youtube-nocookie.com/embed/TYMRjLTMA64" as="document" crossorigin>
+		<link rel="prefetch" href="https://www.youtube-nocookie.com/embed/L2hm253HdQc" as="document" crossorigin>
+
+
+
+		<!-- Lazy Loading für embeds und Bilder, um Ruckler zu verringern -->
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+			document.querySelectorAll('img, iframe').forEach(el => {
+				el.setAttribute('loading', 'lazy');
+			});
+			});
+		</script>
 	</head>
 	<body class="is-preload">
 		<div id="logo" style="display: none; font-family: 'Source Sans 3', sans-serif;"">GERMAN TCAKULOV</div>
@@ -38,7 +58,7 @@
 					position: fixed;
 					top: 40vh; /* statt % → stabiler bei verschiedenen Bildschirmhöhen */
 					right: 3.1vw;
-					transition: opacity 0.25s ease;
+					transition: opacity 0.75s ease;
 					color: #003049;
 					font-size: 5em;
 					z-index: 0;
@@ -115,6 +135,23 @@
 						height: 100vh !important;
 						max-height: 100vh !important;
 					}
+				}
+
+				.lightbox-overlay {
+					position: fixed;
+					top: 0; left: 0;
+					width: 100%; height: 100%;
+					background: rgba(0,0,0,0.6);
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					z-index: 9999;
+				}
+
+				.lightbox-overlay img {
+					max-width: 90%;
+					max-height: 90%;
+					box-shadow: 0 0 15px rgba(255,255,255,0.4);
 				}
 
 				
