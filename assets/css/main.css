@@ -3466,6 +3466,7 @@ html {
 
 .datum{
 	margin-top: 0.5em;
+	align-items: center !important;
 }
 
 .kurs-eintrag .kursname {
