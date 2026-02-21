@@ -3506,7 +3506,7 @@ html {
 
 .kurs-trenner-light {
 	width: 2px;
-	background-color: #E3C29E;  
+	background-color: #FEF1D5;  
 	margin-top: 0.4em;
 	margin-bottom: 0.2em;
 	display: block !important;
@@ -3515,7 +3515,7 @@ html {
 
 .kurs-trenner-dark {
 	width: 2px;
-	background-color: #FEF1D5;  
+	background-color: #E3C29E;  
 	margin-top: 0.4em;
 	margin-bottom: 0.2em;
 	display: block !important;
