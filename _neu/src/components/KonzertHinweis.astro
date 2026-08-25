@@ -1,0 +1,72 @@
+---
+import type { Vitainhalt } from '../inhalte/vita';
+
+interface Props {
+  inhalt: Vitainhalt;
+}
+
+const { inhalt } = Astro.props;
+---
+
+<section class="konzert">
+  <div class="raster raster--konzert">
+    <div class="konzert__block">
+      <h3 class="konzert__titel">{inhalt.konzertTitel}</h3>
+      <p class="konzert__ort">{inhalt.konzertOrt}</p>
+      {inhalt.konzertZeilen.map((zeile) => (
+        <p class="konzert__zeile">
+          <a class="blanko-verweis" href={zeile.ziel} target="_blank" rel="noopener noreferrer">{zeile.text}</a>
+        </p>
+      ))}
+    </div>
+
+    <div class="konzert__zitat">
+      {inhalt.zitat.map((zeile) => <p><em>{zeile}</em></p>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .konzert {
+    margin: 0;
+    padding-bottom: 4em;
+  }
+
+  .raster.raster--konzert { margin-top: -20px; }
+
+  .raster > .konzert__block { padding-top: 55px; }
+
+  .konzert__titel {
+    margin-bottom: 1em;
+    padding-bottom: 0;
+    font-size: 1.5em;
+    font-weight: 400;
+    text-align: left;
+    color: var(--farbe-akzent);
+  }
+
+  .konzert__ort,
+  .konzert__zeile {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    color: var(--farbe-text);
+  }
+
+  .konzert__ort   { font-weight: 700; }
+  .konzert__zeile { font-weight: 100; cursor: pointer; }
+
+  .raster > .konzert__zitat {
+    align-self: flex-end;
+    margin-left: auto;
+    padding-top: 50px;
+    text-align: right;
+    color: var(--farbe-text);
+  }
+
+  .konzert__zitat p {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+  }
+</style>

@@ -1,0 +1,50 @@
+/* ---------------------------------------------------------------------------
+   Wiederkehrende Kleinteile: Icons und der gedaempfte Verweisstil.
+   --------------------------------------------------------------------------- */
+
+/* --- Font-Awesome-Grundlage (aus der Vorlage) ---------------------------- */
+
+.icon {
+  position: relative;
+  text-decoration: none;
+}
+
+.icon::before {
+  display: inline-block;
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  line-height: inherit;
+  text-rendering: auto;
+  text-transform: none !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon.solid::before  { font-weight: 900; }
+
+.icon.brands::before {
+  font-family: 'Font Awesome 5 Brands';
+  color: var(--farbe-akzent);
+}
+
+.icon.brands:hover::before { color: var(--farbe-text); }
+
+/* --- Verweise ohne Unterstrich ------------------------------------------- */
+
+.mail-link {
+  color: var(--farbe-akzent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.mail-link:hover { color: var(--farbe-text) !important; }
+
+/* --- Verweis, der jede geerbte Auszeichnung ablegt ------------------------ */
+/* Ersetzt das frueher inline gesetzte `all: unset` an Terminverweisen. */
+
+.blanko-verweis {
+  all: unset;
+  cursor: pointer;
+}

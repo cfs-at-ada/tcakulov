@@ -1,0 +1,86 @@
+---
+import type { Vitainhalt } from '../inhalte/vita';
+
+interface Props {
+  inhalt: Vitainhalt;
+}
+
+const { inhalt } = Astro.props;
+---
+
+{/* Das lange Portrait faehrt auf Wunsch aus. Ohne Skript bleibt es
+    zugeklappt – der Kurztext darueber traegt die Seite. */}
+
+<section class="portrait">
+  <h3 class="portrait__titel">{inhalt.portraitTitel}</h3>
+
+  <a
+    class="portrait__schalter"
+    href="#portrait"
+    role="button"
+    aria-expanded="false"
+    aria-controls="portrait"
+    data-mehr={inhalt.mehr}
+    data-weniger={inhalt.weniger}
+  >{inhalt.mehr}</a>
+
+  <div class="portrait__tafel" id="portrait">
+    {inhalt.abschnitte.map((abschnitt) => (
+      <>
+        {abschnitt.titel && <h3 class="portrait__zwischentitel">{abschnitt.titel}</h3>}
+        {abschnitt.absaetze.map((absatz) => (
+          <p class="portrait__absatz">
+            {absatz.map((zeile, i) => (<>{i > 0 && <br />}{zeile}</>))}
+          </p>
+        ))}
+      </>
+    ))}
+
+    <p class="portrait__abschluss">
+      <a class="portrait__schalter" href="#portrait" role="button">{inhalt.weniger}</a>
+    </p>
+  </div>
+</section>
+
+
+<style>
+  .portrait {
+    margin-top: 0;
+    font-weight: 100;
+    color: var(--farbe-text);
+  }
+
+  .portrait__titel {
+    margin-bottom: 0.5em;
+    font-size: 1.4em;
+    font-weight: 100;
+    color: var(--farbe-akzent);
+  }
+
+  .portrait__schalter {
+    margin-top: 0;
+    color: var(--farbe-akzent);
+    text-decoration: none;
+  }
+
+  .portrait__tafel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease;
+  }
+
+  .portrait__tafel--offen { max-height: 30000px; }
+
+  .portrait__zwischentitel {
+    margin-bottom: 0.3em;
+    font-weight: 100;
+    color: var(--farbe-akzent);
+  }
+
+  .portrait__absatz {
+    margin-bottom: 2.15em;
+    text-align: justify;
+  }
+
+  .portrait__abschluss { margin-bottom: 0.65em; }
+</style>

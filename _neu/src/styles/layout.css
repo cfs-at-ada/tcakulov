@@ -1,0 +1,100 @@
+/* ---------------------------------------------------------------------------
+   Seitengeruest: zentrierte Inhaltsbahn und das Spaltenraster.
+   Werte unveraendert aus der Vorlage uebernommen.
+   --------------------------------------------------------------------------- */
+
+/* --- Inhaltsbahn --------------------------------------------------------- */
+
+.inhalt {
+  margin: 0 auto;
+  max-width: 100%;
+  width: 64em;
+}
+
+@media screen and (max-width: 1680px) { .inhalt { width: 52em; } }
+@media screen and (max-width:  980px) { .inhalt { width: calc(52em - 40px); } }
+@media screen and (max-width:  736px) { .inhalt { width: calc(100% - 40px); } }
+@media screen and (max-width:  360px) { .inhalt { width: calc(100% - 30px); } }
+
+/* --- Spaltenraster ------------------------------------------------------- */
+
+.raster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  margin-top: -50px;
+  margin-left: -50px;
+}
+
+.raster > * {
+  padding: 50px 0 0 50px;
+}
+
+.spalte-5  { width: 41.66667%; }
+.spalte-7  { width: 58.33333%; }
+.spalte-12 { width: 100%; }
+
+@media screen and (max-width: 1280px) {
+  .raster { margin-top: -40px; margin-left: -40px; }
+  .raster > * { padding: 40px 0 0 40px; }
+}
+
+@media screen and (max-width: 980px) {
+  .raster { margin-top: -50px; margin-left: -50px; }
+  .raster > * { padding: 50px 0 0 50px; }
+}
+
+@media screen and (max-width: 736px) {
+  .raster { margin-top: -50px; margin-left: -20px; }
+  .raster > * { padding: 20px 0 0 20px; }
+  .spalte-12-klein { width: 100%; }
+}
+
+@media screen and (max-width: 360px) {
+  .raster { margin-top: -15px; margin-left: -15px; }
+  .raster > * { padding: 15px 0 0 15px; }
+}
+
+/* --- Seitenrumpf --------------------------------------------------------- */
+
+#seitenrumpf > section { margin-bottom: 0; }
+
+@media screen and (max-width: 1080px) {
+  #seitenrumpf {
+    backface-visibility: hidden;
+    transition: transform 0.5s ease;
+    padding-bottom: 1px;
+  }
+}
+
+#hauptteil {
+  background: var(--farbe-grund);
+}
+
+/* Nur die Startseite laeuft im mittleren Breitenbereich in einer
+   schmaleren Bahn. */
+@media screen and (min-width: 700px) and (max-width: 1280px) {
+  #hauptteil.schmal {
+    max-width: 924px;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+
+@media screen and (max-width: 736px) {
+  #hauptteil { padding: 0; }
+}
+
+/* --- Sprungmarken -------------------------------------------------------- */
+
+.sprungmarke        { scroll-margin-top: -3px; }
+.sprungmarke-oben   { scroll-margin-top: 80px; }
+
+/* Beim geoeffneten Menue wandert die Seite nach rechts. */
+@media screen and (max-width: 1080px) {
+  body.menue-offen #seitenrumpf { transform: translateX(275px); }
+}
+
+/* Seiten, die buendig oben beginnen, legen den Rasterabstand ab. */
+.raster.ohne-abstand-oben { margin-top: 0; }
+.raster.ohne-abstand-oben > * { padding-top: 0; }

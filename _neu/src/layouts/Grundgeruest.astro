@@ -1,0 +1,77 @@
+---
+import '../styles/tokens.css';
+import '../styles/schriften.css';
+import '../styles/basis.css';
+import '../styles/layout.css';
+import '../styles/elemente.css';
+
+import Navigation from '../components/Navigation.astro';
+import Menuetafel from '../components/Menuetafel.astro';
+import Fusszeile from '../components/Fusszeile.astro';
+
+import type { Seitenschluessel, Sprache } from '../inhalte/navigation';
+
+interface Props {
+  sprache: Sprache;
+  /** Welche Seite gerade offen ist – steuert den Sprachwechsel. */
+  seite: Seitenschluessel;
+  /** Welcher Navigationspunkt hervorgehoben wird. */
+  aktiv?: Seitenschluessel;
+  /** Sprungmarke, auf die der hervorgehobene Punkt zeigt. */
+  marke?: string;
+  /** Abstand der Trennlinie ueber der Fusszeile. */
+  fusszeileAbstand: string;
+  /** Die Startseite laeuft in einer schmaleren Bahn. */
+  schmal?: boolean;
+  /** Impressum behaelt den oberen Rasterabstand. */
+  rasterAbstand?: boolean;
+}
+
+const {
+  sprache,
+  seite,
+  aktiv,
+  marke,
+  fusszeileAbstand,
+  schmal = false,
+  rasterAbstand = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={sprache}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>German Tcakulov</title>
+    <link rel="stylesheet" href="/assets/css/fontawesome-all.min.css" />
+    <link rel="preload" href="/fonts/SourceSans3-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <slot name="kopf" />
+  </head>
+
+  <body class="is-preload">
+    <div id="seitenrumpf">
+      <slot name="titelbild" />
+
+      <Navigation sprache={sprache} seite={seite} aktiv={aktiv} marke={marke} />
+
+      <section id="hauptteil" class:list={[{ schmal }]}>
+        <div class="inhalt">
+          <div class:list={['raster', { 'ohne-abstand-oben': !rasterAbstand }]}>
+            <div class="spalte-12">
+              <slot />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Fusszeile sprache={sprache} abstandOben={fusszeileAbstand} />
+    </div>
+
+    <Menuetafel sprache={sprache} seite={seite} aktiv={aktiv} marke={marke} />
+
+    <script>
+      import '../skripte/start';
+    </script>
+  </body>
+</html>

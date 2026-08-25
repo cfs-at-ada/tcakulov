@@ -1,0 +1,75 @@
+---
+import Grundgeruest from '../layouts/Grundgeruest.astro';
+import Titelbild from '../components/Titelbild.astro';
+import Termin from '../components/Termin.astro';
+import { termine, terminTitel } from '../inhalte/termine';
+import type { Sprache } from '../inhalte/navigation';
+
+interface Props {
+  sprache: Sprache;
+}
+
+const { sprache } = Astro.props;
+---
+
+<Grundgeruest
+  sprache={sprache}
+  seite="termine"
+  aktiv="termine"
+  marke="#jumphere"
+  fusszeileAbstand="1.9em"
+>
+  <Titelbild slot="titelbild" seite="termine" />
+
+  <section class="terminkopf">
+    <h2 class="terminkopf__titel sprungmarke-oben">{terminTitel[sprache]}</h2>
+  </section>
+
+  <article class="terminbereich">
+    <div class="raster raster--termine">
+      <div class="spalte-12 terminspalte">
+        <ul class="terminliste">
+          {termine[sprache].map((eintrag) => <Termin eintrag={eintrag} />)}
+        </ul>
+      </div>
+    </div>
+  </article>
+</Grundgeruest>
+
+<style>
+  .terminkopf {
+    margin-bottom: 4.65em;
+    color: var(--farbe-akzent-hell);
+  }
+
+  .terminkopf__titel {
+    margin: 0.55em 0 0 0;
+    font-size: 3em;
+    font-weight: 400;
+    color: var(--farbe-akzent);
+  }
+
+  .terminbereich {
+    margin: 0;
+    padding: 0;
+  }
+
+  .raster.raster--termine {
+    margin: 0;
+    padding: 0 3.5em 0 0;
+    color: var(--farbe-akzent-hell);
+  }
+
+  .raster > .terminspalte {
+    margin: -1.8em 0 0 0;
+    padding: 0;
+  }
+
+  .terminliste {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    font-weight: 100;
+    color: var(--farbe-akzent);
+  }
+</style>

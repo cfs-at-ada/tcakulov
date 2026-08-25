@@ -1,0 +1,156 @@
+---
+import Grundgeruest from '../layouts/Grundgeruest.astro';
+import Titelbild from '../components/Titelbild.astro';
+import Termin from '../components/Termin.astro';
+import { lehre } from '../inhalte/lehre';
+import { kurse } from '../inhalte/termine';
+import type { Sprache } from '../inhalte/navigation';
+
+interface Props {
+  sprache: Sprache;
+}
+
+const { sprache } = Astro.props;
+const inhalt = lehre[sprache];
+---
+
+<Grundgeruest
+  sprache={sprache}
+  seite="lehre"
+  aktiv="lehre"
+  marke="#jumphere"
+  fusszeileAbstand="3.75em"
+>
+  <Titelbild slot="titelbild" seite="lehre" />
+
+  <section class="lehrkopf">
+    <h2 id="jumphere" class="lehrkopf__titel sprungmarke-oben">{inhalt.ueberschrift}</h2>
+    <p class="lehrkopf__ausspruch"><em>{inhalt.zitat}</em> {inhalt.zitatEnde}</p>
+  </section>
+
+  <hr class="lehre-trenner" />
+
+  <article class="lehre">
+    <div class="raster raster--lehre">
+      <div class="spalte-7 spalte-12-klein lehre__flaeche">
+        <p class="lehre__fliesstext">{inhalt.fliesstext}</p>
+      </div>
+
+      <div class="spalte-5 spalte-12-klein lehre__kurse">
+        <h3 class:list={['kursetitel', sprache === 'en' && 'kursetitel--en']}>{inhalt.kurseTitel}</h3>
+        <ul class="kursliste">
+          {kurse[sprache].map((eintrag) => <Termin eintrag={eintrag} form="kurs" />)}
+        </ul>
+      </div>
+    </div>
+
+    <figure class="lehre__bild">
+      <img
+        src="/images/Mozarteum.jpg"
+        alt="Universität Mozarteum Salzburg, Vorplatz"
+        width="1664"
+        height="1065"
+      />
+      <figcaption class="lehre__bildnachweis">{inhalt.bildnachweis}</figcaption>
+    </figure>
+  </article>
+</Grundgeruest>
+
+<style>
+  .lehrkopf {
+    margin-bottom: 62px;
+    color: var(--farbe-akzent-hell);
+  }
+
+  .lehrkopf__titel {
+    margin: 0.625em 0 1.325em 0;
+    font-size: 3em;
+    font-weight: 400;
+    color: var(--farbe-akzent);
+  }
+
+  .lehrkopf__ausspruch {
+    font-weight: 100;
+    text-align: justify;
+    color: var(--farbe-text);
+  }
+
+  .lehre-trenner {
+    margin-bottom: 4em;
+    padding-bottom: 0;
+  }
+
+  .lehre {
+    margin: 0;
+    padding: 0;
+  }
+
+  .raster.raster--lehre {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .raster > .lehre__flaeche {
+    margin: 0 0 4em 0;
+    padding-top: 0;
+  }
+
+  .lehre__fliesstext {
+    margin: 0;
+    padding: 0;
+    font-weight: 100;
+    text-align: justify;
+    color: var(--farbe-text);
+  }
+
+  .raster > .lehre__kurse {
+    margin: 0 0 2.2em 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .kursetitel {
+    display: inline-block;
+    max-width: 100%;
+    margin: 0.25em 0 0 0;
+    font-size: 2.55em;
+    font-weight: 100;
+    white-space: normal;
+    color: var(--farbe-akzent);
+  }
+
+  .kursetitel--en { font-size: 2.5em; }
+
+  @media screen and (min-width: 737px) and (max-width: 980px) {
+    .kursetitel--en { font-size: 2.3em; }
+  }
+
+  .kursliste {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .lehre__bild {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .lehre__bild img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 250px;
+    margin: 0 auto;
+    object-fit: cover;
+    object-position: center 85%;
+  }
+
+  .lehre__bildnachweis {
+    margin-top: 0.4em;
+    font-size: 0.5em;
+    line-height: 1;
+    color: var(--farbe-akzent);
+  }
+</style>

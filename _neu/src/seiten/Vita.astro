@@ -1,0 +1,69 @@
+---
+import Grundgeruest from '../layouts/Grundgeruest.astro';
+import Titelbild from '../components/Titelbild.astro';
+import KonzertHinweis from '../components/KonzertHinweis.astro';
+import Portrait from '../components/Portrait.astro';
+import { vita } from '../inhalte/vita';
+import type { Sprache } from '../inhalte/navigation';
+
+interface Props {
+  sprache: Sprache;
+}
+
+const { sprache } = Astro.props;
+const inhalt = vita[sprache];
+---
+
+<Grundgeruest
+  sprache={sprache}
+  seite="vita"
+  aktiv="vita"
+  marke="#jumphere"
+  fusszeileAbstand="2.65em"
+  schmal
+>
+  <Titelbild slot="titelbild" seite="vita" />
+
+  <KonzertHinweis inhalt={inhalt} />
+
+  <hr id="jumphere" class="sprungmarke vita-trenner" />
+
+  <article class="vita">
+    <section class="vita__kurz">
+      <h2 id="vita" class="vita__ueberschrift">{inhalt.ueberschrift}</h2>
+      <p class="vita__text">
+        {inhalt.kurz.map((zeile, i) => (<>{i > 0 && <br />}{zeile}</>))}
+      </p>
+    </section>
+
+    <Portrait inhalt={inhalt} />
+  </article>
+</Grundgeruest>
+
+<style>
+  .vita-trenner { margin-bottom: 4.65em; }
+
+  .vita {
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  .vita__kurz {
+    margin: 0;
+    color: var(--farbe-text);
+  }
+
+  .vita__ueberschrift {
+    margin: 0;
+    font-size: 3em;
+    font-weight: 400;
+    color: var(--farbe-akzent);
+  }
+
+  .vita__text {
+    margin-top: 4em;
+    margin-bottom: 3.55em;
+    font-weight: 100;
+    text-align: justify;
+  }
+</style>

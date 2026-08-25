@@ -1,0 +1,72 @@
+---
+import Grundgeruest from '../layouts/Grundgeruest.astro';
+import Titelbild from '../components/Titelbild.astro';
+import { kontakt } from '../inhalte/kontakt';
+import type { Sprache } from '../inhalte/navigation';
+
+interface Props {
+  sprache: Sprache;
+}
+
+const { sprache } = Astro.props;
+const texte = kontakt[sprache];
+const presseZiel = sprache === 'de' ? '/Presse.html' : '/Presse-en.html';
+---
+
+<Grundgeruest
+  sprache={sprache}
+  seite="kontakt"
+  aktiv="kontakt"
+  marke="#jumphere"
+  fusszeileAbstand="3.15em"
+>
+  <Titelbild slot="titelbild" seite="kontakt" />
+
+  <article class="kontakt">
+    <section>
+      <div class="kontakt__zeile">
+        <h2 id="jumphere" class="kontakt__titel sprungmarke-oben">{texte.titel}</h2>
+        <h3 class="kontakt__presse">
+          <a href={presseZiel} class="mail-link">{texte.presse}</a>
+        </h3>
+      </div>
+    </section>
+  </article>
+</Grundgeruest>
+
+<style>
+  article.kontakt {
+    margin: 0.55em 0 -0.1em 0;
+    padding: 0;
+    color: var(--farbe-akzent);
+  }
+
+  .kontakt section { margin: 0; }
+
+  .kontakt__zeile {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .kontakt__titel {
+    margin: 0.35em 0 0.5em 0;
+    font-size: 3em;
+    font-weight: 400;
+    color: var(--farbe-akzent);
+  }
+
+  .kontakt__presse {
+    margin: 0;
+    font-size: 1.25em;
+    font-weight: 300;
+    text-transform: none;
+    color: var(--farbe-akzent);
+  }
+
+  .kontakt__presse a {
+    color: inherit;
+    text-decoration: none;
+    text-transform: none;
+  }
+</style>

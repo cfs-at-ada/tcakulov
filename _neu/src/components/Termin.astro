@@ -1,0 +1,98 @@
+---
+import type { Termin } from '../inhalte/termine';
+
+interface Props {
+  eintrag: Termin;
+  /** `termin` = Terminseite, `kurs` = Lehrseite (engere Satzbreite). */
+  form?: 'termin' | 'kurs';
+}
+
+const { eintrag, form = 'termin' } = Astro.props;
+---
+
+<li class:list={['termin', `termin--${eintrag.ton}`, `termin--${form}`]}>
+  <div class="termin__datum">
+    <span class="termin__tag">{eintrag.tag}</span>
+    <span class="termin__jahr">{eintrag.jahr}</span>
+  </div>
+
+  <div class="termin__strich" aria-hidden="true"></div>
+
+  <div class="termin__text">
+    <span class="termin__ort">{eintrag.ort}</span><br />
+    <a class="blanko-verweis" href={eintrag.ziel} target="_blank" rel="noopener noreferrer">
+      {eintrag.zeilen.map((zeile, i) => (<>{i > 0 && <br />}{zeile}</>))}
+    </a>
+  </div>
+</li>
+
+<style>
+  .termin {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin-top: 1.5em;
+    margin-bottom: 2em;
+    color: var(--ton);
+  }
+
+  .termin--sand   { --ton: var(--farbe-akzent-hell); }
+  .termin--creme  { --ton: var(--farbe-text); }
+  .termin--kupfer { --ton: var(--farbe-akzent); }
+
+  .termin__datum {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    min-width: 6em;
+    margin-top: 0.5em;
+  }
+
+  .termin__tag {
+    font-weight: 700;
+    line-height: 1.2em;
+  }
+
+  .termin__jahr {
+    font-weight: 100;
+    line-height: 1;
+  }
+
+  .termin__strich {
+    width: 2px;
+    height: 68px;
+    margin-top: 0.4em;
+    margin-bottom: 0.2em;
+    background-color: var(--ton);
+  }
+
+  @media screen and (max-width: 1280px) {
+    .termin__strich { height: 63px; }
+  }
+
+  .termin__text {
+    flex: 1;
+    margin: 0.4em -3em 0 0;
+    font-size: 1em;
+    font-weight: 100;
+    line-height: 1.4em;
+  }
+
+  .termin__ort { font-weight: 700; }
+
+  /* --- Terminseite ------------------------------------------------------- */
+
+  .termin--termin .termin__tag  { font-size: 1.2em; }
+  .termin--termin .termin__jahr { font-size: 3em; margin-top: -0.15em; }
+  .termin--termin .termin__ort  { font-size: 1.2em; }
+  .termin--termin .termin__strich { margin-left: 1em; margin-right: 1em; }
+
+  /* --- Lehrseite --------------------------------------------------------- */
+
+  .termin--kurs .termin__tag  { font-size: 1em; }
+  .termin--kurs .termin__jahr { font-size: 2.55em; margin-top: 0; }
+  .termin--kurs .termin__ort  { font-size: 1em; }
+  .termin--kurs .termin__strich { margin-left: 0.3em; margin-right: 0.9em; }
+</style>

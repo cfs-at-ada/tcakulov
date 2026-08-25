@@ -1,0 +1,290 @@
+---
+/**
+ * Das seitenhohe Titelbild mit dem Namenszug.
+ * Bildausschnitt und Verankerung sind je Seite eigens gesetzt; darum
+ * traegt jede Fassung eine eigene Kennzeichnung.
+ */
+interface Props {
+  seite: 'vita' | 'termine' | 'lehre' | 'media' | 'kontakt';
+}
+
+const { seite } = Astro.props;
+---
+
+<div class:list={['titelbild', `titelbild--${seite}`]}>
+  <div class="titelbild__name">GERMAN <br /> TCAKULOV</div>
+</div>
+
+
+<style>
+  .titelbild {
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .titelbild__name {
+    position: fixed;
+    top: 40vh;
+    right: 3.1vw;
+    z-index: 0;
+    color: var(--farbe-grund);
+    text-align: right;
+    line-height: 0.9em;
+    letter-spacing: -0.05em;
+    transition: opacity 0.75s ease;
+    /* Der Namenszug ist Zierrat. Er steht fest im Bild und liegt beim
+       Blaettern ueber dem Inhalt darunter – auch noch, wenn er laengst
+       ausgeblendet ist. Ohne diese Zeile faengt er dort Klicks ab. */
+    pointer-events: none;
+  }
+
+  /* Unterhalb von 1080px verdeckt die Titelleiste den Namenszug. */
+  @media screen and (max-width: 1080px) {
+    .titelbild__name { display: none; }
+  }
+
+  /* --- Vita ------------------------------------------------------------- */
+
+  .titelbild--vita {
+    background-image: url('/images/4.2.jpg');
+    background-position: 50% 30%;
+    background-attachment: fixed;
+    margin-bottom: 30px;
+  }
+
+  .titelbild--vita .titelbild__name { font-size: 5em; }
+
+  @media screen and (min-width: 737px) and (max-width: 1080px) {
+    .titelbild--vita {
+      max-height: 95vh;
+      background-position: 40% 5%;
+      background-attachment: scroll;
+    }
+  }
+
+  @media screen and (max-width: 736px) {
+    .titelbild--vita {
+      max-height: 60vh;
+      background-position: 36% top;
+      background-attachment: scroll;
+    }
+  }
+
+  /* --- Termine ---------------------------------------------------------- */
+
+  .titelbild--termine {
+    width: 100%;
+    background-image: url('/images/Termine.jpg');
+    background-position: center;
+    background-attachment: fixed;
+    margin-bottom: 3em;
+  }
+
+  .titelbild--termine .titelbild__name { font-size: 5em; }
+
+  @media screen and (min-width: 737px) and (max-width: 1080px) {
+    .titelbild--termine {
+      background-position: 30% top;
+      background-attachment: scroll;
+    }
+  }
+
+  @media screen and (max-width: 736px) {
+    .titelbild--termine {
+      max-height: 60vh;
+      background-size: 250%;
+      background-position: 40% 45%;
+      background-attachment: scroll;
+    }
+  }
+
+  @media screen and (min-width: 560px) and (max-width: 736px) {
+    .titelbild--termine { background-size: 200%; }
+  }
+
+  /* --- Lehre ------------------------------------------------------------ */
+
+  .titelbild--lehre {
+    background-image: url('/images/Lehre.jpg');
+    background-size: 120%;
+    background-position: 90% 65%;
+    background-attachment: fixed;
+    margin-bottom: 45px;
+  }
+
+  .titelbild--lehre .titelbild__name { font-size: 4em; }
+
+  @media screen and (min-width: 1081px) and (max-width: 1180px) {
+    .titelbild--lehre .titelbild__name { font-size: 3.75em; }
+  }
+
+  @media screen and (min-width: 1000px) and (max-width: 1080px) {
+    .titelbild--lehre {
+      max-height: 60vh;
+      background-size: 100%;
+      background-position: 65% 80%;
+      background-attachment: scroll;
+    }
+  }
+
+  @media screen and (min-width: 737px) and (max-width: 1000px) {
+    .titelbild--lehre {
+      max-height: 60vh;
+      background-size: 100%;
+      background-position: 65% 90%;
+      background-attachment: scroll;
+    }
+  }
+
+  @media screen and (min-width: 551px) and (max-width: 736px) {
+    .titelbild--lehre {
+      max-height: 60vh;
+      background-size: 150%;
+      background-position: 65% 70%;
+      background-attachment: scroll;
+    }
+  }
+
+  @media screen and (max-width: 550px) {
+    .titelbild--lehre {
+      max-height: 60vh;
+      background-size: 200%;
+      background-position: 65% 70%;
+      background-attachment: scroll;
+    }
+  }
+
+  /* --- Media ------------------------------------------------------------ */
+
+  .titelbild--media {
+    background-image: url('/images/Media-spiegel.jpg');
+    background-position: center;
+    background-attachment: fixed;
+    margin-bottom: 3em;
+  }
+
+  .titelbild--media .titelbild__name { font-size: 5em; }
+
+  @media screen and (min-width: 1080px) and (max-width: 1180px) {
+    .titelbild--media .titelbild__name { font-size: 4.3em; }
+  }
+
+  @media screen and (min-width: 736px) and (max-width: 1080px) {
+    .titelbild--media { background-position: 57% 70%; }
+  }
+
+  @media screen and (max-width: 736px) {
+    .titelbild--media {
+      max-height: 60vh;
+      background-size: 200%;
+      background-position: 57% 70%;
+      background-attachment: scroll;
+    }
+  }
+
+  /* --- Kontakt ---------------------------------------------------------- */
+
+  .titelbild--kontakt {
+    background-image: url('/images/4.2.jpg');
+    background-position: 50% 30%;
+    background-attachment: scroll;
+    margin-bottom: 3em;
+  }
+
+  .titelbild--kontakt .titelbild__name { font-size: 5em; }
+
+  @media screen and (min-width: 737px) and (max-width: 1080px) {
+    .titelbild--kontakt { background-position: 40% top; }
+  }
+
+  @media screen and (max-width: 736px) {
+    .titelbild--kontakt {
+      max-height: 60vh;
+      background-position: 36% top;
+    }
+  }
+
+  /* --- Geraeteabhaengige Nachbesserungen -------------------------------- */
+  /* Querformat auf Tablet und Telefon: dort traegt `background-attachment:
+     fixed` nicht, deshalb ein eigener Ausschnitt. Reihenfolge und
+     Gewichtung entsprechen der alten Seite.                               */
+
+  @media only screen and (orientation: landscape) {
+    :global(html.is-ipad) .titelbild--vita {
+      background-attachment: scroll;
+      background-size: 110%;
+      background-position: left top;
+      margin-bottom: -25px;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+
+    :global(html.is-ipad) .titelbild--termine {
+      background-attachment: scroll;
+      background-size: 110%;
+      background-position: left top;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+
+    :global(html.is-ipad) .titelbild--lehre {
+      background-attachment: scroll;
+      background-size: 110%;
+      background-position: right bottom;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+
+    :global(html.is-ipad) .titelbild--lehre .titelbild__name { font-size: 4em; }
+
+    :global(html.is-ipad) .titelbild--media {
+      background-attachment: scroll;
+      background-size: 110%;
+      background-position: right top;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+  }
+
+  @media only screen and (orientation: portrait) {
+    :global(html.is-ipad) .titelbild--media {
+      background-attachment: scroll;
+      background-size: 190%;
+      background-position: 55% top;
+      margin-bottom: -46px;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+  }
+
+  @media only screen and (orientation: landscape) {
+    :global(html.is-mobile) .titelbild--vita,
+    :global(html.is-mobile) .titelbild--kontakt,
+    :global(html.is-mobile) .titelbild--media {
+      background-size: 100%;
+      background-position: center top;
+      width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+    }
+
+    :global(html.is-mobile) .titelbild--termine {
+      background-size: 100%;
+      background-position: center top;
+      width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+    }
+
+    :global(html.is-mobile) .titelbild--lehre {
+      background-size: 100%;
+      background-position: center 70%;
+      width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+    }
+  }
+</style>

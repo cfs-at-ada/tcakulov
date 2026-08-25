@@ -1,0 +1,231 @@
+---
+import Grundgeruest from '../layouts/Grundgeruest.astro';
+import { presse, pressefotos } from '../inhalte/presse';
+import type { Sprache } from '../inhalte/navigation';
+
+interface Props {
+  sprache: Sprache;
+}
+
+const { sprache } = Astro.props;
+const inhalt = presse[sprache];
+
+/** Die vier Dokumente stehen in zwei Reihen zu je zwei Kacheln. */
+const reihen = [
+  { paar: inhalt.dokumente.slice(0, 2), abstand: '4.4em' },
+  { paar: inhalt.dokumente.slice(2, 4), abstand: '2.35em' },
+];
+---
+
+<Grundgeruest
+  sprache={sprache}
+  seite="presse"
+  aktiv="media"
+  fusszeileAbstand="3.85em"
+>
+  <article class="presse">
+    <section class="pressekopf">
+      <h2 class="pressekopf__titel">{inhalt.titel}</h2>
+      <p>{inhalt.hinweis}</p>
+    </section>
+
+    {reihen.map(({ paar, abstand }) => (
+      <div class="presse-reihe" style={`margin-bottom: ${abstand}`}>
+        {paar.map((dokument, stelle) => (
+          <>
+            <div class:list={['presse-kachel', { 'presse-zweit': stelle === 1 }]}>
+              <div class="presse-kachel__feld">
+                <a title={inhalt.kacheltitel}>
+                  <div class="presse-kachel__mitte">
+                    <i class="icon solid fa-file-word"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <a
+              href={dokument.datei}
+              download
+              title={inhalt.ladetitel}
+              class:list={['presse-lade', { 'presse-zweit': stelle === 1 }]}
+            >
+              <i class="icon solid fa-download"></i>
+            </a>
+
+            <div class:list={['presse-text', { 'presse-zweit': stelle === 1 }]}>
+              <p>{dokument.zeile1}<br /> {dokument.zeile2}</p>
+            </div>
+          </>
+        ))}
+      </div>
+    ))}
+
+    {pressefotos.map((foto) => (
+      <div class="presse-foto">
+        <div class="presse-foto__zeile">
+          <div class="presse-foto__bild">
+            <img src={foto.bild} alt="Pressebild" width="1980" height="1320" />
+          </div>
+
+          <a href={foto.archiv} download title={inhalt.ladetitel} class="presse-lade">
+            <i class="icon solid fa-download"></i>
+          </a>
+
+          <div class="presse-foto__text">
+            <p>{inhalt.fototext} <span class="presse-foto__groesse">{foto.groesse}</span></p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </article>
+</Grundgeruest>
+
+<style>
+  .presse {
+    margin: 0;
+    padding: 0;
+    font-weight: 100;
+  }
+
+  /* Ueberschrift und Nutzungshinweis */
+
+  .pressekopf {
+    margin: 0 0 2em 0;
+    color: var(--farbe-akzent-hell);
+    text-align: justify;
+  }
+
+  .pressekopf__titel {
+    margin: 1.55em 0 0 -0.1em;
+    padding-bottom: 1.3em;
+    font-size: 3em;
+    font-weight: 400;
+    color: var(--farbe-akzent);
+  }
+
+  .pressekopf p {
+    margin: 0;
+    padding-bottom: 2em;
+    font-weight: 100;
+  }
+
+  /* Die beiden Reihen mit den Textdokumenten */
+
+  .presse-reihe {
+    display: flex;
+    align-items: center;
+    gap: 0 2.5em;
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .presse-kachel {
+    flex: 0 0 160px;
+    height: 110px;
+  }
+
+  .presse-kachel.presse-zweit { margin-left: 5em; }
+
+  .presse-kachel__feld {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    max-width: 160px;
+    max-height: 120px;
+    border: 1px solid var(--farbe-akzent);
+    border-radius: 8px;
+    background-color: var(--farbe-kachel);
+  }
+
+  /* Das Wortsymbol sitzt optisch etwas tiefer als die Mitte. */
+  .presse-kachel__mitte { transform: translateY(10%); }
+
+  .presse-kachel__mitte .icon {
+    font-size: 2.5em;
+    color: var(--farbe-akzent);
+  }
+
+  .presse-text { flex: 1; }
+
+  .presse-text p {
+    margin: 0;
+    font-size: 0.95em;
+    font-weight: 100;
+    color: var(--farbe-text);
+  }
+
+  @media screen and (max-width: 736px) {
+    .pressekopf__titel {
+      font-size: 2em;
+      margin-top: 1.4em;
+      margin-bottom: 0.5em;
+    }
+  }
+
+  /* Ab hier ist die zweite Spalte zu breit – sie wird ausgeblendet,
+     behaelt ihren Platz aber wie in der Vorlage. */
+  @media screen and (max-width: 800px) {
+    .presse-zweit { visibility: hidden; }
+  }
+
+  @media screen and (max-width: 1080px) {
+    .presse-text br { display: none; }
+  }
+
+  /* Die Pressefotos */
+
+  .presse-foto {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 2em;
+    margin-top: 1.9em;
+    padding-top: 0;
+  }
+
+  .presse-foto:first-of-type { margin-top: 0; }
+
+  .presse-foto__zeile {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+    gap: 2.5em;
+    padding: 0;
+  }
+
+  .presse-foto__bild { flex: 0 0 160px; }
+
+  .presse-foto__bild img {
+    width: 100%;
+    height: auto;
+    margin-top: 2em;
+    border-radius: 8px;
+  }
+
+  .presse-foto .presse-lade { margin-top: 1em; }
+
+  .presse-foto__text { flex: 1; }
+
+  .presse-foto__text p {
+    margin: 2.6em 0 0.7em 0;
+    font-size: 0.95em;
+    font-weight: 100;
+    color: var(--farbe-text);
+  }
+
+  .presse-foto__groesse { white-space: nowrap; }
+
+  /* Das Ladesymbol wachst beim Ueberfahren leicht an. */
+
+  .presse-lade i {
+    font-size: 1.8em;
+    color: var(--farbe-akzent);
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  .presse-lade:hover i {
+    transform: scale(1.2);
+    color: var(--farbe-akzent-hell);
+  }
+</style>

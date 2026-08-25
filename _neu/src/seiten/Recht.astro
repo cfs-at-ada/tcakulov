@@ -1,0 +1,113 @@
+---
+import Grundgeruest from '../layouts/Grundgeruest.astro';
+import { recht } from '../inhalte/recht';
+import type { Sprache } from '../inhalte/navigation';
+
+interface Props {
+  sprache: Sprache;
+}
+
+const { sprache } = Astro.props;
+const inhalt = recht[sprache];
+---
+
+<Grundgeruest
+  sprache={sprache}
+  seite="impressum"
+  fusszeileAbstand="3.35em"
+  rasterAbstand
+>
+  <article class="recht">
+    <section class="recht__block">
+      <h2 class="recht__titel">
+        {sprache === 'de'
+          ? <Fragment><span class="umbruchfrei">{'Impressum &'}</span>{' Datenschutz'}</Fragment>
+          : <Fragment>{'Legal Notice & '}<span class="umbruchfrei">{' Privacy '}</span></Fragment>}
+      </h2><br />
+
+      <h3>{inhalt.anschriftTitel}</h3>
+      {inhalt.anschrift.map((zeile, stelle) => (
+        <p
+          class:list={[
+            'recht__anschrift',
+            { 'recht__anschrift--fett': stelle === 0, 'recht__anschrift--letzte': stelle === inhalt.anschrift.length - 1 },
+          ]}
+        >{zeile}</p>
+      ))}
+
+      {inhalt.abschnitte.map((abschnitt) => (
+        <Fragment>
+          <h3>{abschnitt.titel}</h3>
+          <p class:list={[{ 'recht__eng': abschnitt.eng }]}>
+            {abschnitt.text}<br />
+            {abschnitt.punkte && (
+              <Fragment>
+                <br />
+                {abschnitt.punkte.map((punkt) => <span class="recht__punkt">{punkt}</span>)}
+              </Fragment>
+            )}
+            {abschnitt.schluss && <Fragment><br />{abschnitt.schluss}<br /></Fragment>}
+          </p>
+        </Fragment>
+      ))}
+    </section>
+  </article>
+</Grundgeruest>
+
+<style>
+  article.recht {
+    margin-bottom: 0;
+    padding: 0;
+    font-weight: 100;
+  }
+
+  .recht__block {
+    margin: 0;
+    color: var(--farbe-akzent-hell);
+    text-align: justify;
+  }
+
+  .recht__titel {
+    margin: 0 0 0 -0.1em;
+    padding: 1.6em 0 0.8em 0;
+    font-size: 3em;
+    font-weight: 400;
+    color: var(--farbe-akzent);
+  }
+
+  .recht h3 { color: var(--farbe-akzent); }
+
+  .recht__anschrift {
+    margin: 0;
+    padding: 0;
+  }
+
+  .recht__anschrift--fett { font-weight: bold; }
+  .recht__anschrift--letzte { margin-bottom: 3em; }
+
+  /* Die Aufzaehlungen sind Zeilen, keine Listen – so steht es in der Vorlage. */
+  .recht__punkt { display: block; }
+
+  /* Der letzte Absatz schliesst enger ab als die uebrigen. */
+  .recht p.recht__eng { margin-bottom: 0.65em; }
+
+  .umbruchfrei { white-space: nowrap; }
+
+  /* Auf schmalen Schirmen werden die harten Umbrueche aufgehoben. */
+  @media screen and (max-width: 1080px) {
+    .recht br { display: none; }
+
+    .recht__titel {
+      padding-top: 0.9em;
+      padding-bottom: 1.2em;
+    }
+  }
+
+  @media screen and (max-width: 736px) {
+    .recht__titel {
+      padding-top: 2.2em;
+      padding-bottom: 1.7em;
+      font-size: 2em;
+    }
+  }
+</style>

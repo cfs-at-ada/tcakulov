@@ -1,0 +1,25 @@
+/* ---------------------------------------------------------------------------
+   Farb- und Schriftmarken
+   Die fünf Farben der Seite, plus zwei Restwerte aus der Ursprungsvorlage
+   (HTML5UP "TXT"), die an einzelnen Stellen noch durchschlagen.
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* Markenfarben */
+  --farbe-grund:        #003049;  /* Seitenhintergrund, Nachtblau            */
+  --farbe-akzent:       #A78768;  /* Kupfer – Überschriften, Linien, Icons   */
+  --farbe-akzent-hell:  #E3C29E;  /* Sand – zweite Akzentstufe               */
+  --farbe-text:         #FEF1D5;  /* Creme – Fließtext auf dunklem Grund     */
+  --farbe-kachel:       #1A1A1A;  /* Kachelgrund im Pressebereich            */
+
+  /* Sekundärfarben */
+  --farbe-grau:         #999999;  /* Fußzeilentext                            */
+
+  /* Restwerte der Vorlage – bewusst erhalten, damit die Darstellung
+     unveraendert bleibt; sie erscheinen nur dort, wo nichts anderes greift. */
+  --farbe-vorlage-text: #6B7770;
+  --farbe-vorlage-link: #006376;
+
+  /* Schrift */
+  --schrift: 'Source Sans 3', sans-serif;
+}

@@ -1,0 +1,165 @@
+/* ---------------------------------------------------------------------------
+   Grundlagen: Normalisierung, Schriftbild, Elementvorgaben.
+   Uebernommen aus der wirksamen Fassung von assets/css/main.css.
+   --------------------------------------------------------------------------- */
+
+/* --- Normalisierung (Meyer-Reset der Vorlage) ---------------------------- */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, figure, figcaption,
+footer, header, hgroup, menu, nav, output, ruby,
+section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Die Vorlage setzt Schriftfamilie und Laufweite global auf den
+   Universalselektor. Beides bleibt erhalten – die negative Laufweite
+   praegt das Schriftbild der gesamten Seite. */
+* {
+  font-family: var(--schrift);
+  letter-spacing: -0.015em;
+}
+
+/* --- Grundflaeche und Fliesstext ---------------------------------------- */
+
+body {
+  background: var(--farbe-grund);
+  line-height: 1;
+  -webkit-text-size-adjust: none;
+  padding-top: 0;
+}
+
+body, input, textarea, select {
+  font-family: var(--schrift);
+  font-weight: 400;
+  color: var(--farbe-vorlage-text);
+  font-size: 13pt;
+  line-height: 2em;
+}
+
+/* Waehrend des Seitenaufbaus sind Uebergaenge stillgelegt, damit beim
+   Laden nichts aufblitzt. Das Skript nimmt die Klasse nach dem Load ab. */
+body.is-preload *,
+body.is-preload *::before,
+body.is-preload *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* --- Textelemente -------------------------------------------------------- */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--schrift);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--farbe-vorlage-text);
+  margin: 0;
+}
+
+h2 { font-size: 1.65em; }
+h3, h4 { font-size: 1.25em; }
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a {
+  color: var(--farbe-vorlage-link);
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+b, strong { font-weight: 700; }
+i, em { font-style: italic; }
+
+hr {
+  border: 0;
+  border-top: solid 2px var(--farbe-akzent);
+  margin: 0;
+}
+
+p, ul, ol, dl, table {
+  margin-bottom: 3em;
+}
+
+ul {
+  list-style: disc;
+  padding-left: 0;
+}
+
+ul li {
+  padding-left: 0;
+}
+
+section, article {
+  margin-bottom: 6em;
+}
+
+section > :last-child,
+section:last-child,
+article > :last-child,
+article:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Schriftgroessen nach Breite ---------------------------------------- */
+
+@media screen and (max-width: 1680px) {
+  body, input, textarea, select {
+    font-size: 12pt;
+    line-height: 1.75em;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  body, input, textarea, select { font-size: 11pt; }
+}
+
+@media screen and (max-width: 1080px) {
+  html, body { overflow-x: hidden; }
+  body { padding-top: 66px; }
+}
+
+@media screen and (max-width: 736px) {
+  body, input, textarea, select { font-size: 11pt; }
+  h2 { font-size: 1.25em; }
+  section, article { margin-bottom: 2em; }
+}
+
+@media screen and (max-width: 360px) {
+  body, input, textarea, select { font-size: 10pt; }
+}

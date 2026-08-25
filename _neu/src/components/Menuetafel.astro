@@ -1,0 +1,148 @@
+---
+import { navigation, sprachwechsel } from '../inhalte/navigation';
+import type { Seitenschluessel, Sprache } from '../inhalte/navigation';
+
+interface Props {
+  sprache: Sprache;
+  seite: Seitenschluessel;
+  aktiv?: Seitenschluessel;
+  marke?: string;
+}
+
+const { sprache, seite, aktiv, marke } = Astro.props;
+const punkte = navigation[sprache];
+---
+
+{/* Schmale Fassung der Navigation: feste Titelleiste plus ausfahrende Tafel.
+    In der alten Seite baute jQuery beides zur Laufzeit zusammen; hier steht
+    es im Markup und funktioniert auch ohne Skript. */}
+
+<div id="titelleiste">
+  <a class="schalter" href="#menuetafel" aria-label="Menü" aria-controls="menuetafel" aria-expanded="false"></a>
+  <span class="titel">German Tcakulov</span>
+</div>
+
+<div id="menuetafel">
+  <nav>
+    {punkte.map((punkt) => (
+      <a class="verweis" href={punkt.schluessel === aktiv && marke ? marke : punkt.ziel}>{punkt.text}</a>
+    ))}
+    <a class="verweis" href={sprachwechsel[sprache][seite]}>DE | EN</a>
+  </nav>
+</div>
+
+<style>
+  #titelleiste,
+  #menuetafel {
+    display: none;
+  }
+
+  @media screen and (max-width: 1080px) {
+    #titelleiste {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 66px;
+      z-index: 10001;
+      background-color: var(--farbe-grund);
+      backface-visibility: hidden;
+      transition: transform 0.5s ease;
+    }
+
+    #titelleiste .titel {
+      display: flex;
+      position: relative;
+      z-index: 1000;
+      font-weight: 400;
+      font-size: 1.75em;
+      line-height: 66px;
+      text-align: center;
+      text-transform: uppercase;
+      color: var(--farbe-akzent-hell);
+    }
+
+    #titelleiste .schalter {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 80px;
+      height: 60px;
+      z-index: 1001;
+      text-decoration: none;
+    }
+
+    #titelleiste .schalter::before {
+      content: '\f0c9';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      text-transform: none !important;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: inline-block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 44px;
+      height: 44px;
+      background: var(--farbe-grund);
+      color: var(--farbe-akzent);
+      text-align: center;
+      line-height: 44px;
+      font-size: 25px;
+      text-decoration: none;
+      transform: translateY(23.5%);
+    }
+
+    #titelleiste .schalter:active::before {
+      background-color: transparent;
+    }
+
+    #menuetafel {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 275px;
+      height: 100%;
+      z-index: 10002;
+      overflow-y: auto;
+      background-color: var(--farbe-grund);
+      text-transform: uppercase;
+      font-weight: 400;
+      font-size: 1.25em;
+      backface-visibility: hidden;
+      transform: translateX(-275px);
+      transition: transform 0.5s ease;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #menuetafel nav {
+      position: relative;
+      z-index: 1000;
+      margin-top: 3em;
+    }
+
+    #menuetafel .verweis {
+      display: block;
+      height: 44px;
+      line-height: 44px;
+      padding: 0 1em 0 2em;
+      margin-top: 0.5em;
+      font-size: 1.3em;
+      color: var(--farbe-akzent-hell);
+      text-decoration: none;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    :global(body.menue-offen) #titelleiste { transform: translateX(275px); }
+    :global(body.menue-offen) #menuetafel  { transform: translateX(0); }
+  }
+</style>
+
