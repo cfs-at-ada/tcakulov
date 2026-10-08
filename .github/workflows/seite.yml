@@ -1,0 +1,106 @@
+# Baut die Website aus _neu/.
+#
+# Laeuft bei jeder Aenderung (auch wenn die Terminverwaltung speichert),
+# jede Nacht (damit vergangene Termine ins Archiv wandern) und auf Knopfdruck.
+#
+# Ziele, ueber Repository-Variablen (Settings → Variables → Actions) geschaltet:
+#   VORSCHAU=ja     Stellt die Seite auf GitHub Pages (<name>.github.io/<repo>/).
+#   IN_WURZEL=ja    Legt die fertige Seite in die Wurzel des Repositorys –
+#                   dort holt der Webserver der echten Domain sie ab.
+# Ohne Variable prueft der Lauf nur, ob sich die Seite bauen laesst.
+name: Seite bauen
+
+on:
+  push:
+    paths:
+      - '_neu/**'
+      - '.github/workflows/seite.yml'
+  schedule:
+    - cron: '15 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: seite-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  HAUPTZWEIG: ${{ github.event.repository.default_branch }}
+
+jobs:
+  vorschau:
+    if: vars.VORSCHAU == 'ja'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: _neu/package-lock.json
+      - id: pages
+        uses: actions/configure-pages@v5
+      - name: Bauen
+        working-directory: _neu
+        run: |
+          npm ci
+          npm run build
+        env:
+          SEITE_BASIS: ${{ steps.pages.outputs.base_path || '/' }}
+          SEITE_URL: ${{ steps.pages.outputs.origin }}
+          PUBLIC_TERMINE_REPO: ${{ github.repository }}
+          PUBLIC_TERMINE_ZWEIG: ${{ env.HAUPTZWEIG }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _neu/dist
+      - id: deploy
+        if: github.ref_name == env.HAUPTZWEIG
+        uses: actions/deploy-pages@v4
+
+  wurzel:
+    if: vars.VORSCHAU != 'ja'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: _neu/package-lock.json
+      - name: Bauen
+        working-directory: _neu
+        run: |
+          npm ci
+          npm run build
+        env:
+          SEITE_BASIS: /
+          SEITE_URL: https://germantcakulov.com
+          PUBLIC_TERMINE_REPO: ${{ github.repository }}
+          PUBLIC_TERMINE_ZWEIG: ${{ env.HAUPTZWEIG }}
+      - name: In die Wurzel legen und einchecken
+        if: vars.IN_WURZEL == 'ja' && github.ref_name == env.HAUPTZWEIG
+        run: |
+          # Nur ueberschreiben und ergaenzen, nichts loeschen: Bilder und
+          # Dateien der alten Seite bleiben erreichbar.
+          rsync -a _neu/dist/ ./
+          git add -A -- . ':(exclude)_neu' ':(exclude).github'
+          if git diff --cached --quiet; then
+            echo "Keine Aenderung an der Website."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "Website gebaut (${GITHUB_SHA::7})"
+          # Falls die Verwaltung in der Zwischenzeit gespeichert hat
+          for versuch in 1 2 3; do
+            git pull --rebase --quiet && git push && exit 0
+            sleep 5
+          done
+          exit 1

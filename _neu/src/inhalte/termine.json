@@ -1,0 +1,465 @@
+[
+  {
+    "id": "2025-07-21-salzburg",
+    "start": "2025-07-21",
+    "ende": "2025-07-26",
+    "typ": "meisterkurs",
+    "ort": {
+      "de": "Österreich, Salzburg",
+      "en": "Austria, Salzburg"
+    },
+    "titel": {
+      "de": "Sommerakademie",
+      "en": "Summer Academy"
+    },
+    "zusatz": {
+      "de": "Mozarteum Salzburg",
+      "en": "Mozarteum Salzburg"
+    },
+    "link": {
+      "de": "https://www.moz.ac.at/de/internationale-sommerakademie",
+      "en": "https://www.moz.ac.at/en/summeracademy"
+    }
+  },
+  {
+    "id": "2025-07-31-solsona",
+    "start": "2025-07-31",
+    "ende": "2025-08-10",
+    "typ": "meisterkurs",
+    "ort": {
+      "de": "Spanien, Solsona",
+      "en": "Spain, Solsona"
+    },
+    "titel": {
+      "de": "AIMS Foundation",
+      "en": "AIMS Foundation"
+    },
+    "zusatz": {
+      "de": "Strings Academy",
+      "en": "Strings Academy"
+    },
+    "link": {
+      "de": "https://aims.cat/en/aims-string-academy/faculty/german-tcakulov/",
+      "en": "https://aims.cat/en/aims-string-academy/faculty/german-tcakulov/"
+    }
+  },
+  {
+    "id": "2025-08-16-flaine",
+    "start": "2025-08-16",
+    "ende": "2025-08-29",
+    "typ": "meisterkurs",
+    "ort": {
+      "de": "Frankreich, Flaine",
+      "en": "France, Flaine"
+    },
+    "titel": {
+      "de": "Musique à Flaine",
+      "en": "Musique à Flaine"
+    },
+    "zusatz": {
+      "de": "Summer Academy",
+      "en": "Summer Academy"
+    },
+    "link": {
+      "de": "https://www.musiqueaflaine.fr/en/academy/",
+      "en": "https://www.musiqueaflaine.fr/en/academy/"
+    }
+  },
+  {
+    "id": "2025-10-08-karlsruhe",
+    "start": "2025-10-08",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Deutschland, Karlsruhe",
+      "en": "Germany, Karlsruhe"
+    },
+    "titel": {
+      "de": "Badische Landesbibliothek",
+      "en": "Badische Landesbibliothek"
+    },
+    "zusatz": {
+      "de": "Konzert",
+      "en": "Concert"
+    },
+    "link": {
+      "de": "https://hfm-karlsruhe.de/veranstaltungen",
+      "en": "https://hfm-karlsruhe.de/veranstaltungen"
+    }
+  },
+  {
+    "id": "2025-10-11-karlsruhe",
+    "start": "2025-10-11",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Deutschland, Karlsruhe",
+      "en": "Germany, Karlsruhe"
+    },
+    "titel": {
+      "de": "Schloss Karlsburg",
+      "en": "Karlsburg Castle"
+    },
+    "zusatz": {
+      "de": "Eröffnungskonzert",
+      "en": "Opening concert"
+    },
+    "link": {
+      "de": "https://www.adticket.de/Eroeffnungskonzert/Karlsruhe-Durlach-Schloss-Karlsburg/11-10-2025_19-00.html",
+      "en": "https://www.adticket.de/Eroeffnungskonzert/Karlsruhe-Durlach-Schloss-Karlsburg/11-10-2025_19-00.html"
+    }
+  },
+  {
+    "id": "2025-11-06-genf",
+    "start": "2025-11-06",
+    "ende": "2025-11-12",
+    "typ": "sonstiges",
+    "ort": {
+      "de": "Schweiz, Genf",
+      "en": "Switzerland, Geneva"
+    },
+    "titel": {
+      "de": "Concours de Genève",
+      "en": "Concours de Genève"
+    },
+    "zusatz": {
+      "de": "Mitglied der Jury",
+      "en": "Member of the Jury"
+    },
+    "link": {
+      "de": "https://www.concoursgeneve.ch",
+      "en": "https://www.concoursgeneve.ch"
+    }
+  },
+  {
+    "id": "2025-12-16-madrid",
+    "start": "2025-12-16",
+    "ende": "2025-12-17",
+    "typ": "meisterkurs",
+    "ort": {
+      "de": "Spanien, Madrid",
+      "en": "Spain, Madrid"
+    },
+    "titel": {
+      "de": "RCSM Madrid",
+      "en": "RCSM Madrid"
+    },
+    "zusatz": {
+      "de": "Konzert und Meisterkurs",
+      "en": "Masterclass and concert"
+    },
+    "link": {
+      "de": "https://rcsmm.eu",
+      "en": "https://rcsmm.eu"
+    }
+  },
+  {
+    "id": "2026-02-27-hamburg",
+    "start": "2026-02-27",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Deutschland, Hamburg",
+      "en": "Germany, Hamburg"
+    },
+    "titel": {
+      "de": "TONALi Saal",
+      "en": "TONALi Saal Hamburg"
+    },
+    "zusatz": {
+      "de": "Rezital mit Mana Oguchi",
+      "en": "Recital with Mana Oguchi"
+    },
+    "link": {
+      "de": "https://www.tonali.de/termine/",
+      "en": "https://www.tonali.de/termine/"
+    }
+  },
+  {
+    "id": "2026-03-26-barcelona",
+    "start": "2026-03-26",
+    "ende": "2026-03-27",
+    "typ": "meisterkurs",
+    "ort": {
+      "de": "Spanien, Barcelona",
+      "en": "Spain, Barcelona"
+    },
+    "titel": {
+      "de": "ESMUC",
+      "en": "ESMUC"
+    },
+    "zusatz": {
+      "de": "Meisterkurs",
+      "en": "Masterclass"
+    },
+    "link": {
+      "de": "https://www.esmuc.cat",
+      "en": "https://www.esmuc.cat"
+    }
+  },
+  {
+    "id": "2026-04-13-gyoer",
+    "start": "2026-04-13",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Ungarn, Györ",
+      "en": "Hungary, Györ"
+    },
+    "titel": {
+      "de": "Universität Széchenyi",
+      "en": "Széchenyi University"
+    },
+    "zusatz": {
+      "de": "Konzert mit Domonkos Csabay",
+      "en": "Concert with Domonkos Csabay"
+    },
+    "link": {
+      "de": "https://hellogyor.hu/de-DE",
+      "en": "https://hellogyor.hu/en-US"
+    }
+  },
+  {
+    "id": "2026-04-24-fiesole",
+    "start": "2026-04-24",
+    "ende": "2026-04-27",
+    "typ": "meisterkurs",
+    "ort": {
+      "de": "Italien, Fiesole",
+      "en": "Italy, Fiesole"
+    },
+    "titel": {
+      "de": "Scuola di Musica",
+      "en": "Scuola di Musica"
+    },
+    "zusatz": {
+      "de": "Konzert und Meisterkurs",
+      "en": "Masterclass and concert"
+    },
+    "link": {
+      "de": "https://www.scuolamusicafiesole.it/masterclass/german-tcakulov-masterclass-di-viola/",
+      "en": "https://www.scuolamusicafiesole.it/masterclass/german-tcakulov-masterclass-di-viola/"
+    }
+  },
+  {
+    "id": "2026-05-07-salzburg",
+    "start": "2026-05-07",
+    "ende": "2026-05-09",
+    "typ": "meisterkurs",
+    "ort": {
+      "de": "Österreich, Salzburg",
+      "en": "Austria, Salzburg"
+    },
+    "titel": {
+      "de": "Mozarteum Salzburg",
+      "en": "Mozarteum Salzburg"
+    },
+    "zusatz": {
+      "de": "Meisterkurs und Festival",
+      "en": "Masterclass and Festival"
+    },
+    "link": {
+      "de": "https://www.moz.ac.at/de/festivals-akademien/erika-frieser-kammermusiktage",
+      "en": "https://www.moz.ac.at/en/festivals-academies/erika-frieser-chamber-music-days"
+    }
+  },
+  {
+    "id": "2026-05-31-herrenchiemsee",
+    "start": "2026-05-31",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Deutschland, Herrenchiemsee",
+      "en": "Germany, Herrenchiemsee"
+    },
+    "titel": {
+      "de": "Inselkonzerte",
+      "en": "Inselkonzerte"
+    },
+    "zusatz": {
+      "de": "Konzert im Bibliothekssaal",
+      "en": "Concert in the Library Hall"
+    },
+    "link": {
+      "de": "https://inselkonzerte-chiemsee.de",
+      "en": "https://inselkonzerte-chiemsee.de"
+    }
+  },
+  {
+    "id": "2026-06-12-linz",
+    "start": "2026-06-12",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Österreich, Linz",
+      "en": "Austria, Linz"
+    },
+    "titel": {
+      "de": "A. Bruckner Privatuniversität",
+      "en": "A. Bruckner Private University"
+    },
+    "zusatz": {
+      "de": "Konzert",
+      "en": "Concert"
+    },
+    "link": {
+      "de": "https://www.bruckneruni.ac.at/de/besuchen/events/detail/antrittskonzert-univ-prof-mikhail-nemtsov-violoncello-h-0-001-gro-er-saal-alice-harnoncourt-platz-1-4040-linz-12-06-2026-12-06-2026-4488335",
+      "en": "https://www.bruckneruni.ac.at/de/besuchen/events/detail/antrittskonzert-univ-prof-mikhail-nemtsov-violoncello-h-0-001-gro-er-saal-alice-harnoncourt-platz-1-4040-linz-12-06-2026-12-06-2026-4488335"
+    }
+  },
+  {
+    "id": "2026-06-20-thalgau",
+    "start": "2026-06-20",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Österreich, Thalgau",
+      "en": "Austria, Thalgau"
+    },
+    "titel": {
+      "de": "Musiktage Hundsmarktmühle",
+      "en": "Musiktage Hundsmarktmühle"
+    },
+    "zusatz": {
+      "de": "Konzert",
+      "en": "Concert"
+    },
+    "link": {
+      "de": "https://www.musiktagehundsmarktmuehle.com",
+      "en": "https://www.musiktagehundsmarktmuehle.com"
+    }
+  },
+  {
+    "id": "2026-06-21-thalgau",
+    "start": "2026-06-21",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Österreich, Thalgau",
+      "en": "Austria, Thalgau"
+    },
+    "titel": {
+      "de": "Musiktage Hundsmarktmühle",
+      "en": "Musiktage Hundsmarktmühle"
+    },
+    "zusatz": {
+      "de": "Matinée",
+      "en": "Matinee"
+    },
+    "link": {
+      "de": "https://www.musiktagehundsmarktmuehle.com",
+      "en": "https://www.musiktagehundsmarktmuehle.com"
+    }
+  },
+  {
+    "id": "2026-07-20-salzburg",
+    "start": "2026-07-20",
+    "ende": "2026-07-25",
+    "typ": "meisterkurs",
+    "ort": {
+      "de": "Österreich, Salzburg",
+      "en": "Austria, Salzburg"
+    },
+    "titel": {
+      "de": "Internationale Sommerakademie",
+      "en": "International Summer Academy"
+    },
+    "zusatz": {
+      "de": "Mozarteum Salzburg",
+      "en": "Mozarteum Salzburg"
+    },
+    "link": {
+      "de": "https://www.moz.ac.at/de/internationale-sommerakademie#viola",
+      "en": "https://www.moz.ac.at/en/summeracademy#viola"
+    }
+  },
+  {
+    "id": "2026-09-27-prussia-cove",
+    "start": "2026-09-27",
+    "ende": "2026-10-04",
+    "typ": "meisterkurs",
+    "ort": {
+      "de": "England, Prussia Cove",
+      "en": "England, Prussia Cove"
+    },
+    "titel": {
+      "de": "International Musicians Seminar",
+      "en": "International Musicians Seminar"
+    },
+    "zusatz": {
+      "de": "Meisterkurs",
+      "en": "Masterclass"
+    },
+    "link": {
+      "de": "https://www.i-m-s.org.uk",
+      "en": "https://www.i-m-s.org.uk"
+    }
+  },
+  {
+    "id": "2026-10-16-wien",
+    "start": "2026-10-16",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Österreich, Wien",
+      "en": "Austria, Vienna"
+    },
+    "titel": {
+      "de": "Konzert im Bechstein Centrum Wien",
+      "en": "Concert at Bechstein Centrum Vienna"
+    },
+    "zusatz": {
+      "de": "mit Elena Nemtsova",
+      "en": "with Elena Nemtsova"
+    },
+    "link": {
+      "de": "https://www.bechstein.com/centren/wien/veranstaltungen/konzert/duo-klavier-bratsche/",
+      "en": "https://www.bechstein.com/centren/wien/veranstaltungen/konzert/duo-klavier-bratsche/"
+    },
+    "abgesagt": "2026-10-08"
+  },
+  {
+    "id": "2026-10-19-gyoer",
+    "start": "2026-10-19",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Ungarn, Györ",
+      "en": "Hungary, Györ"
+    },
+    "titel": {
+      "de": "Konzert an der SZE Universität",
+      "en": "Concert at SZE University"
+    },
+    "zusatz": {
+      "de": "mit Domonkos Csabay",
+      "en": "with Domonkos Csabay"
+    },
+    "link": {
+      "de": "https://admissions.sze.hu/welcome",
+      "en": "https://admissions.sze.hu/welcome"
+    }
+  },
+  {
+    "id": "2026-12-11-graz",
+    "start": "2026-12-11",
+    "ende": null,
+    "typ": "konzert",
+    "ort": {
+      "de": "Österreich, Graz",
+      "en": "Austria, Graz"
+    },
+    "titel": {
+      "de": "Konzert an der Kunstuniversität Graz",
+      "en": "Concert at Kunstuniversität Graz"
+    },
+    "zusatz": {
+      "de": "mit Elena Nemtsova & Stefan Schilling",
+      "en": "with Elena Nemtsova & Stefan Schilling"
+    },
+    "link": {
+      "de": "https://www.kug.ac.at/veranstaltungen",
+      "en": "https://www.kug.ac.at/veranstaltungen"
+    }
+  }
+]

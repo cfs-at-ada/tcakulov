@@ -4,14 +4,18 @@
  * Bildausschnitt und Verankerung sind je Seite eigens gesetzt; darum
  * traegt jede Fassung eine eigene Kennzeichnung.
  */
+import { titelbilder, titelbildFassungen, type Titelseite } from '../inhalte/bilder';
+
 interface Props {
-  seite: 'vita' | 'termine' | 'lehre' | 'media' | 'kontakt';
+  seite: Titelseite;
 }
 
 const { seite } = Astro.props;
+// Drei Groessen je Bild, jeweils WebP mit JPEG als Rueckfall
+const fassungen = await titelbildFassungen(titelbilder[seite]);
 ---
 
-<div class:list={['titelbild', `titelbild--${seite}`]}>
+<div class:list={['titelbild', `titelbild--${seite}`]} style={fassungen}>
   <div class="titelbild__name">GERMAN <br /> TCAKULOV</div>
 </div>
 
@@ -23,6 +27,28 @@ const { seite } = Astro.props;
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
+    background-image: var(--titel-gross-jpg);
+  }
+
+  @media screen and (max-width: 1280px) {
+    .titelbild { background-image: var(--titel-mittel-jpg); }
+  }
+
+  @media screen and (max-width: 736px) {
+    .titelbild { background-image: var(--titel-klein-jpg); }
+  }
+
+  /* WebP, wo der Browser die Auswahl nach Dateityp beherrscht */
+  @supports (background-image: image-set(url("x.webp") type("image/webp"))) {
+    .titelbild { background-image: var(--titel-gross); }
+
+    @media screen and (max-width: 1280px) {
+      .titelbild { background-image: var(--titel-mittel); }
+    }
+
+    @media screen and (max-width: 736px) {
+      .titelbild { background-image: var(--titel-klein); }
+    }
   }
 
   .titelbild__name {
@@ -49,7 +75,6 @@ const { seite } = Astro.props;
   /* --- Vita ------------------------------------------------------------- */
 
   .titelbild--vita {
-    background-image: url('/images/4.2.jpg');
     background-position: 50% 30%;
     background-attachment: fixed;
     margin-bottom: 30px;
@@ -77,7 +102,6 @@ const { seite } = Astro.props;
 
   .titelbild--termine {
     width: 100%;
-    background-image: url('/images/Termine.jpg');
     background-position: center;
     background-attachment: fixed;
     margin-bottom: 3em;
@@ -108,7 +132,6 @@ const { seite } = Astro.props;
   /* --- Lehre ------------------------------------------------------------ */
 
   .titelbild--lehre {
-    background-image: url('/images/Lehre.jpg');
     background-size: 120%;
     background-position: 90% 65%;
     background-attachment: fixed;
@@ -160,7 +183,6 @@ const { seite } = Astro.props;
   /* --- Media ------------------------------------------------------------ */
 
   .titelbild--media {
-    background-image: url('/images/Media-spiegel.jpg');
     background-position: center;
     background-attachment: fixed;
     margin-bottom: 3em;
@@ -188,7 +210,6 @@ const { seite } = Astro.props;
   /* --- Kontakt ---------------------------------------------------------- */
 
   .titelbild--kontakt {
-    background-image: url('/images/4.2.jpg');
     background-position: 50% 30%;
     background-attachment: scroll;
     margin-bottom: 3em;

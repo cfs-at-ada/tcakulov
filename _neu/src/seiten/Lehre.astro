@@ -1,4 +1,6 @@
 ---
+import { Picture } from 'astro:assets';
+import mozarteum from '../bilder/Mozarteum.jpg';
 import Grundgeruest from '../layouts/Grundgeruest.astro';
 import Titelbild from '../components/Titelbild.astro';
 import Termin from '../components/Termin.astro';
@@ -39,17 +41,31 @@ const inhalt = lehre[sprache];
       <div class="spalte-5 spalte-12-klein lehre__kurse">
         <h3 class:list={['kursetitel', sprache === 'en' && 'kursetitel--en']}>{inhalt.kurseTitel}</h3>
         <ul class="kursliste">
-          {kurse[sprache].map((eintrag) => <Termin eintrag={eintrag} form="kurs" />)}
+          {kurse.map((eintrag) => <Termin eintrag={eintrag} sprache={sprache} form="kurs" />)}
         </ul>
+
+        <div class="studium">
+          <h3 class:list={['kursetitel', sprache === 'en' && 'kursetitel--en']}>{inhalt.studium.titel}</h3>
+          <p class="studium__text">{inhalt.studium.text}</p>
+          <ul class="studium__verweise">
+            {inhalt.studium.verweise.map((v) => (
+              <li><a href={v.ziel} target="_blank" rel="noopener noreferrer">{v.text}</a></li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
 
     <figure class="lehre__bild">
-      <img
-        src="/images/Mozarteum.jpg"
-        alt="Universität Mozarteum Salzburg, Vorplatz"
-        width="1664"
-        height="1065"
+      <Picture
+        src={mozarteum}
+        alt={inhalt.bildAlt}
+        widths={[600, 1000, 1664]}
+        sizes="(max-width: 980px) calc(100vw - 2 * var(--rand)), 52em"
+        formats={['webp']}
+        fallbackFormat="jpg"
+        quality={82}
+        loading="lazy"
       />
       <figcaption class="lehre__bildnachweis">{inhalt.bildnachweis}</figcaption>
     </figure>
@@ -57,6 +73,33 @@ const inhalt = lehre[sprache];
 </Grundgeruest>
 
 <style>
+  .studium { margin-top: 2.5em; }
+
+  .studium__text {
+    margin: 0.4em 0 0.6em;
+    font-weight: 100;
+    line-height: 1.5;
+    color: var(--farbe-akzent-hell);
+  }
+
+  .studium__verweise {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .studium__verweise li { margin: 0.2em 0; }
+
+  .studium__verweise a {
+    color: var(--farbe-akzent);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s ease;
+  }
+
+  .studium__verweise a::after { content: ' →'; }
+  .studium__verweise a:hover { color: var(--farbe-text); }
+
   .lehrkopf {
     margin-bottom: 62px;
     color: var(--farbe-akzent-hell);
@@ -71,7 +114,7 @@ const inhalt = lehre[sprache];
 
   .lehrkopf__ausspruch {
     font-weight: 100;
-    text-align: justify;
+    text-align: var(--blocksatz);
     color: var(--farbe-text);
   }
 
@@ -99,7 +142,7 @@ const inhalt = lehre[sprache];
     margin: 0;
     padding: 0;
     font-weight: 100;
-    text-align: justify;
+    text-align: var(--blocksatz);
     color: var(--farbe-text);
   }
 
@@ -137,7 +180,7 @@ const inhalt = lehre[sprache];
     text-align: center;
   }
 
-  .lehre__bild img {
+  .lehre__bild :global(img) {
     display: block;
     width: 100%;
     height: 100%;

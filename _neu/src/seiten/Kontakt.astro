@@ -1,4 +1,5 @@
 ---
+import { pfad } from '../inhalte/pfad';
 import Grundgeruest from '../layouts/Grundgeruest.astro';
 import Titelbild from '../components/Titelbild.astro';
 import { kontakt } from '../inhalte/kontakt';
@@ -10,7 +11,7 @@ interface Props {
 
 const { sprache } = Astro.props;
 const texte = kontakt[sprache];
-const presseZiel = sprache === 'de' ? '/Presse.html' : '/Presse-en.html';
+const presseZiel = sprache === 'de' ? pfad('/Presse') : pfad('/Presse-en');
 ---
 
 <Grundgeruest

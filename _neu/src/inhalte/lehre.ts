@@ -8,6 +8,12 @@ export interface Lehrinhalt {
   fliesstext: string;
   kurseTitel: string;
   bildnachweis: string;
+  bildAlt: string;
+  studium: {
+    titel: string;
+    text: string;
+    verweise: { text: string; ziel: string }[];
+  };
 }
 
 export const lehre: Record<Sprache, Lehrinhalt> = {
@@ -18,6 +24,16 @@ export const lehre: Record<Sprache, Lehrinhalt> = {
     fliesstext: "German Tcakulov ist ein renommierter Bratschist mit einer tiefen Hingabe zur Lehre und seit Oktober 2024 Professor für Bratsche an der Universität Mozarteum in Salzburg. Diese neue Position markiert einen bedeutenden Meilenstein in seiner pädagogischen Laufbahn. Zuvor war er ab 2022 Professor an der Hochschule für Musik in Karlsruhe und leitete bis 2023 seine eigene Bratschenklasse an der Hochschule für Musik und Theater in München. Von 2017 bis 2022 wirkte er als Lehrbeauftragter an der Hochschule für Musik Hanns Eisler in Berlin und war Assistent von Tabea Zimmermann. Darüber hinaus vermittelt er sein Wissen und seine Expertise an der Scuola di Musica di Fiesole/Florenz. Das Engagement Tcakulovs für die Förderung der nächsten Musiker-Generationen zeigt sich in seiner herausragenden Lehrtätigkeit in ganz Europa und in seinen weltweiten Meisterkursen.",
     kurseTitel: "MEISTERKURSE",
     bildnachweis: "© Mozarteum Salzburg",
+    bildAlt: "Universität Mozarteum Salzburg, Vorplatz in der Abenddämmerung",
+    studium: {
+      titel: "STUDIUM",
+      text: "Wer bei German Tcakulov Viola studieren möchte, bewirbt sich über die Universität Mozarteum Salzburg. Studiengänge, Zulassungsprüfungen und Fristen stehen dort:",
+      verweise: [
+        { text: "Studienfinder", ziel: "https://www.moz.ac.at/de/studium/studienfinder" },
+        { text: "Semestertermine & Fristen", ziel: "https://www.moz.ac.at/de/studium/semestertermine-fristen" },
+        { text: "Profil am Mozarteum", ziel: "https://www.moz.ac.at/en/people/string-studies/german-tcakulov" },
+      ],
+    },
   },
   en: {
     ueberschrift: "Lehre",
@@ -26,5 +42,15 @@ export const lehre: Record<Sprache, Lehrinhalt> = {
     fliesstext: "German Tcakulov is a distinguished violist with a profound commitment to teaching and, since October 2024, has been a professor of viola at the Mozarteum University Salzburg. This new appointment represents a significant milestone in his pedagogical journey. Previously, in 2022, he was appointed as a professor at the Hochschule für Musik in Karlsruhe, where he served until 2023 while leading his own viola class at the Hochschule für Musik und Theater in Munich. From 2017 to 2022, he held a teaching position at the Hochschule für Musik Hanns Eisler in Berlin and served as an assistant to Tabea Zimmermann. Additionally, he imparts his knowledge and expertise at the Scuola di Musica di Fiesole/Florence. Tcakulov’s dedication to nurturing the next generations of musicians is evident in his impactful teaching roles across Europe and in his worldwide masterclasses.",
     kurseTitel: "MASTERCLASSES",
     bildnachweis: "© Mozarteum Salzburg",
+    bildAlt: "Mozarteum University Salzburg, forecourt at dusk",
+    studium: {
+      titel: "STUDY",
+      text: "Anyone wishing to study viola with German Tcakulov applies through the Mozarteum University Salzburg. Degree programmes, entrance examinations and deadlines can be found there:",
+      verweise: [
+        { text: "Course finder", ziel: "https://www.moz.ac.at/en/study/course-finder" },
+        { text: "Semester dates & deadlines", ziel: "https://www.moz.ac.at/en/study/semester-dates" },
+        { text: "Profile at the Mozarteum", ziel: "https://www.moz.ac.at/en/people/string-studies/german-tcakulov" },
+      ],
+    },
   },
 };

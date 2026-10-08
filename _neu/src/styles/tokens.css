@@ -20,6 +20,16 @@
   --farbe-vorlage-text: #6B7770;
   --farbe-vorlage-link: #006376;
 
-  /* Schrift */
+  /* Schrift – genau wie im Original: Source Sans 3 wird genannt, aber nicht
+     nachgeladen (dort lief der Pfad ins Leere). Der Browser zeigt daher seine
+     Standardschrift (Mac/iPhone: Helvetica, Windows: Arial) – so sieht die
+     Seite seit jeher aus, und so bleibt sie. */
   --schrift: 'Source Sans 3', sans-serif;
+
+
+  /* Seitenrand auf Tablet und Telefon, wie in der Vorlage */
+  --rand: 20px;
+
+  /* Blocksatz wie im Original */
+  --blocksatz: justify;
 }

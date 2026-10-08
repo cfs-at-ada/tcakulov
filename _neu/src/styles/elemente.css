@@ -1,35 +1,7 @@
 /* ---------------------------------------------------------------------------
-   Wiederkehrende Kleinteile: Icons und der gedaempfte Verweisstil.
+   Wiederkehrende Kleinteile: der gedaempfte Verweisstil.
+   Symbole stehen als SVG in components/Symbol.astro.
    --------------------------------------------------------------------------- */
-
-/* --- Font-Awesome-Grundlage (aus der Vorlage) ---------------------------- */
-
-.icon {
-  position: relative;
-  text-decoration: none;
-}
-
-.icon::before {
-  display: inline-block;
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 400;
-  font-style: normal;
-  font-variant: normal;
-  line-height: inherit;
-  text-rendering: auto;
-  text-transform: none !important;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.icon.solid::before  { font-weight: 900; }
-
-.icon.brands::before {
-  font-family: 'Font Awesome 5 Brands';
-  color: var(--farbe-akzent);
-}
-
-.icon.brands:hover::before { color: var(--farbe-text); }
 
 /* --- Verweise ohne Unterstrich ------------------------------------------- */
 

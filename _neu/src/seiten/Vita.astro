@@ -5,6 +5,7 @@ import KonzertHinweis from '../components/KonzertHinweis.astro';
 import Portrait from '../components/Portrait.astro';
 import { vita } from '../inhalte/vita';
 import type { Sprache } from '../inhalte/navigation';
+import { personDaten } from '../inhalte/strukturdaten';
 
 interface Props {
   sprache: Sprache;
@@ -21,10 +22,11 @@ const inhalt = vita[sprache];
   marke="#jumphere"
   fusszeileAbstand="2.65em"
   schmal
+  strukturdaten={personDaten(sprache, new URL(import.meta.env.BASE_URL, Astro.site).href)}
 >
   <Titelbild slot="titelbild" seite="vita" />
 
-  <KonzertHinweis inhalt={inhalt} />
+  <KonzertHinweis inhalt={inhalt} sprache={sprache} />
 
   <hr id="jumphere" class="sprungmarke vita-trenner" />
 
@@ -64,6 +66,6 @@ const inhalt = vita[sprache];
     margin-top: 4em;
     margin-bottom: 3.55em;
     font-weight: 100;
-    text-align: justify;
+    text-align: var(--blocksatz);
   }
 </style>

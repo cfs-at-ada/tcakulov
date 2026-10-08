@@ -1,0 +1,36 @@
+# Adressen ohne .html: /Termine liefert Termine.html aus,
+# alte Links auf /Termine.html werden dauerhaft auf /Termine umgeleitet.
+# Ohne Apache greift diese Datei nicht; dann fuehrt /Termine ueber den
+# Ordner Termine/index.html zum Ziel (siehe astro.config.mjs).
+Options -MultiViews -Indexes
+DirectoryIndex index.html
+DirectorySlash Off
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Quellen und Werkzeuge im Repository gehoeren nicht auf die Website.
+  RewriteRule ^(_neu|_analyse|_konzept|\.github|\.git)(/|$) - [R=404,L]
+  RewriteRule (^|/)\.ht - [R=404,L]
+
+  # /index.html -> /
+  RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+  RewriteRule ^ / [R=301,L]
+
+  # /Seite.html -> /Seite (nur echte Aufrufe, nicht die Weiterreichung unten)
+  RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L,NE]
+
+  # /Seite/ -> /Seite, wenn es Seite.html gibt
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # /Seite -> Seite.html
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
+
+  # Ordner ohne Schraegstrich (z. B. /images) wie gewohnt ergaenzen
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^(.+[^/])$ /$1/ [R=301,L]
+</IfModule>

@@ -1,4 +1,6 @@
 ---
+import { pfad } from '../inhalte/pfad';
+import Symbol from './Symbol.astro';
 import { sprachwechsel } from '../inhalte/navigation';
 import type { Sprache } from '../inhalte/navigation';
 
@@ -10,7 +12,7 @@ interface Props {
 
 const { sprache, abstandOben } = Astro.props;
 
-const impressum = sprache === 'de' ? '/Impressum_Datenschutz.html' : '/Impressum_Datenschutz-en.html';
+const impressum = sprache === 'de' ? pfad('/Impressum_Datenschutz') : pfad('/Impressum_Datenschutz-en');
 const impressumText = sprache === 'de' ? 'Impressum & Datenschutz' : 'Legal Notice & Privacy';
 ---
 
@@ -23,11 +25,12 @@ const impressumText = sprache === 'de' ? 'Impressum & Datenschutz' : 'Legal Noti
     <div class="fusszeile-verteilung">
       <div class="fusszeile-links">
         <a
-          class="icon brands fa-instagram"
+          class="fusszeile-instagram"
           href="https://www.instagram.com/tcakulov/"
           target="_blank"
           rel="noopener noreferrer"
-        ><span class="mail-link fusszeile-kennung">@tcakulov</span></a>
+          aria-label="Instagram: @tcakulov"
+        ><Symbol name="instagram" class="fusszeile-symbol" /><span class="mail-link fusszeile-kennung">@tcakulov</span></a>
       </div>
 
       <div class="fusszeile-rechts">
@@ -89,6 +92,17 @@ const impressumText = sprache === 'de' ? 'Impressum & Datenschutz' : 'Legal Noti
     color: inherit;
     text-decoration: none;
   }
+
+  .fusszeile-links :global(.fusszeile-symbol) {
+    /* Masse des fruheren Font-Awesome-Zeichens (448 x 512 Einheiten) */
+    width: 0.875em;
+    height: 1em;
+    vertical-align: -0.125em;
+    color: var(--farbe-akzent);
+    transition: color 0.2s ease;
+  }
+
+  .fusszeile-links a:hover :global(.fusszeile-symbol) { color: var(--farbe-text); }
 
   .fusszeile-kennung {
     margin-left: -0.8em;

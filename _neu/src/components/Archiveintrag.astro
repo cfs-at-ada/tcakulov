@@ -1,0 +1,101 @@
+---
+import { tagZeile, letzterTag } from '../inhalte/terminformat';
+import type { TerminDaten, Sprache } from '../inhalte/terminformat';
+
+interface Props {
+  eintrag: TerminDaten;
+  sprache: Sprache;
+  /** Noch kommende Termine stehen verborgen bereit, siehe Termine.astro. */
+  verborgen?: boolean;
+}
+
+const { eintrag, sprache, verborgen = false } = Astro.props;
+const ziel = eintrag.link[sprache] || eintrag.link.de;
+const zusatz = eintrag.zusatz[sprache];
+const typText: Record<Sprache, Partial<Record<TerminDaten['typ'], string>>> = {
+  de: { konzert: 'Konzert', meisterkurs: 'Meisterkurs' },
+  en: { konzert: 'Concert', meisterkurs: 'Masterclass' },
+};
+const typ = typText[sprache][eintrag.typ];
+---
+
+<li class="eintrag" data-archiv-eintrag data-ende={letzterTag(eintrag)} hidden={verborgen}>
+  <time class="eintrag__datum" datetime={eintrag.start}>{tagZeile(eintrag, sprache)}</time>
+  <div class="eintrag__inhalt">
+    <span class="eintrag__ort">{eintrag.ort[sprache]}</span>
+    {ziel ? (
+      <a class="eintrag__titel" href={ziel} target="_blank" rel="noopener noreferrer">
+        {eintrag.titel[sprache]}{zusatz && <span class="eintrag__zusatz"> · {zusatz}</span>}
+      </a>
+    ) : (
+      <span class="eintrag__titel">
+        {eintrag.titel[sprache]}{zusatz && <span class="eintrag__zusatz"> · {zusatz}</span>}
+      </span>
+    )}
+  </div>
+  {typ && <span class="eintrag__typ">{typ}</span>}
+</li>
+
+<style>
+  .eintrag {
+    display: grid;
+    grid-template-columns: 7.5em minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.2em 1.25em;
+    padding: 0.85em 0;
+    border-top: 1px solid color-mix(in srgb, var(--farbe-akzent) 22%, transparent);
+    line-height: 1.4;
+  }
+
+  .eintrag[hidden] { display: none; }
+
+  .eintrag__datum {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--farbe-akzent-hell);
+  }
+
+  .eintrag__inhalt {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.75em;
+    min-width: 0;
+  }
+
+  .eintrag__ort {
+    font-weight: 700;
+    color: var(--farbe-text);
+  }
+
+  .eintrag__titel {
+    font-weight: 100;
+    color: var(--farbe-text);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  a.eintrag__titel { transition: color 0.2s ease; }
+  a.eintrag__titel:hover { color: var(--farbe-akzent-hell); }
+
+  .eintrag__zusatz { color: var(--farbe-akzent-hell); }
+
+  .eintrag__typ {
+    font-size: max(0.8em, 12px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--farbe-akzent);
+  }
+
+  /* Wird die Spalte schmal, wandert das Datum ueber den Inhalt. */
+  @container (width < 34em) {
+    .eintrag {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.15em 1em;
+    }
+
+    .eintrag__inhalt { grid-column: 1 / -1; flex-direction: column; }
+    .eintrag__typ { grid-row: 1; grid-column: 2; }
+  }
+</style>

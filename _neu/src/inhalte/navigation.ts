@@ -1,3 +1,4 @@
+import { pfad } from './pfad';
 /**
  * Navigationspunkte beider Sprachfassungen.
  * `ziel` ist die Seite, `marke` das Sprungziel, wenn der Punkt die
@@ -18,39 +19,39 @@ export type Seitenschluessel =
 
 export const navigation: Record<Sprache, Navigationspunkt[]> = {
   de: [
-    { schluessel: 'vita',    text: 'Vita',    ziel: '/index.html' },
-    { schluessel: 'termine', text: 'Termine', ziel: '/Termine.html' },
-    { schluessel: 'lehre',   text: 'Lehre',   ziel: '/Lehre.html' },
-    { schluessel: 'media',   text: 'Media',   ziel: '/Media.html' },
-    { schluessel: 'kontakt', text: 'Kontakt', ziel: '/Kontakt.html' },
+    { schluessel: 'vita',    text: 'Vita',    ziel: pfad('/') },
+    { schluessel: 'termine', text: 'Termine', ziel: pfad('/Termine') },
+    { schluessel: 'lehre',   text: 'Lehre',   ziel: pfad('/Lehre') },
+    { schluessel: 'media',   text: 'Media',   ziel: pfad('/Media') },
+    { schluessel: 'kontakt', text: 'Kontakt', ziel: pfad('/Kontakt') },
   ],
   en: [
-    { schluessel: 'vita',    text: 'Biography', ziel: '/index-en.html' },
-    { schluessel: 'termine', text: 'Calendar',  ziel: '/Termine-en.html' },
-    { schluessel: 'lehre',   text: 'Teaching',  ziel: '/Lehre-en.html' },
-    { schluessel: 'media',   text: 'Media',     ziel: '/Media-en.html' },
-    { schluessel: 'kontakt', text: 'Contact',   ziel: '/Kontakt-en.html' },
+    { schluessel: 'vita',    text: 'Biography', ziel: pfad('/index-en') },
+    { schluessel: 'termine', text: 'Calendar',  ziel: pfad('/Termine-en') },
+    { schluessel: 'lehre',   text: 'Teaching',  ziel: pfad('/Lehre-en') },
+    { schluessel: 'media',   text: 'Media',     ziel: pfad('/Media-en') },
+    { schluessel: 'kontakt', text: 'Contact',   ziel: pfad('/Kontakt-en') },
   ],
 };
 
 /** Gegenstueck derselben Seite in der jeweils anderen Sprache. */
 export const sprachwechsel: Record<Sprache, Record<Seitenschluessel, string>> = {
   de: {
-    vita: '/index-en.html',
-    termine: '/Termine-en.html',
-    lehre: '/Lehre-en.html',
-    media: '/Media-en.html',
-    kontakt: '/Kontakt-en.html',
-    presse: '/Presse-en.html',
-    impressum: '/Impressum_Datenschutz-en.html',
+    vita: pfad('/index-en'),
+    termine: pfad('/Termine-en'),
+    lehre: pfad('/Lehre-en'),
+    media: pfad('/Media-en'),
+    kontakt: pfad('/Kontakt-en'),
+    presse: pfad('/Presse-en'),
+    impressum: pfad('/Impressum_Datenschutz-en'),
   },
   en: {
-    vita: '/index.html',
-    termine: '/Termine.html',
-    lehre: '/Lehre.html',
-    media: '/Media.html',
-    kontakt: '/Kontakt.html',
-    presse: '/Presse.html',
-    impressum: '/Impressum_Datenschutz.html',
+    vita: pfad('/'),
+    termine: pfad('/Termine'),
+    lehre: pfad('/Lehre'),
+    media: pfad('/Media'),
+    kontakt: pfad('/Kontakt'),
+    presse: pfad('/Presse'),
+    impressum: pfad('/Impressum_Datenschutz'),
   },
 };

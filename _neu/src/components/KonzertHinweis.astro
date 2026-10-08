@@ -1,23 +1,41 @@
 ---
 import type { Vitainhalt } from '../inhalte/vita';
+import { naechsteKonzerte, terminTexte } from '../inhalte/termine';
+import { datumLang, letzterTag } from '../inhalte/terminformat';
+import type { Sprache } from '../inhalte/navigation';
 
 interface Props {
   inhalt: Vitainhalt;
+  sprache: Sprache;
 }
 
-const { inhalt } = Astro.props;
+const { inhalt, sprache } = Astro.props;
 ---
+
+{/* Alle kommenden Konzerte stehen bereit, sichtbar ist nur das erste.
+    Verstreicht es, bevor die Seite neu gebaut ist, rueckt das Skript
+    das naechste nach. */}
 
 <section class="konzert">
   <div class="raster raster--konzert">
-    <div class="konzert__block">
-      <h3 class="konzert__titel">{inhalt.konzertTitel}</h3>
-      <p class="konzert__ort">{inhalt.konzertOrt}</p>
-      {inhalt.konzertZeilen.map((zeile) => (
-        <p class="konzert__zeile">
-          <a class="blanko-verweis" href={zeile.ziel} target="_blank" rel="noopener noreferrer">{zeile.text}</a>
-        </p>
-      ))}
+    <div class="konzert__block" data-konzert-block hidden={naechsteKonzerte.length === 0}>
+      <h3 class="konzert__titel">{terminTexte[sprache].naechstes}</h3>
+      {naechsteKonzerte.map((t, i) => {
+        const ziel = t.link[sprache] || t.link.de;
+        const zeilen = [t.titel[sprache], t.zusatz[sprache]].filter(Boolean);
+        return (
+          <div class="konzert__eintrag" data-konzert data-ende={letzterTag(t)} hidden={i > 0}>
+            <p class="konzert__ort">{t.ort[sprache]}, {datumLang(t, sprache)}</p>
+            {zeilen.map((zeile) => (
+              <p class="konzert__zeile">
+                {ziel
+                  ? <a class="blanko-verweis" href={ziel} target="_blank" rel="noopener noreferrer">{zeile}</a>
+                  : zeile}
+              </p>
+            ))}
+          </div>
+        );
+      })}
     </div>
 
     <div class="konzert__zitat">
@@ -35,6 +53,9 @@ const { inhalt } = Astro.props;
   .raster.raster--konzert { margin-top: -20px; }
 
   .raster > .konzert__block { padding-top: 55px; }
+
+  .konzert__block[hidden],
+  .konzert__eintrag[hidden] { display: none; }
 
   .konzert__titel {
     margin-bottom: 1em;

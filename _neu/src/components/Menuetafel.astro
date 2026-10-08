@@ -76,22 +76,20 @@ const punkte = navigation[sprache];
     }
 
     #titelleiste .schalter::before {
-      content: '\f0c9';
-      font-family: 'Font Awesome 5 Free';
-      font-weight: 900;
-      font-style: normal;
-      font-variant: normal;
-      text-rendering: auto;
-      text-transform: none !important;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      /* Das „bars“-Zeichen von Font Awesome 5 als eingebettetes SVG, in
+         derselben Groesse wie zuvor (25px Schrift); Farbe = --farbe-akzent. */
+      content: '';
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23A78768' d='M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 21.875px 25px;
       display: inline-block;
       position: absolute;
-      left: 0;
+      left: env(safe-area-inset-left, 0px);
       top: 0;
       width: 44px;
       height: 44px;
-      background: var(--farbe-grund);
+      background-color: var(--farbe-grund);
       color: var(--farbe-akzent);
       text-align: center;
       line-height: 44px;
@@ -114,6 +112,8 @@ const punkte = navigation[sprache];
       z-index: 10002;
       overflow-y: auto;
       background-color: var(--farbe-grund);
+      /* So im Original – faellt wie die Seite auf die Systemschrift zurueck. */
+      font-family: 'Source Sans Pro', sans-serif;
       text-transform: uppercase;
       font-weight: 400;
       font-size: 1.25em;

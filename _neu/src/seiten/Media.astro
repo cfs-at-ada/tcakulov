@@ -1,7 +1,11 @@
 ---
+import { pfad } from '../inhalte/pfad';
 import Grundgeruest from '../layouts/Grundgeruest.astro';
 import Titelbild from '../components/Titelbild.astro';
+import Einbettung from '../components/Einbettung.astro';
+import { Picture } from 'astro:assets';
 import { galerie, videos, spotifyAlbum, medienTexte } from '../inhalte/medien';
+import { grossansicht } from '../inhalte/bilder';
 import type { Sprache } from '../inhalte/navigation';
 
 interface Props {
@@ -10,7 +14,8 @@ interface Props {
 
 const { sprache } = Astro.props;
 const texte = medienTexte[sprache];
-const presseZiel = sprache === 'de' ? '/Presse.html' : '/Presse-en.html';
+const presseZiel = sprache === 'de' ? pfad('/Presse') : pfad('/Presse-en');
+const grosseBilder = await Promise.all(galerie.map((g) => grossansicht(g.bild)));
 ---
 
 <Grundgeruest
@@ -20,14 +25,6 @@ const presseZiel = sprache === 'de' ? '/Presse.html' : '/Presse-en.html';
   marke="#jumphere"
   fusszeileAbstand="4.65em"
 >
-  <Fragment slot="kopf">
-    <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin />
-    <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
-    <link rel="preconnect" href="https://open.spotify.com" crossorigin />
-    <link rel="prefetch" href={spotifyAlbum} as="document" crossorigin />
-    {videos.map((v) => <link rel="prefetch" href={v} as="document" crossorigin />)}
-  </Fragment>
-
   <Titelbild slot="titelbild" seite="media" />
 
   <section class="mediakopf">
@@ -41,34 +38,33 @@ const presseZiel = sprache === 'de' ? '/Presse.html' : '/Presse-en.html';
 
   <article class="medien">
     <div class="raster raster--medien">
-      {galerie.map((bild) => (
-        <div class="medien__feld galerie__kachel" data-gross={bild.datei}>
-          <img class="medien__bild" src={bild.datei} alt="German Tcakulov" width="1980" height="1320" />
-          <div class="medien__nachweis">{bild.nachweis}</div>
+      {galerie.map((g, stelle) => (
+        <div class="medien__feld galerie__kachel" data-gross={grosseBilder[stelle]} data-alt={g.alt[sprache]}>
+          <button type="button" class="galerie__knopf" aria-label={`${texte.grossansicht}: ${g.alt[sprache]}`}>
+            <Picture
+              class="medien__bild"
+              src={g.bild}
+              alt={g.alt[sprache]}
+              widths={[480, 800, 1200]}
+              sizes="(max-width: 980px) calc(100vw - 2 * var(--rand)), 26em"
+              formats={['webp']}
+              fallbackFormat="jpg"
+              quality={82}
+              loading={stelle < 2 ? 'eager' : 'lazy'}
+            />
+          </button>
+          <div class="medien__nachweis">{g.nachweis}</div>
         </div>
       ))}
 
-      {videos.map((quelle) => (
+      {videos.map((video) => (
         <div class="medien__feld medien__video">
-          <div class="medien__rahmen">
-            <iframe
-              src={quelle}
-              title="German Tcakulov"
-              frameborder="0"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-            ></iframe>
-          </div>
+          <Einbettung eintrag={video} sprache={sprache} />
         </div>
       ))}
 
       <div class="medien__feld medien__spotify">
-        <iframe
-          src={spotifyAlbum}
-          title="Album bei Spotify"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-        ></iframe>
+        <Einbettung eintrag={spotifyAlbum} sprache={sprache} />
       </div>
     </div>
   </article>
@@ -143,34 +139,22 @@ const presseZiel = sprache === 'de' ? '/Presse.html' : '/Presse-en.html';
 
   .raster > .medien__video { padding-bottom: 0.9em; }
 
-  .medien__rahmen {
-    position: relative;
-    height: 0;
-    padding-bottom: 66.5%;
-    max-width: 100%;
-    overflow: hidden;
-  }
-
-  .medien__rahmen iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .raster > .medien__spotify {
-    max-height: 150px;
-    padding: 0 0.1em 0 0;
-  }
-
-  .medien__spotify iframe {
+  .galerie__knopf {
     display: block;
     width: 100%;
-    height: 300px;
-    margin: 0 auto;
-    border: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
   }
+
+  .galerie__knopf :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .raster > .medien__spotify { padding: 0 0.1em 0 0; }
 
   /* Die Grossansicht entsteht erst beim Klick, darum unbeschraenkt. */
   :global(.bildschau) {

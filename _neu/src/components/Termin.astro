@@ -1,53 +1,102 @@
 ---
-import type { Termin } from '../inhalte/termine';
+import Symbol from './Symbol.astro';
+import { pfad } from '../inhalte/pfad';
+import { terminTexte } from '../inhalte/termine';
+import { tagZeile, jahr, letzterTag, absageEndet } from '../inhalte/terminformat';
+import type { TerminDaten, Sprache } from '../inhalte/terminformat';
 
 interface Props {
-  eintrag: Termin;
+  eintrag: TerminDaten;
+  sprache: Sprache;
   /** `termin` = Terminseite, `kurs` = Lehrseite (engere Satzbreite). */
   form?: 'termin' | 'kurs';
 }
 
-const { eintrag, form = 'termin' } = Astro.props;
+const { eintrag, sprache, form = 'termin' } = Astro.props;
+const ziel = eintrag.link[sprache] || eintrag.link.de;
+const zusatz = eintrag.zusatz[sprache];
+const texte = terminTexte[sprache];
+const programm = (eintrag.programm?.[sprache] || eintrag.programm?.de || '').split('\n').filter(Boolean);
+const abgesagt = !!eintrag.abgesagt;
+// Auf der Terminseite gibt es Tickets und Kalendereintrag; abgesagt entfaellt beides.
+const aktionen = form === 'termin' && !abgesagt;
 ---
 
-<li class:list={['termin', `termin--${eintrag.ton}`, `termin--${form}`]}>
-  <div class="termin__datum">
-    <span class="termin__tag">{eintrag.tag}</span>
-    <span class="termin__jahr">{eintrag.jahr}</span>
-  </div>
+<li class:list={['termin', `termin--${form}`, { 'termin--abgesagt': abgesagt }]} data-ende={letzterTag(eintrag)} data-weg={absageEndet(eintrag)} data-stempel={abgesagt ? texte.abgesagt : undefined}>
+  <time class="termin__datum" datetime={eintrag.start}>
+    <span class="termin__tag">{tagZeile(eintrag, sprache)}</span>
+    <span class="termin__jahr">{jahr(eintrag)}</span>
+  </time>
 
   <div class="termin__strich" aria-hidden="true"></div>
 
   <div class="termin__text">
-    <span class="termin__ort">{eintrag.ort}</span><br />
-    <a class="blanko-verweis" href={eintrag.ziel} target="_blank" rel="noopener noreferrer">
-      {eintrag.zeilen.map((zeile, i) => (<>{i > 0 && <br />}{zeile}</>))}
-    </a>
+    <div class="termin__kopf">
+    <span class="termin__ort">
+      {abgesagt && <span class="termin__vermerk">{texte.abgesagt}</span>}
+      {eintrag.ort[sprache]}{eintrag.uhrzeit && <span class="termin__uhrzeit"> · {texte.uhr(eintrag.uhrzeit)}</span>}
+    </span>
+    {ziel && !abgesagt ? (
+      <a class="termin__titel blanko-verweis" href={ziel} target="_blank" rel="noopener noreferrer">
+        {eintrag.titel[sprache]}{zusatz && <><br />{zusatz}</>}
+      </a>
+    ) : (
+      <span class="termin__titel">
+        {eintrag.titel[sprache]}{zusatz && <><br />{zusatz}</>}
+      </span>
+    )}
+    </div>
+    {(programm.length > 0 || aktionen) && (
+    <div class="termin__mehr">
+    {programm.length > 0 && (
+      <ul class="termin__programm" aria-label={texte.programm}>
+        {programm.map((werk) => <li>{werk}</li>)}
+      </ul>
+    )}
+    {aktionen && (
+      <span class="termin__aktionen">
+        {eintrag.tickets && (
+          <a class="termin__aktion termin__aktion--tickets" href={eintrag.tickets} target="_blank" rel="noopener noreferrer">
+            <Symbol name="karte" />{texte.tickets}
+          </a>
+        )}
+        <a class="termin__aktion" href={pfad(`/kalender/${eintrag.id}.ics`)} download title={texte.kalenderTitel}>
+          <Symbol name="kalender" />{texte.kalender}
+        </a>
+      </span>
+    )}
+    </div>
+    )}
   </div>
 </li>
 
 <style>
+  /* Raster statt Flex: Datum, Strich und Kopf (Ort + Titel) teilen sich
+     die erste Zeile. Bricht der Kopf auf schmalen Geraeten in mehr Zeilen
+     um, waechst der Strich mit und das Datum bleibt mittig daneben.
+     Programm und Kalender folgen darunter in der zweiten Zeile. */
   .termin {
-    display: flex;
-    align-items: stretch;
-    flex-wrap: wrap;
-    gap: 1em;
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    column-gap: 1em;
     margin-top: 1.5em;
     margin-bottom: 2em;
     color: var(--ton);
   }
 
-  .termin--sand   { --ton: var(--farbe-akzent-hell); }
-  .termin--creme  { --ton: var(--farbe-text); }
-  .termin--kupfer { --ton: var(--farbe-akzent); }
+  /* Hell und dunkel im Wechsel – ergibt sich aus der Reihenfolge,
+     auch wenn ein Skript spaeter einen Eintrag ins Archiv verschiebt. */
+  .termin--termin:nth-child(odd)  { --ton: var(--farbe-akzent-hell); }
+  .termin--termin:nth-child(even) { --ton: var(--farbe-text); }
+  .termin--kurs                   { --ton: var(--farbe-akzent); }
 
   .termin__datum {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-shrink: 0;
+    justify-content: center;
+    grid-row: 1;
     min-width: 6em;
-    margin-top: 0.5em;
   }
 
   .termin__tag {
@@ -61,26 +110,143 @@ const { eintrag, form = 'termin' } = Astro.props;
   }
 
   .termin__strich {
+    grid-row: 1;
     width: 2px;
-    height: 68px;
+    min-height: 68px;
     margin-top: 0.4em;
     margin-bottom: 0.2em;
     background-color: var(--ton);
   }
 
   @media screen and (max-width: 1280px) {
-    .termin__strich { height: 63px; }
+    .termin__strich { min-height: 63px; }
   }
 
+  /* Der Textblock selbst ordnet nichts an; seine zwei Teile sitzen im Raster. */
   .termin__text {
-    flex: 1;
-    margin: 0.4em -3em 0 0;
+    display: contents;
     font-size: 1em;
     font-weight: 100;
     line-height: 1.4em;
+    overflow-wrap: break-word;
   }
 
-  .termin__ort { font-weight: 700; }
+  .termin__kopf,
+  .termin__mehr {
+    grid-column: 3;
+    margin-right: -3em;
+  }
+
+  .termin__kopf {
+    grid-row: 1;
+    margin-top: 0.4em;
+    margin-bottom: 0.2em;
+  }
+
+  .termin__mehr {
+    grid-row: 2;
+    margin-top: -0.2em;
+  }
+
+  .termin__ort {
+    display: block;
+    font-weight: 700;
+  }
+
+  .termin__titel { display: block; }
+
+  a.termin__titel { transition: color 0.2s ease; }
+
+  .termin__uhrzeit { font-weight: 100; }
+
+  .termin__programm {
+    margin: 0.35em 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9em;
+    font-style: italic;
+    line-height: 1.35;
+    opacity: 0.9;
+  }
+
+  .termin__aktionen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em 1.25em;
+    margin-top: 0.5em;
+    font-size: max(0.85em, 12px);
+  }
+
+  .termin__aktion {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--farbe-akzent);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .termin__aktion:hover,
+  .termin__aktion:focus-visible { color: var(--farbe-text); }
+
+  .termin__aktion--tickets {
+    padding: 0.15em 0.75em;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+  }
+
+  /* Fuer Screenreader; sichtbar ist der Stempel. */
+  .termin__vermerk {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Abgesagt: der Termin ausgegraut, darueber schraeg das Wort wie ein
+     Stempel – ohne Rahmen, in Sand, deckt den Grossteil des Eintrags. */
+  .termin--termin.termin--abgesagt,
+  .termin--kurs.termin--abgesagt { --ton: var(--farbe-grau); }
+
+  .termin--abgesagt {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .termin--abgesagt :is(.termin__datum, .termin__strich, .termin__kopf, .termin__mehr) { opacity: 0.6; }
+
+  .termin--abgesagt::after {
+    content: attr(data-stempel);
+    content: attr(data-stempel) / '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-10deg);
+    font-size: 2.2em;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--farbe-akzent-hell);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .termin--kurs.termin--abgesagt::after { font-size: 1.7em; }
+
+  @media screen and (max-width: 736px) {
+    .termin--abgesagt::after { font-size: calc(2.2em * 0.72); }
+    .termin--kurs.termin--abgesagt::after { font-size: calc(1.7em * 0.72); }
+  }
+
+  a.termin__titel:hover { color: var(--farbe-akzent); }
 
   /* --- Terminseite ------------------------------------------------------- */
 
@@ -95,4 +261,12 @@ const { eintrag, form = 'termin' } = Astro.props;
   .termin--kurs .termin__jahr { font-size: 2.55em; margin-top: 0; }
   .termin--kurs .termin__ort  { font-size: 1em; }
   .termin--kurs .termin__strich { margin-left: 0.3em; margin-right: 0.9em; }
+
+  /* Im Original ragt der Kurstext hier mit seinem negativen Rand ueber den
+     Bildschirm hinaus und wird abgeschnitten – unter 800 px bleibt er drin. */
+  @media screen and (max-width: 800px) {
+    .termin--kurs .termin__kopf,
+    .termin--kurs .termin__mehr { margin-right: 0; }
+  }
+
 </style>

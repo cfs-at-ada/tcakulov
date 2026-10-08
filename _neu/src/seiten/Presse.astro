@@ -1,5 +1,7 @@
 ---
 import Grundgeruest from '../layouts/Grundgeruest.astro';
+import Symbol from '../components/Symbol.astro';
+import { Picture } from 'astro:assets';
 import { presse, pressefotos } from '../inhalte/presse';
 import type { Sprache } from '../inhalte/navigation';
 
@@ -10,11 +12,12 @@ interface Props {
 const { sprache } = Astro.props;
 const inhalt = presse[sprache];
 
-/** Die vier Dokumente stehen in zwei Reihen zu je zwei Kacheln. */
+/** Die vier Dokumente stehen wie im Original in zwei Reihen zu je zwei Kacheln. */
 const reihen = [
   { paar: inhalt.dokumente.slice(0, 2), abstand: '4.4em' },
   { paar: inhalt.dokumente.slice(2, 4), abstand: '2.35em' },
 ];
+
 ---
 
 <Grundgeruest
@@ -29,33 +32,31 @@ const reihen = [
       <p>{inhalt.hinweis}</p>
     </section>
 
+    <section class="presse-bio" aria-labelledby="presse-bio-titel">
+      <div class="presse-bio__kopf">
+        <h3 id="presse-bio-titel">{inhalt.bioTitel}</h3>
+        <button type="button" class="presse-bio__kopieren" data-kopieren="#presse-bio-text" data-fertig={inhalt.kopiert}>
+          {inhalt.kopieren}
+        </button>
+      </div>
+      <div class="presse-bio__text" id="presse-bio-text">
+        {inhalt.kurzbio.split('\n\n').map((absatz) => <p>{absatz}</p>)}
+      </div>
+      <p class="presse-bio__stand">{inhalt.bioStand}</p>
+    </section>
+
     {reihen.map(({ paar, abstand }) => (
       <div class="presse-reihe" style={`margin-bottom: ${abstand}`}>
         {paar.map((dokument, stelle) => (
-          <>
-            <div class:list={['presse-kachel', { 'presse-zweit': stelle === 1 }]}>
-              <div class="presse-kachel__feld">
-                <a title={inhalt.kacheltitel}>
-                  <div class="presse-kachel__mitte">
-                    <i class="icon solid fa-file-word"></i>
-                  </div>
-                </a>
-              </div>
-            </div>
-
-            <a
-              href={dokument.datei}
-              download
-              title={inhalt.ladetitel}
-              class:list={['presse-lade', { 'presse-zweit': stelle === 1 }]}
-            >
-              <i class="icon solid fa-download"></i>
-            </a>
-
-            <div class:list={['presse-text', { 'presse-zweit': stelle === 1 }]}>
-              <p>{dokument.zeile1}<br /> {dokument.zeile2}</p>
-            </div>
-          </>
+          <a class="presse-dokument" href={dokument.datei} download title={inhalt.ladetitel}>
+            <span class:list={['presse-kachel', { 'presse-zweit': stelle === 1 }]} aria-hidden="true">
+              <Symbol name="dokument" class="presse-symbol" />
+            </span>
+            <span class="presse-lade" aria-hidden="true">
+              <Symbol name="laden" class="presse-symbol" />
+            </span>
+            <span class="presse-text"><span class="presse-text__zeilen">{dokument.zeile1}<br /> {dokument.zeile2}</span></span>
+          </a>
         ))}
       </div>
     ))}
@@ -64,15 +65,27 @@ const reihen = [
       <div class="presse-foto">
         <div class="presse-foto__zeile">
           <div class="presse-foto__bild">
-            <img src={foto.bild} alt="Pressebild" width="1980" height="1320" />
+            <Picture
+              src={foto.bild}
+              alt={`${inhalt.fototext}, ${foto.nachweis}`}
+              widths={[160, 320]}
+              sizes="160px"
+              formats={['webp']}
+              fallbackFormat="jpg"
+              quality={80}
+              loading="lazy"
+            />
           </div>
 
-          <a href={foto.archiv} download title={inhalt.ladetitel} class="presse-lade">
-            <i class="icon solid fa-download"></i>
+          <a href={foto.archiv} download title={inhalt.ladetitel} class="presse-lade" aria-label={`${inhalt.ladetitel}: ${inhalt.fototext} ${foto.groesse}`}>
+            <Symbol name="laden" class="presse-symbol" />
           </a>
 
           <div class="presse-foto__text">
-            <p>{inhalt.fototext} <span class="presse-foto__groesse">{foto.groesse}</span></p>
+            <p>
+              {inhalt.fototext} <span class="presse-foto__groesse">{foto.groesse}</span><br />
+              <span class="presse-foto__nachweis">{foto.nachweis} · {inhalt.fotoformat}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -92,7 +105,7 @@ const reihen = [
   .pressekopf {
     margin: 0 0 2em 0;
     color: var(--farbe-akzent-hell);
-    text-align: justify;
+    text-align: var(--blocksatz);
   }
 
   .pressekopf__titel {
@@ -109,7 +122,9 @@ const reihen = [
     font-weight: 100;
   }
 
-  /* Die beiden Reihen mit den Textdokumenten */
+  /* Die vier Textdokumente in zwei Reihen wie im Original. Jeder Verweis
+     loest sich auf dem Rechner in seine drei Teile auf (display: contents),
+     damit die Reihe genau wie die Vorlage aufgeteilt wird. */
 
   .presse-reihe {
     display: flex;
@@ -119,41 +134,65 @@ const reihen = [
     padding: 0;
   }
 
+  .presse-dokument {
+    display: contents;
+    color: inherit;
+    text-decoration: none;
+  }
+
   .presse-kachel {
+    display: flex;
+    box-sizing: border-box;
     flex: 0 0 160px;
+    align-items: center;
+    justify-content: center;
     height: 110px;
+    border: 1px solid var(--farbe-akzent);
+    border-radius: 8px;
+    background-color: var(--farbe-kachel);
+    transition: border-color 0.3s ease;
+  }
+
+  .presse-kachel :global(.presse-symbol) {
+    font-size: 2.5em;
+    color: var(--farbe-akzent);
+    /* Das Wortsymbol sitzt optisch etwas tiefer als die Mitte. */
+    transform: translateY(10%);
   }
 
   .presse-kachel.presse-zweit { margin-left: 5em; }
 
-  .presse-kachel__feld {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    max-width: 160px;
-    max-height: 120px;
-    border: 1px solid var(--farbe-akzent);
-    border-radius: 8px;
-    background-color: var(--farbe-kachel);
-  }
-
-  /* Das Wortsymbol sitzt optisch etwas tiefer als die Mitte. */
-  .presse-kachel__mitte { transform: translateY(10%); }
-
-  .presse-kachel__mitte .icon {
-    font-size: 2.5em;
-    color: var(--farbe-akzent);
-  }
+  .presse-dokument:hover .presse-kachel { border-color: var(--farbe-akzent-hell); }
 
   .presse-text { flex: 1; }
 
-  .presse-text p {
-    margin: 0;
+  .presse-text__zeilen {
+    display: block;
     font-size: 0.95em;
     font-weight: 100;
     color: var(--farbe-text);
+  }
+
+  /* Das Original blendet hier die zweite Spalte aus („Lang“ war dann nicht
+     mehr zu erreichen). Stattdessen rutscht sie in eine eigene Zeile. */
+  @media screen and (max-width: 800px) {
+    .presse-reihe {
+      flex-wrap: wrap;
+      gap: 2.35em 0;
+    }
+
+    .presse-dokument {
+      display: flex;
+      flex: 1 1 100%;
+      align-items: center;
+      gap: 2.5em;
+    }
+
+    .presse-kachel.presse-zweit { margin-left: 0; }
+  }
+
+  @media screen and (max-width: 1080px) {
+    .presse-text br { display: none; }
   }
 
   @media screen and (max-width: 736px) {
@@ -162,16 +201,6 @@ const reihen = [
       margin-top: 1.4em;
       margin-bottom: 0.5em;
     }
-  }
-
-  /* Ab hier ist die zweite Spalte zu breit – sie wird ausgeblendet,
-     behaelt ihren Platz aber wie in der Vorlage. */
-  @media screen and (max-width: 800px) {
-    .presse-zweit { visibility: hidden; }
-  }
-
-  @media screen and (max-width: 1080px) {
-    .presse-text br { display: none; }
   }
 
   /* Die Pressefotos */
@@ -196,7 +225,7 @@ const reihen = [
 
   .presse-foto__bild { flex: 0 0 160px; }
 
-  .presse-foto__bild img {
+  .presse-foto__bild :global(img) {
     width: 100%;
     height: auto;
     margin-top: 2em;
@@ -216,16 +245,92 @@ const reihen = [
 
   .presse-foto__groesse { white-space: nowrap; }
 
+  .presse-foto__nachweis {
+    font-size: max(0.9em, 12px);
+    color: var(--farbe-akzent-hell);
+  }
+
+  /* Kurzbiografie zum Kopieren */
+
+  .presse-bio {
+    margin: 0 0 3em;
+    padding: 1.5em 1.75em 1.25em;
+    border: 1px solid var(--farbe-akzent);
+    border-radius: 8px;
+    color: var(--farbe-text);
+  }
+
+  .presse-bio__kopf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5em 1em;
+    margin-bottom: 0.75em;
+  }
+
+  .presse-bio h3 {
+    margin: 0;
+    font-size: 1.25em;
+    color: var(--farbe-akzent);
+  }
+
+  .presse-bio__kopieren {
+    padding: 0.35em 1em;
+    border: 1px solid var(--farbe-akzent);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--farbe-akzent-hell);
+    font: inherit;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .presse-bio__kopieren:hover,
+  .presse-bio__kopieren:focus-visible {
+    background: var(--farbe-akzent);
+    color: var(--farbe-grund);
+  }
+
+  .presse-bio__text p {
+    margin: 0 0 0.9em;
+    font-weight: 100;
+    text-align: var(--blocksatz);
+  }
+
+  .presse-bio__stand {
+    margin: 0;
+    font-size: max(0.85em, 12px);
+    font-style: italic;
+    color: var(--farbe-akzent-hell);
+  }
+
+  @media screen and (max-width: 480px) {
+    .presse-bio { padding: 1.1em 1em 1em; }
+  }
+
   /* Das Ladesymbol wachst beim Ueberfahren leicht an. */
 
-  .presse-lade i {
+  .presse-lade :global(.presse-symbol) {
     font-size: 1.8em;
     color: var(--farbe-akzent);
     transition: transform 0.3s ease, color 0.3s ease;
   }
 
-  .presse-lade:hover i {
+  .presse-lade:hover :global(.presse-symbol),
+  .presse-dokument:hover .presse-lade :global(.presse-symbol) {
     transform: scale(1.2);
     color: var(--farbe-akzent-hell);
   }
+
+  /* Sehr schmale Telefone: kleinere Kacheln, sonst ragt die Zeile hinaus */
+  @media screen and (max-width: 360px) {
+    .presse-dokument,
+    .presse-foto__zeile { gap: 1.25em; }
+
+    .presse-kachel { flex-basis: 112px; height: 80px; }
+    .presse-foto__bild { flex-basis: 112px; }
+  }
+
 </style>

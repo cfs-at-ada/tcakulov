@@ -185,3 +185,6 @@ build
 .DS_Store
 .env
 npm-debug.log
+
+# Browser-Pruefung
+.playwright-mcp/

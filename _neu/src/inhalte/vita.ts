@@ -8,9 +8,6 @@ export interface Portraitabschnitt {
 }
 
 export interface Vitainhalt {
-  konzertTitel: string;
-  konzertOrt: string;
-  konzertZeilen: { text: string; ziel: string }[];
   zitat: string[];
   ueberschrift: string;
   kurz: string[];
@@ -22,12 +19,6 @@ export interface Vitainhalt {
 
 export const vita: Record<Sprache, Vitainhalt> = {
   de: {
-    konzertTitel: "NÄCHSTES KONZERT",
-    konzertOrt: "Österreich, Wien, 16.10.2026",
-    konzertZeilen: [
-      { text: "Konzert im Bechstein Centrum Wien", ziel: "https://www.bechstein.com/centren/wien/veranstaltungen/konzert/duo-klavier-bratsche/" },
-      { text: "mit Elena Nemtsova", ziel: "https://www.bechstein.com/centren/wien/veranstaltungen/konzert/duo-klavier-bratsche/" },
-    ],
     zitat: [
       "„Musik existiert als Ziel.",
       "Erst dann komme ich selbst als Person.“",
@@ -111,12 +102,6 @@ export const vita: Record<Sprache, Vitainhalt> = {
     ],
   },
   en: {
-    konzertTitel: "upcoming concert",
-    konzertOrt: "Austria, Vienna, 16/10/2026",
-    konzertZeilen: [
-      { text: "Concert at Bechstein Centrum Wien", ziel: "https://www.bechstein.com/centren/wien/veranstaltungen/konzert/duo-klavier-bratsche/" },
-      { text: "with Elena Nemtsova", ziel: "https://www.bechstein.com/centren/wien/veranstaltungen/konzert/duo-klavier-bratsche/" },
-    ],
     zitat: [
       "„Music exists as a destination.",
       "Only then do I come as a person.“",

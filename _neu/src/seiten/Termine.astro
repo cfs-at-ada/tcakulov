@@ -2,14 +2,27 @@
 import Grundgeruest from '../layouts/Grundgeruest.astro';
 import Titelbild from '../components/Titelbild.astro';
 import Termin from '../components/Termin.astro';
-import { termine, terminTitel } from '../inhalte/termine';
+import Archiveintrag from '../components/Archiveintrag.astro';
+import { archivfaehig, kommende, vergangene, stichtag, terminTexte } from '../inhalte/termine';
+import { istVergangen } from '../inhalte/terminformat';
 import type { Sprache } from '../inhalte/navigation';
+import { terminDaten } from '../inhalte/strukturdaten';
 
 interface Props {
   sprache: Sprache;
 }
 
 const { sprache } = Astro.props;
+const texte = terminTexte[sprache];
+
+/*
+ * Das Archiv enthaelt alle Termine ausser den abgesagten, die juengsten zuerst. Die noch
+ * kommenden stehen verborgen darin: Ist die Seite aelter als ein Termin,
+ * blendet das Skript ihn oben aus und hier ein – ohne neuen Bau.
+ */
+const archiv = [...archivfaehig].reverse();
+const jahre = [...new Set(archiv.map((t) => t.start.slice(0, 4)))];
+const offenesJahr = vergangene[0]?.start.slice(0, 4);
 ---
 
 <Grundgeruest
@@ -18,22 +31,48 @@ const { sprache } = Astro.props;
   aktiv="termine"
   marke="#jumphere"
   fusszeileAbstand="1.9em"
+  strukturdaten={terminDaten(kommende, sprache, Astro.url.href)}
 >
   <Titelbild slot="titelbild" seite="termine" />
 
   <section class="terminkopf">
-    <h2 class="terminkopf__titel sprungmarke-oben">{terminTitel[sprache]}</h2>
+    <h2 class="terminkopf__titel sprungmarke-oben">{texte.titel}</h2>
   </section>
 
   <article class="terminbereich">
-    <div class="raster raster--termine">
-      <div class="spalte-12 terminspalte">
-        <ul class="terminliste">
-          {termine[sprache].map((eintrag) => <Termin eintrag={eintrag} />)}
-        </ul>
-      </div>
-    </div>
+    <ul class="terminliste" data-kommend-liste>
+      {kommende.map((eintrag) => <Termin eintrag={eintrag} sprache={sprache} />)}
+    </ul>
+    <p class="terminbereich__leer" data-kommend-leer hidden={kommende.length > 0}>{texte.keine}</p>
   </article>
+
+  <section class="archiv" id="archiv" data-archiv hidden={vergangene.length === 0}>
+    <h2 class="archiv__titel">
+      {texte.archiv}
+      <span class="archiv__anzahl" data-archiv-anzahl data-vorlage-eins={texte.archivHinweis(1)} data-vorlage-viele={texte.archivHinweis(2)}>
+        {texte.archivHinweis(vergangene.length)}
+      </span>
+    </h2>
+
+    {jahre.map((j) => {
+      const imJahr = archiv.filter((t) => t.start.startsWith(j));
+      const sichtbar = imJahr.filter((t) => istVergangen(t, stichtag)).length;
+      return (
+        <details class="archiv__jahr" data-archiv-jahr open={j === offenesJahr} hidden={sichtbar === 0}>
+          <summary class="archiv__kopf">
+            <span class="archiv__jahreszahl">{j}</span>
+            <span class="archiv__zahl" data-jahr-anzahl>{sichtbar}</span>
+            <span class="archiv__pfeil" aria-hidden="true"></span>
+          </summary>
+          <ol class="archiv__liste">
+            {imJahr.map((t) => (
+              <Archiveintrag eintrag={t} sprache={sprache} verborgen={!istVergangen(t, stichtag)} />
+            ))}
+          </ol>
+        </details>
+      );
+    })}
+  </section>
 </Grundgeruest>
 
 <style>
@@ -50,19 +89,11 @@ const { sprache } = Astro.props;
   }
 
   .terminbereich {
-    margin: 0;
-    padding: 0;
-  }
-
-  .raster.raster--termine {
-    margin: 0;
+    margin: -1.8em 0 0 0;
+    /* Wie im Original: rechts Luft, denn der Termintext greift mit
+       negativem Rand 3em nach rechts hinaus. */
     padding: 0 3.5em 0 0;
     color: var(--farbe-akzent-hell);
-  }
-
-  .raster > .terminspalte {
-    margin: -1.8em 0 0 0;
-    padding: 0;
   }
 
   .terminliste {
@@ -71,5 +102,99 @@ const { sprache } = Astro.props;
     list-style: none;
     font-weight: 100;
     color: var(--farbe-akzent);
+  }
+
+  .terminbereich__leer {
+    margin: 2em 0 3em;
+    font-weight: 100;
+    color: var(--farbe-text);
+  }
+
+  /* --- Archiv ------------------------------------------------------------- */
+
+  .archiv {
+    margin: 4.5em 0 3em;
+    padding-top: 3em;
+    border-top: 2px solid var(--farbe-akzent);
+    container-type: inline-size;
+  }
+
+  .archiv[hidden] { display: none; }
+
+  .archiv__titel {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25em 0.75em;
+    margin: 0 0 1em;
+    font-size: 2em;
+    font-weight: 400;
+    color: var(--farbe-akzent);
+  }
+
+  .archiv__anzahl {
+    font-size: 0.5em;
+    font-weight: 100;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--farbe-akzent-hell);
+  }
+
+  .archiv__jahr {
+    border-bottom: 1px solid color-mix(in srgb, var(--farbe-akzent) 40%, transparent);
+  }
+
+  .archiv__jahr[hidden] { display: none; }
+
+  .archiv__kopf {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.6em 0;
+    cursor: pointer;
+    list-style: none;
+    color: var(--farbe-akzent-hell);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .archiv__kopf::-webkit-details-marker { display: none; }
+
+  .archiv__jahreszahl {
+    font-size: 2.2em;
+    font-weight: 100;
+    line-height: 1.1;
+  }
+
+  .archiv__zahl {
+    min-width: 1.9em;
+    padding: 0.1em 0.55em;
+    border: 1px solid color-mix(in srgb, var(--farbe-akzent) 60%, transparent);
+    border-radius: 1em;
+    font-size: max(0.8em, 12px);
+    line-height: 1.5;
+    text-align: center;
+    color: var(--farbe-akzent);
+  }
+
+  .archiv__pfeil {
+    width: 0.6em;
+    height: 0.6em;
+    margin-left: auto;
+    margin-right: 0.4em;
+    border-right: 2px solid var(--farbe-akzent);
+    border-bottom: 2px solid var(--farbe-akzent);
+    transform: rotate(45deg) translateY(-25%);
+    transition: transform 0.25s ease;
+  }
+
+  .archiv__jahr[open] .archiv__pfeil { transform: rotate(225deg) translateY(-25%); }
+
+  .archiv__kopf:hover .archiv__jahreszahl,
+  .archiv__kopf:focus-visible .archiv__jahreszahl { color: var(--farbe-text); }
+
+  .archiv__liste {
+    margin: 0 0 1.5em;
+    padding: 0;
+    list-style: none;
   }
 </style>

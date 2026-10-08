@@ -9,6 +9,22 @@ interface Props {
 
 const { sprache } = Astro.props;
 const inhalt = recht[sprache];
+const { impressum, datenschutz } = inhalt;
+
+/** Zerlegt Text so, dass Adressen und E-Mail-Adressen anklickbar werden. */
+const MUSTER = /(https?:\/\/\S+?)(?=[.,;)]?(?:\s|$))|([\w.-]+@[\w-]+\.[\w.]+)/g;
+function teile(text: string) {
+  const stuecke: { text: string; ziel?: string }[] = [];
+  let rest = 0;
+  for (const treffer of text.matchAll(MUSTER)) {
+    if (treffer.index! > rest) stuecke.push({ text: text.slice(rest, treffer.index) });
+    const [ganz, url, mail] = treffer;
+    stuecke.push({ text: ganz, ziel: url ?? `mailto:${mail}` });
+    rest = treffer.index! + ganz.length;
+  }
+  if (rest < text.length) stuecke.push({ text: text.slice(rest) });
+  return stuecke;
+}
 ---
 
 <Grundgeruest
@@ -18,38 +34,54 @@ const inhalt = recht[sprache];
   rasterAbstand
 >
   <article class="recht">
-    <section class="recht__block">
-      <h2 class="recht__titel">
-        {sprache === 'de'
-          ? <Fragment><span class="umbruchfrei">{'Impressum &'}</span>{' Datenschutz'}</Fragment>
-          : <Fragment>{'Legal Notice & '}<span class="umbruchfrei">{' Privacy '}</span></Fragment>}
-      </h2><br />
+    <h2 class="recht__titel">
+      {sprache === 'de'
+        ? <Fragment><span class="umbruchfrei">{'Impressum &'}</span>{' Datenschutz'}</Fragment>
+        : <Fragment>{'Legal Notice & '}<span class="umbruchfrei">{' Privacy '}</span></Fragment>}
+    </h2>
 
-      <h3>{inhalt.anschriftTitel}</h3>
-      {inhalt.anschrift.map((zeile, stelle) => (
-        <p
-          class:list={[
-            'recht__anschrift',
-            { 'recht__anschrift--fett': stelle === 0, 'recht__anschrift--letzte': stelle === inhalt.anschrift.length - 1 },
-          ]}
-        >{zeile}</p>
-      ))}
+    <section class="recht__block" id="impressum" aria-labelledby="impressum-titel">
+      <h3 class="recht__kapitel" id="impressum-titel">{impressum.titel}</h3>
+      <p class="recht__grundlage">{impressum.grundlage}</p>
+      <p class="recht__anschrift">
+        {impressum.anschrift.map((zeile, i) => <Fragment>{i === 0 ? <strong>{zeile}</strong> : zeile}<br /></Fragment>)}
+      </p>
+      <p class="recht__anschrift">
+        {impressum.kontakt.map((zeile) => <Fragment>{teile(zeile).map((t) => t.ziel ? <a href={t.ziel}>{t.text}</a> : t.text)}<br /></Fragment>)}
+      </p>
+      <h4>{impressum.verantwortlichTitel}</h4>
+      <p>{impressum.verantwortlich.join(', ')}</p>
+      {impressum.hinweis && <p class="recht__hinweis">{impressum.hinweis}</p>}
 
-      {inhalt.abschnitte.map((abschnitt) => (
+      {impressum.abschnitte.map((abschnitt) => (
         <Fragment>
-          <h3>{abschnitt.titel}</h3>
-          <p class:list={[{ 'recht__eng': abschnitt.eng }]}>
-            {abschnitt.text}<br />
-            {abschnitt.punkte && (
-              <Fragment>
-                <br />
-                {abschnitt.punkte.map((punkt) => <span class="recht__punkt">{punkt}</span>)}
-              </Fragment>
-            )}
-            {abschnitt.schluss && <Fragment><br />{abschnitt.schluss}<br /></Fragment>}
-          </p>
+          <h4>{abschnitt.titel}</h4>
+          <p>{teile(abschnitt.text).map((t) => t.ziel ? <a href={t.ziel}>{t.text}</a> : t.text)}</p>
+          {abschnitt.punkte && (
+            <ul class="recht__liste">
+              {abschnitt.punkte.map((punkt) => <li>{teile(punkt).map((t) => t.ziel ? <a href={t.ziel}>{t.text}</a> : t.text)}</li>)}
+            </ul>
+          )}
+          {abschnitt.schluss && <p>{teile(abschnitt.schluss).map((t) => t.ziel ? <a href={t.ziel}>{t.text}</a> : t.text)}</p>}
         </Fragment>
       ))}
+    </section>
+
+    <section class="recht__block" id="datenschutz" aria-labelledby="datenschutz-titel">
+      <h3 class="recht__kapitel" id="datenschutz-titel">{datenschutz.titel}</h3>
+      {datenschutz.abschnitte.map((abschnitt) => (
+        <Fragment>
+          <h4>{abschnitt.titel}</h4>
+          <p>{teile(abschnitt.text).map((t) => t.ziel ? <a href={t.ziel}>{t.text}</a> : t.text)}</p>
+          {abschnitt.punkte && (
+            <ul class="recht__liste">
+              {abschnitt.punkte.map((punkt) => <li>{teile(punkt).map((t) => t.ziel ? <a href={t.ziel}>{t.text}</a> : t.text)}</li>)}
+            </ul>
+          )}
+          {abschnitt.schluss && <p>{teile(abschnitt.schluss).map((t) => t.ziel ? <a href={t.ziel}>{t.text}</a> : t.text)}</p>}
+        </Fragment>
+      ))}
+      <p class="recht__stand">{datenschutz.stand}</p>
     </section>
   </article>
 </Grundgeruest>
@@ -61,52 +93,74 @@ const inhalt = recht[sprache];
     font-weight: 100;
   }
 
-  .recht__block {
-    margin: 0;
-    color: var(--farbe-akzent-hell);
-    text-align: justify;
-  }
-
   .recht__titel {
     margin: 0 0 0 -0.1em;
-    padding: 1.6em 0 0.8em 0;
+    padding: 1.6em 0 0.4em 0;
     font-size: 3em;
     font-weight: 400;
     color: var(--farbe-akzent);
   }
 
-  .recht h3 { color: var(--farbe-akzent); }
-
-  .recht__anschrift {
-    margin: 0;
-    padding: 0;
+  .recht__block {
+    margin: 0 0 2.5em;
+    color: var(--farbe-akzent-hell);
+    text-align: var(--blocksatz);
   }
 
-  .recht__anschrift--fett { font-weight: bold; }
-  .recht__anschrift--letzte { margin-bottom: 3em; }
+  /* Zwischentitel wie die h3 des Originals: Grundstil der Seite, Kupfer */
+  .recht__kapitel {
+    margin: 1.2em 0 0.6em;
+    font-size: 1.6em;
+    color: var(--farbe-akzent);
+    /* „Datenschutzerklärung“ passt auf sehr schmalen Geraeten nicht in eine Zeile. */
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
 
-  /* Die Aufzaehlungen sind Zeilen, keine Listen – so steht es in der Vorlage. */
-  .recht__punkt { display: block; }
+  .recht h4 {
+    margin: 1.6em 0 0.35em;
+    font-size: 1.25em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--farbe-akzent);
+  }
 
-  /* Der letzte Absatz schliesst enger ab als die uebrigen. */
-  .recht p.recht__eng { margin-bottom: 0.65em; }
+  .recht p { margin: 0 0 0.9em; }
+
+  .recht__grundlage { font-style: italic; }
+
+  .recht__anschrift { text-align: left; }
+
+  .recht__hinweis { font-style: italic; }
+
+  .recht__liste {
+    margin: 0 0 0.9em;
+    padding-left: 1.2em;
+    text-align: left;
+  }
+
+  .recht__liste li { margin: 0.15em 0; }
+
+  .recht a {
+    color: var(--farbe-text);
+    overflow-wrap: anywhere;
+  }
+
+  .recht__stand {
+    margin-top: 2em;
+    font-style: italic;
+  }
 
   .umbruchfrei { white-space: nowrap; }
 
-  /* Auf schmalen Schirmen werden die harten Umbrueche aufgehoben. */
   @media screen and (max-width: 1080px) {
-    .recht br { display: none; }
-
-    .recht__titel {
-      padding-top: 0.9em;
-      padding-bottom: 1.2em;
-    }
+    .recht__titel { padding-top: 0.9em; }
   }
 
   @media screen and (max-width: 736px) {
     .recht__titel {
       padding-top: 2.2em;
-      padding-bottom: 1.7em;
+      padding-bottom: 0.6em;
       font-size: 2em;
     }
   }

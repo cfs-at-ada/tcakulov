@@ -1,0 +1,89 @@
+---
+import { pfad } from '../inhalte/pfad';
+import '../styles/tokens.css';
+import '../styles/basis.css';
+
+/*
+ * Fehlerseite fuer Adressen, die es nicht gibt – zweisprachig, weil
+ * unklar ist, aus welcher Sprachfassung jemand kommt.
+ */
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <title>Seite nicht gefunden – German Tcakulov</title>
+    <link rel="icon" href={pfad('/favicon-192.png')} sizes="192x192" type="image/png" />
+    <link rel="icon" href={pfad('/favicon-32.png')} sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href={pfad('/apple-touch-icon.png')} />
+    <meta name="theme-color" content="#003049" />
+  </head>
+  <body>
+    <main class="fehler">
+      <p class="fehler__name"><a href={pfad('/')}>German Tcakulov</a></p>
+      <h1 class="fehler__titel">404</h1>
+      <section lang="de">
+        <p class="fehler__text">Diese Seite gibt es leider nicht (mehr).</p>
+        <p><a class="fehler__knopf" href={pfad('/')}>Zur Startseite</a> <a class="fehler__knopf" href={pfad('/Termine')}>Termine</a></p>
+      </section>
+      <section lang="en">
+        <p class="fehler__text">Sorry, this page does not exist (anymore).</p>
+        <p><a class="fehler__knopf" href={pfad('/index-en')}>Home</a> <a class="fehler__knopf" href={pfad('/Termine-en')}>Calendar</a></p>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--farbe-grund);
+    color: var(--farbe-text);
+    font-family: var(--schrift);
+  }
+
+  .fehler {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 12vh var(--rand) 4rem;
+    text-align: center;
+  }
+
+  .fehler__name {
+    margin: 0;
+    font-size: 1.1em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .fehler__name a { color: var(--farbe-akzent-hell); text-decoration: none; }
+
+  .fehler__titel {
+    margin: 0.3em 0 0.2em;
+    font-size: clamp(4rem, 18vw, 7rem);
+    font-weight: 300;
+    line-height: 1;
+    color: var(--farbe-akzent);
+  }
+
+  section { margin-top: 2em; }
+
+  .fehler__text { margin: 0 0 0.8em; font-size: 1.15em; }
+
+  .fehler__knopf {
+    display: inline-block;
+    margin: 0.25em;
+    padding: 0.45em 1.2em;
+    border: 1px solid var(--farbe-akzent);
+    border-radius: 999px;
+    color: var(--farbe-text);
+    text-decoration: none;
+  }
+
+  .fehler__knopf:hover,
+  .fehler__knopf:focus-visible { background: var(--farbe-akzent); color: var(--farbe-grund); }
+</style>

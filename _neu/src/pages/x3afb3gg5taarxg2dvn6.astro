@@ -1,0 +1,1214 @@
+---
+/**
+ * Terminverwaltung. Die zufaellige Adresse haelt Neugierige fern, sie ist
+ * nicht verlinkt und nicht indexiert. Geschuetzt ist sie durch GitHub:
+ * Ohne gueltigen Schluessel kann sie nichts lesen und nichts schreiben.
+ */
+import '../styles/tokens.css';
+
+const repo = import.meta.env.PUBLIC_TERMINE_REPO ?? 'cfs-at-ada/germantcakulov-neu';
+const zweig = import.meta.env.PUBLIC_TERMINE_ZWEIG ?? 'main';
+const pfad = import.meta.env.PUBLIC_TERMINE_PFAD ?? '_neu/src/inhalte/termine.json';
+const basis = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Vorbelegter Antrag fuer einen fein abgestimmten Schluessel
+const schluesselAntrag =
+  'https://github.com/settings/personal-access-tokens/new?' +
+  new URLSearchParams({
+    name: 'Terminverwaltung germantcakulov.com',
+    description: 'Darf die Termine der Website lesen und schreiben.',
+    target_name: repo.split('/')[0],
+    expires_in: '366',
+    contents: 'write',
+    actions: 'read',
+  }).toString();
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- Die Adresse soll nicht ueber Links nach aussen gelangen. -->
+    <meta name="referrer" content="no-referrer" />
+    <meta name="theme-color" content="#003049" />
+    <title>Termine verwalten · German Tcakulov</title>
+  </head>
+
+  <body data-ansicht="laden" data-repo={repo} data-zweig={zweig} data-pfad={pfad} data-seite={`${basis}/Termine`}>
+
+    <!-- ===================== Anmeldung ===================== -->
+    <main class="anmeldung" data-nur="anmeldung">
+      <div class="anmeldung__karte">
+        <p class="marke">German<br />Tcakulov</p>
+        <h1 class="anmeldung__titel">Terminverwaltung</h1>
+        <p class="anmeldung__text">Melde dich mit deinem GitHub-Schlüssel an. Er bleibt nur auf diesem Gerät gespeichert.</p>
+
+        <form class="anmeldung__form" data-anmeldeformular>
+          <label class="feld">
+            <span class="feld__name">Schlüssel</span>
+            <span class="feld__mit-knopf">
+              <input class="eingabe" name="schluessel" type="password" autocomplete="current-password"
+                     placeholder="github_pat_…" required spellcheck="false" />
+              <button class="knopf-zeigen" type="button" data-zeigen aria-label="Schlüssel anzeigen">Zeigen</button>
+            </span>
+          </label>
+
+          <details class="erweitert">
+            <summary>Repository</summary>
+            <label class="feld">
+              <span class="feld__name">Besitzer / Name</span>
+              <input class="eingabe" name="repo" value={repo} spellcheck="false" />
+            </label>
+          </details>
+
+          <p class="meldung meldung--fehler" data-anmeldefehler hidden></p>
+
+          <button class="knopf knopf--haupt knopf--breit" type="submit">
+            <span>Anmelden</span>
+          </button>
+        </form>
+
+        <details class="hilfe">
+          <summary>Wie bekomme ich einen Schlüssel?</summary>
+          <ol>
+            <li>Bei GitHub anmelden und <a href={schluesselAntrag} target="_blank" rel="noopener">diesen vorbereiteten Antrag öffnen</a>.</li>
+            <li>Unter <em>Repository access</em> „Only select repositories“ wählen und <strong>{repo.split('/')[1]}</strong> auswählen.</li>
+            <li>Die Rechte <em>Contents: Read and write</em> und <em>Actions: Read</em> sind schon gesetzt.</li>
+            <li>„Generate token“ – den Schlüssel kopieren und hier einfügen.</li>
+          </ol>
+          <p>Der Schlüssel darf nur dieses eine Repository ändern. Läuft er ab, einfach einen neuen erstellen.</p>
+        </details>
+      </div>
+    </main>
+
+    <!-- ===================== Uebersicht ===================== -->
+    <div class="app" data-nur="app">
+      <header class="kopf">
+        <div class="kopf__innen">
+          <a class="kopf__marke" href={`${basis}/Termine`} target="_blank" rel="noopener" title="Terminseite öffnen">
+            <span class="marke marke--klein">German Tcakulov</span>
+            <span class="kopf__unter">Terminverwaltung</span>
+          </a>
+          <div class="kopf__nutzer">
+            <img class="kopf__bild" data-nutzerbild alt="" width="32" height="32" hidden />
+            <button class="knopf knopf--leise" type="button" data-abmelden>Abmelden</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="uebersicht">
+        <div class="uebersicht__kopf">
+          <h1 class="uebersicht__titel">Termine</h1>
+          <button class="knopf knopf--haupt" type="button" data-neu>
+            <span class="plus" aria-hidden="true"></span><span>Neuer Termin</span>
+          </button>
+        </div>
+
+        <div class="werkzeuge">
+          <div class="reiter" role="tablist">
+            <button role="tab" class="reiter__knopf" aria-selected="true" data-reiter="kommend">
+              Kommend <span class="reiter__zahl" data-zahl="kommend">0</span>
+            </button>
+            <button role="tab" class="reiter__knopf" aria-selected="false" data-reiter="archiv">
+              Archiv <span class="reiter__zahl" data-zahl="archiv">0</span>
+            </button>
+          </div>
+          <label class="suche">
+            <span class="suche__lupe" aria-hidden="true"></span>
+            <input class="eingabe eingabe--suche" type="search" placeholder="Suchen …" data-suche aria-label="Termine durchsuchen" />
+          </label>
+        </div>
+
+        <ol class="liste" data-liste aria-live="polite"></ol>
+        <div class="leer" data-leer hidden>
+          <p class="leer__titel" data-leer-titel>Keine kommenden Termine</p>
+          <p class="leer__text">Lege mit „Neuer Termin“ den nächsten an.</p>
+        </div>
+        <div class="ladeplatz" data-ladeplatz>
+          <span class="kreisel"></span>
+        </div>
+      </main>
+    </div>
+
+    <!-- ===================== Bearbeiten ===================== -->
+    <dialog class="tafel" data-tafel aria-labelledby="tafel-titel">
+      <form class="tafel__form" data-terminformular novalidate>
+        <header class="tafel__kopf">
+          <button class="knopf-zurueck" type="button" data-schliessen aria-label="Schließen"></button>
+          <h2 class="tafel__titel" id="tafel-titel" data-tafel-titel>Neuer Termin</h2>
+        </header>
+
+        <div class="tafel__rumpf">
+          <section class="gruppe">
+            <h3 class="gruppe__titel">Art</h3>
+            <div class="wahl" role="radiogroup">
+              <label class="wahl__punkt"><input type="radio" name="typ" value="konzert" checked /><span>Konzert</span></label>
+              <label class="wahl__punkt"><input type="radio" name="typ" value="meisterkurs" /><span>Meisterkurs</span></label>
+              <label class="wahl__punkt"><input type="radio" name="typ" value="sonstiges" /><span>Sonstiges</span></label>
+            </div>
+            <p class="gruppe__hinweis" data-typhinweis>Erscheint auf der Startseite als „Nächstes Konzert“.</p>
+          </section>
+
+          <section class="gruppe">
+            <h3 class="gruppe__titel">Wann</h3>
+            <div class="reihe reihe--datum">
+              <label class="feld">
+                <span class="feld__name">Datum</span>
+                <input class="eingabe" type="date" name="start" required />
+              </label>
+              <label class="feld" data-endfeld hidden>
+                <span class="feld__name">bis</span>
+                <input class="eingabe" type="date" name="ende" />
+              </label>
+              <label class="feld feld--uhrzeit">
+                <span class="feld__name">Beginn <span class="feld__bsp">optional</span></span>
+                <input class="eingabe" type="time" name="uhrzeit" step="300" />
+              </label>
+            </div>
+            <label class="schalter">
+              <input type="checkbox" name="mehrtaegig" />
+              <span class="schalter__bahn" aria-hidden="true"></span>
+              <span>Mehrere Tage</span>
+            </label>
+          </section>
+
+          <section class="gruppe">
+            <h3 class="gruppe__titel">Wo und was</h3>
+            <div class="sprachkopf" aria-hidden="true">
+              <span>Deutsch</span><span>English</span>
+            </div>
+
+            <div class="paar">
+              <label class="feld">
+                <span class="feld__name">Ort <span class="feld__bsp">Land, Stadt</span></span>
+                <input class="eingabe" name="ort_de" list="orte" placeholder="Österreich, Wien" required autocomplete="off" />
+              </label>
+              <label class="feld">
+                <span class="feld__name">Place <span class="feld__auto" data-auto-hinweis="ort_en">automatisch</span></span>
+                <input class="eingabe" name="ort_en" placeholder="Austria, Vienna" required autocomplete="off" />
+              </label>
+            </div>
+
+            <div class="paar">
+              <label class="feld">
+                <span class="feld__name">Erste Zeile</span>
+                <input class="eingabe" name="titel_de" placeholder="Konzert im Bechstein Centrum Wien" required />
+              </label>
+              <label class="feld">
+                <span class="feld__name">First line <span class="feld__auto" data-auto-hinweis="titel_en">automatisch</span></span>
+                <input class="eingabe" name="titel_en" placeholder="Concert at Bechstein Centrum Vienna" required />
+              </label>
+            </div>
+
+            <div class="paar">
+              <label class="feld">
+                <span class="feld__name">Zweite Zeile <span class="feld__bsp">optional</span></span>
+                <input class="eingabe" name="zusatz_de" placeholder="mit Elena Nemtsova" />
+              </label>
+              <label class="feld">
+                <span class="feld__name">Second line <span class="feld__auto" data-auto-hinweis="zusatz_en">automatisch</span></span>
+                <input class="eingabe" name="zusatz_en" placeholder="with Elena Nemtsova" />
+              </label>
+            </div>
+            <div class="paar">
+              <label class="feld">
+                <span class="feld__name">Programm <span class="feld__bsp">optional, ein Werk pro Zeile</span></span>
+                <textarea class="eingabe eingabe--mehrzeilig" name="programm_de" rows="3" placeholder="Brahms: Sonate f-Moll op. 120 Nr. 1&#10;Schumann: Märchenbilder op. 113"></textarea>
+              </label>
+              <label class="feld">
+                <span class="feld__name">Programme <span class="feld__bsp">leer = wie Deutsch</span></span>
+                <textarea class="eingabe eingabe--mehrzeilig" name="programm_en" rows="3" placeholder="Brahms: Sonata in F minor, Op. 120 No. 1"></textarea>
+              </label>
+            </div>
+            <datalist id="orte" data-orte></datalist>
+          </section>
+
+          <section class="gruppe">
+            <h3 class="gruppe__titel">Links</h3>
+            <label class="feld">
+              <span class="feld__name">Infos zur Veranstaltung <span class="feld__bsp">optional</span></span>
+              <input class="eingabe" type="url" name="link_de" placeholder="https://…" inputmode="url" spellcheck="false" />
+            </label>
+            <label class="feld">
+              <span class="feld__name">Tickets <span class="feld__bsp">optional, direkt zum Kartenkauf</span></span>
+              <input class="eingabe" type="url" name="tickets" placeholder="https://…" inputmode="url" spellcheck="false" />
+            </label>
+            <label class="schalter">
+              <input type="checkbox" name="eigener_link_en" />
+              <span class="schalter__bahn" aria-hidden="true"></span>
+              <span>Eigene Adresse für die englische Seite</span>
+            </label>
+            <label class="feld" data-link-en hidden>
+              <span class="feld__name">Englische Adresse</span>
+              <input class="eingabe" type="url" name="link_en" placeholder="https://…" inputmode="url" spellcheck="false" />
+            </label>
+          </section>
+
+          <section class="gruppe">
+            <h3 class="gruppe__titel">Status</h3>
+            <label class="schalter">
+              <input type="checkbox" name="abgesagt" />
+              <span class="schalter__bahn" aria-hidden="true"></span>
+              <span>Abgesagt</span>
+            </label>
+            <p class="gruppe__hinweis" data-absagehinweis>Ein abgesagter Termin bleibt eine Woche lang ausgegraut mit dem Hinweis „Abgesagt“ sichtbar. Danach verschwindet er von selbst – auch aus dem Archiv.</p>
+          </section>
+
+          <section class="gruppe gruppe--vorschau">
+            <div class="vorschau__kopf">
+              <h3 class="gruppe__titel">Vorschau</h3>
+              <div class="mini-reiter">
+                <button type="button" class="mini-reiter__knopf" aria-pressed="true" data-vorschau-sprache="de">DE</button>
+                <button type="button" class="mini-reiter__knopf" aria-pressed="false" data-vorschau-sprache="en">EN</button>
+              </div>
+            </div>
+            <div class="vorschau" data-vorschau></div>
+          </section>
+
+          <p class="meldung meldung--fehler" data-formularfehler hidden></p>
+        </div>
+
+        <footer class="tafel__fuss">
+          <button class="knopf knopf--gefahr" type="button" data-loeschen hidden>Löschen</button>
+          <span class="tafel__luecke"></span>
+          <button class="knopf knopf--leise" type="button" data-schliessen>Abbrechen</button>
+          <button class="knopf knopf--haupt" type="submit" data-speichern>Speichern</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <!-- ===================== Rueckfrage ===================== -->
+    <dialog class="rueckfrage" data-rueckfrage>
+      <form method="dialog">
+        <h2 class="rueckfrage__titel">Termin löschen?</h2>
+        <p class="rueckfrage__text" data-rueckfrage-text></p>
+        <div class="rueckfrage__knoepfe">
+          <button class="knopf knopf--leise" value="nein">Behalten</button>
+          <button class="knopf knopf--gefahr-voll" value="ja">Löschen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- ===================== Statusmeldung ===================== -->
+    <div class="status" data-status role="status" aria-live="polite" hidden>
+      <span class="status__zeichen" data-status-zeichen></span>
+      <span class="status__text">
+        <strong data-status-titel></strong>
+        <span data-status-text></span>
+      </span>
+      <a class="status__link" data-status-link href="#" target="_blank" rel="noopener" hidden>Ansehen</a>
+    </div>
+
+    <script>
+      import '../verwaltung/app';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  /* Die Verwaltung erbt Farben und Schrift der Website, sonst nichts. */
+
+  :root {
+    --flaeche: color-mix(in srgb, var(--farbe-grund) 88%, white);
+    --flaeche-hoch: color-mix(in srgb, var(--farbe-grund) 80%, white);
+    --linie: color-mix(in srgb, var(--farbe-akzent) 35%, transparent);
+    --linie-stark: color-mix(in srgb, var(--farbe-akzent) 70%, transparent);
+    --gedaempft: color-mix(in srgb, var(--farbe-text) 62%, var(--farbe-grund));
+    --rot: #E8806F;
+    --gruen: #9CCB9B;
+    --radius: 12px;
+    --schatten: 0 18px 50px rgba(0, 10, 20, 0.45);
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--farbe-grund);
+    color: var(--farbe-text);
+    font-family: var(--schrift);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button, input, select, textarea { font: inherit; color: inherit; }
+  a { color: var(--farbe-akzent-hell); }
+  [hidden] { display: none !important; }
+
+  /* Welche Ansicht gerade gilt, steuert ein Attribut am body. */
+  body:not([data-ansicht="anmeldung"]) [data-nur="anmeldung"],
+  body:not([data-ansicht="app"]) [data-nur="app"] { display: none; }
+
+  body[data-ansicht="laden"]::after {
+    content: '';
+    position: fixed;
+    inset: 50% auto auto 50%;
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+    border: 2px solid var(--linie);
+    border-top-color: var(--farbe-akzent-hell);
+    border-radius: 50%;
+    animation: drehen 0.8s linear infinite;
+  }
+
+  @keyframes drehen { to { transform: rotate(360deg); } }
+
+  .marke {
+    margin: 0;
+    font-size: 2.6rem;
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: var(--farbe-akzent-hell);
+  }
+
+  .marke--klein {
+    font-size: 1.15rem;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+
+  /* --- Knoepfe ------------------------------------------------------------ */
+
+  .knopf {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    min-height: 44px;
+    padding: 0 1.15em;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .knopf:active { transform: scale(0.97); }
+  .knopf:disabled { opacity: 0.55; cursor: progress; }
+
+  .knopf--haupt { background: var(--farbe-akzent-hell); color: var(--farbe-grund); }
+  .knopf--haupt:hover { background: var(--farbe-text); }
+
+  .knopf--leise { border-color: var(--linie); color: var(--farbe-akzent-hell); }
+  .knopf--leise:hover { border-color: var(--farbe-akzent-hell); }
+
+  .knopf--gefahr { color: var(--rot); padding-inline: 0.6em; }
+  .knopf--gefahr:hover { background: color-mix(in srgb, var(--rot) 12%, transparent); }
+
+  .knopf--gefahr-voll { background: var(--rot); color: #2B0F0A; }
+
+  .knopf--breit { width: 100%; }
+
+  .knopf:focus-visible,
+  .eingabe:focus-visible,
+  .reiter__knopf:focus-visible,
+  .karte:focus-visible {
+    outline: 2px solid var(--farbe-akzent-hell);
+    outline-offset: 2px;
+  }
+
+  .plus {
+    position: relative;
+    width: 12px;
+    height: 12px;
+  }
+
+  .plus::before, .plus::after {
+    content: '';
+    position: absolute;
+    inset: 5px 0 auto 0;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+
+  .plus::after { transform: rotate(90deg); }
+
+  /* --- Felder ------------------------------------------------------------- */
+
+  .feld { display: flex; flex-direction: column; gap: 0.35em; min-width: 0; }
+
+  .feld__name {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--farbe-akzent-hell);
+  }
+
+  .feld__bsp, .feld__auto {
+    font-weight: 400;
+    color: var(--gedaempft);
+  }
+
+  .feld__auto {
+    padding: 0 0.5em;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background: color-mix(in srgb, var(--farbe-akzent) 22%, transparent);
+    color: var(--farbe-akzent-hell);
+  }
+
+  .eingabe {
+    width: 100%;
+    min-height: 46px;
+    padding: 0.55em 0.85em;
+    border: 1px solid var(--linie);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--farbe-grund) 70%, black);
+    color: var(--farbe-text);
+    font-size: 1rem; /* 16px – sonst zoomt iOS beim Antippen */
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .eingabe::placeholder { color: color-mix(in srgb, var(--farbe-text) 32%, transparent); }
+  .eingabe:hover { border-color: var(--linie-stark); }
+  .eingabe:focus { outline: none; border-color: var(--farbe-akzent-hell); background: color-mix(in srgb, var(--farbe-grund) 82%, black); }
+  .eingabe[aria-invalid="true"] { border-color: var(--rot); }
+
+  .eingabe[type="date"] { min-width: 0; }
+  .eingabe[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.85) sepia(0.4); cursor: pointer; }
+
+  .meldung {
+    margin: 0;
+    padding: 0.75em 1em;
+    border-radius: 10px;
+    font-size: 0.92rem;
+  }
+
+  .meldung--fehler {
+    border: 1px solid color-mix(in srgb, var(--rot) 55%, transparent);
+    background: color-mix(in srgb, var(--rot) 12%, transparent);
+    color: #F6C2B8;
+  }
+
+  /* --- Anmeldung ---------------------------------------------------------- */
+
+  .anmeldung {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 24px 16px;
+    background:
+      radial-gradient(120% 70% at 85% 0%, color-mix(in srgb, var(--farbe-akzent) 22%, transparent), transparent 60%),
+      var(--farbe-grund);
+  }
+
+  .anmeldung__karte {
+    width: min(100%, 420px);
+  }
+
+  .anmeldung__titel {
+    margin: 1.6rem 0 0.4rem;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--farbe-akzent);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .anmeldung__text { margin: 0 0 1.6rem; color: var(--gedaempft); }
+
+  .anmeldung__form { display: flex; flex-direction: column; gap: 1rem; }
+
+  .feld__mit-knopf { position: relative; display: block; }
+  .feld__mit-knopf .eingabe { padding-right: 5.2em; }
+
+  .knopf-zeigen {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    padding: 0.35em 0.7em;
+    border: 0;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--farbe-akzent) 18%, transparent);
+    font-size: 0.8rem;
+    color: var(--farbe-akzent-hell);
+    cursor: pointer;
+  }
+
+  .erweitert summary, .hilfe summary {
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--farbe-akzent);
+  }
+
+  .erweitert[open] summary { margin-bottom: 0.6rem; }
+
+  .hilfe {
+    margin-top: 1.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--linie);
+    font-size: 0.92rem;
+    color: var(--gedaempft);
+  }
+
+  .hilfe ol { padding-left: 1.2em; margin: 0.8rem 0; }
+  .hilfe li { margin-bottom: 0.4em; }
+  .hilfe em, .hilfe strong { color: var(--farbe-text); }
+
+  /* --- Kopfleiste --------------------------------------------------------- */
+
+  .kopf {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding-top: env(safe-area-inset-top);
+    border-bottom: 1px solid var(--linie);
+    background: color-mix(in srgb, var(--farbe-grund) 88%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .kopf__innen {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: min(100% - 32px, 880px);
+    min-height: 64px;
+    margin-inline: auto;
+  }
+
+  .kopf__marke { display: flex; flex-direction: column; gap: 3px; text-decoration: none; }
+  .kopf__unter { font-size: 0.78rem; color: var(--farbe-akzent); letter-spacing: 0.02em; }
+
+  .kopf__nutzer { display: flex; align-items: center; gap: 0.75rem; }
+  .kopf__bild { border-radius: 50%; border: 1px solid var(--linie); }
+
+  /* --- Uebersicht --------------------------------------------------------- */
+
+  .uebersicht {
+    width: min(100% - 32px, 880px);
+    margin: 0 auto;
+    padding: 2.25rem 0 calc(6rem + env(safe-area-inset-bottom));
+  }
+
+  .uebersicht__kopf {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .uebersicht__titel {
+    margin: 0;
+    font-size: clamp(2.1rem, 6vw, 3rem);
+    font-weight: 400;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--farbe-akzent);
+  }
+
+  .werkzeuge {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .reiter {
+    display: inline-flex;
+    padding: 4px;
+    border: 1px solid var(--linie);
+    border-radius: 999px;
+  }
+
+  .reiter__knopf {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 38px;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--gedaempft);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .reiter__knopf[aria-selected="true"] { background: var(--flaeche-hoch); color: var(--farbe-akzent-hell); }
+
+  .reiter__zahl {
+    min-width: 1.6em;
+    padding: 0 0.4em;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--farbe-akzent) 25%, transparent);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .suche { position: relative; flex: 1 1 200px; max-width: 280px; }
+
+  .suche__lupe {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    width: 13px;
+    height: 13px;
+    border: 2px solid var(--farbe-akzent);
+    border-radius: 50%;
+    transform: translateY(-60%);
+    pointer-events: none;
+  }
+
+  .suche__lupe::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    bottom: -4px;
+    width: 6px;
+    height: 2px;
+    background: var(--farbe-akzent);
+    transform: rotate(45deg);
+  }
+
+  .eingabe--suche { min-height: 44px; padding-left: 2.4em; border-radius: 999px; }
+
+  /* Liste */
+
+  .liste {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .jahrtrenner {
+    margin: 1.25rem 0 0.1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--farbe-akzent);
+  }
+
+  .jahrtrenner:first-child { margin-top: 0; }
+
+  .karte {
+    display: grid;
+    grid-template-columns: 4.6rem 2px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0 1rem;
+    width: 100%;
+    padding: 0.95rem 1rem 0.95rem 0.75rem;
+    border: 1px solid var(--linie);
+    border-radius: var(--radius);
+    background: var(--flaeche);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .karte:hover { border-color: var(--linie-stark); background: var(--flaeche-hoch); }
+  .karte:active { transform: scale(0.995); }
+
+  .karte--frisch { animation: aufleuchten 1.6s ease; }
+  .karte--abgesagt .karte__datum,
+  .karte--abgesagt .karte__text { opacity: 0.5; }
+  .karte--abgesagt .karte__datum { text-decoration: line-through; }
+
+  .eingabe--mehrzeilig {
+    min-height: 4.5em;
+    resize: vertical;
+    font: inherit;
+    line-height: 1.4;
+  }
+
+  .feld--uhrzeit { max-width: 9rem; }
+
+  .vorschau-termin__programm {
+    display: block;
+    margin-top: 0.3em;
+    font-size: 0.9em;
+    font-style: italic;
+    white-space: pre-line;
+  }
+
+  /* Stempel wie auf der Terminseite: schraeg, ohne Rahmen, in Sand. */
+  .vorschau-termin--abgesagt {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .vorschau-termin--abgesagt > :not(.vorschau-termin__vermerk) { opacity: 0.6; }
+
+  .vorschau-termin--abgesagt .vorschau-termin__datum,
+  .vorschau-termin--abgesagt .vorschau-termin__text { color: #999999; }
+
+  .vorschau-termin__vermerk {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-10deg);
+    font-size: 1.7em;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #E3C29E;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  @keyframes aufleuchten {
+    0%, 30% { border-color: var(--farbe-akzent-hell); box-shadow: 0 0 0 3px color-mix(in srgb, var(--farbe-akzent-hell) 30%, transparent); }
+  }
+
+  .karte__datum {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .karte__tag { font-weight: 700; font-size: 0.85rem; color: var(--farbe-akzent-hell); }
+  .karte__jahr { font-weight: 100; font-size: 1.7rem; color: var(--farbe-akzent-hell); letter-spacing: -0.03em; }
+
+  .karte__strich { align-self: stretch; background: var(--farbe-akzent); border-radius: 1px; }
+
+  .karte__text { min-width: 0; display: flex; flex-direction: column; gap: 0.1rem; }
+  .karte__ort { font-weight: 700; color: var(--farbe-text); }
+  .karte__titel {
+    color: var(--gedaempft);
+    font-weight: 300;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .karte__seite {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+  }
+
+  .marker {
+    padding: 0.1em 0.65em;
+    border: 1px solid var(--linie);
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--farbe-akzent);
+    white-space: nowrap;
+  }
+
+  .marker--warnung { border-color: color-mix(in srgb, var(--rot) 50%, transparent); color: var(--rot); }
+
+  .karte__pfeil {
+    width: 9px;
+    height: 9px;
+    border-top: 2px solid var(--farbe-akzent);
+    border-right: 2px solid var(--farbe-akzent);
+    transform: rotate(45deg);
+    margin-right: 4px;
+  }
+
+  .leer { padding: 3.5rem 1rem; border: 1px dashed var(--linie); border-radius: var(--radius); text-align: center; }
+  .leer__titel { margin: 0 0 0.3rem; font-size: 1.15rem; color: var(--farbe-akzent-hell); }
+  .leer__text { margin: 0; color: var(--gedaempft); }
+
+  .ladeplatz { display: grid; place-items: center; padding: 3rem 0; }
+
+  .kreisel {
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--linie);
+    border-top-color: var(--farbe-akzent-hell);
+    border-radius: 50%;
+    animation: drehen 0.8s linear infinite;
+  }
+
+  /* --- Bearbeitungstafel -------------------------------------------------- */
+  /* Am Rechner eine Tafel von rechts, auf dem Telefon bildschirmfuellend. */
+
+  .tafel {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(100vw, 620px);
+    max-width: 100vw;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid var(--linie);
+    background: var(--farbe-grund);
+    color: var(--farbe-text);
+    box-shadow: var(--schatten);
+  }
+
+  .tafel[open] { animation: hereinfahren 0.32s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+  @keyframes hereinfahren { from { transform: translateX(40px); opacity: 0; } }
+
+  .tafel::backdrop {
+    background: rgba(0, 12, 20, 0.6);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+
+  .tafel__form { display: flex; flex-direction: column; height: 100%; }
+
+  .tafel__kopf {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: calc(0.9rem + env(safe-area-inset-top)) 1.25rem 0.9rem;
+    border-bottom: 1px solid var(--linie);
+  }
+
+  .tafel__titel {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--farbe-akzent);
+  }
+
+  .knopf-zurueck {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    flex: none;
+    border: 1px solid var(--linie);
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+  }
+
+  .knopf-zurueck::before, .knopf-zurueck::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 2px;
+    margin: -1px 0 0 -7px;
+    background: var(--farbe-akzent-hell);
+    transform: rotate(45deg);
+  }
+
+  .knopf-zurueck::after { transform: rotate(-45deg); }
+
+  .tafel__rumpf {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 1.25rem 1.25rem 2rem;
+  }
+
+  .tafel__fuss {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.25rem calc(0.85rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--linie);
+    background: color-mix(in srgb, var(--farbe-grund) 92%, black);
+  }
+
+  .tafel__luecke { flex: 1; }
+
+  .gruppe {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.1rem 0 1.4rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--farbe-akzent) 18%, transparent);
+  }
+
+  .gruppe:first-child { padding-top: 0.25rem; }
+  .gruppe:last-of-type { border-bottom: 0; }
+
+  .gruppe__titel {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--farbe-akzent);
+  }
+
+  .gruppe__hinweis { margin: -0.2rem 0 0; font-size: 0.88rem; color: var(--gedaempft); }
+
+  .wahl { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+  .wahl__punkt { position: relative; cursor: pointer; }
+  .wahl__punkt input { position: absolute; opacity: 0; pointer-events: none; }
+
+  .wahl__punkt span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 1.1rem;
+    border: 1px solid var(--linie);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--gedaempft);
+    transition: all 0.15s ease;
+  }
+
+  .wahl__punkt:hover span { border-color: var(--linie-stark); }
+  .wahl__punkt input:checked + span { border-color: var(--farbe-akzent-hell); background: var(--farbe-akzent-hell); color: var(--farbe-grund); }
+  .wahl__punkt input:focus-visible + span { outline: 2px solid var(--farbe-akzent-hell); outline-offset: 2px; }
+
+  .reihe { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+
+  .schalter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.95rem;
+    color: var(--farbe-text);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .schalter input { position: absolute; opacity: 0; pointer-events: none; }
+
+  .schalter__bahn {
+    position: relative;
+    flex: none;
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--farbe-text) 18%, transparent);
+    transition: background-color 0.2s ease;
+  }
+
+  .schalter__bahn::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--farbe-text);
+    transition: transform 0.2s ease;
+  }
+
+  .schalter input:checked + .schalter__bahn { background: var(--farbe-akzent); }
+  .schalter input:checked + .schalter__bahn::after { transform: translateX(18px); }
+  .schalter input:focus-visible + .schalter__bahn { outline: 2px solid var(--farbe-akzent-hell); outline-offset: 2px; }
+
+  .sprachkopf, .paar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .sprachkopf span {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gedaempft);
+  }
+
+  /* Vorschau: dieselbe Gestalt wie auf der Terminseite */
+
+  .vorschau__kopf { display: flex; align-items: center; justify-content: space-between; }
+
+  .mini-reiter { display: inline-flex; border: 1px solid var(--linie); border-radius: 999px; padding: 2px; }
+
+  .mini-reiter__knopf {
+    min-width: 40px;
+    min-height: 30px;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--gedaempft);
+    cursor: pointer;
+  }
+
+  .mini-reiter__knopf[aria-pressed="true"] { background: var(--flaeche-hoch); color: var(--farbe-akzent-hell); }
+
+  .vorschau {
+    padding: 1.4rem 1.25rem;
+    border-radius: var(--radius);
+    background: var(--farbe-grund);
+    border: 1px dashed var(--linie);
+  }
+
+  .vorschau-termin {
+    display: grid;
+    grid-template-columns: minmax(5.5em, auto) auto minmax(0, 1fr);
+    gap: 0 1em;
+    font-size: 15px;
+    color: var(--farbe-akzent-hell);
+  }
+
+  .vorschau-termin__datum { display: flex; flex-direction: column; align-items: center; white-space: nowrap; }
+  .vorschau-termin__tag { font-weight: 700; font-size: 1.2em; line-height: 1.2; }
+  .vorschau-termin__jahr { font-weight: 100; font-size: 3em; line-height: 1; margin-top: -0.1em; }
+  .vorschau-termin__strich { width: 2px; margin: 0.3em 0.6em 0.1em; background: currentColor; }
+  .vorschau-termin__text { padding-top: 0.25em; font-weight: 100; line-height: 1.4; overflow-wrap: anywhere; }
+  .vorschau-termin__ort { display: block; font-weight: 700; font-size: 1.2em; }
+  .vorschau-termin__leer { opacity: 0.4; }
+
+  /* --- Rueckfrage --------------------------------------------------------- */
+
+  .rueckfrage {
+    width: min(100% - 32px, 400px);
+    padding: 1.5rem;
+    border: 1px solid var(--linie);
+    border-radius: 16px;
+    background: var(--flaeche);
+    color: var(--farbe-text);
+    box-shadow: var(--schatten);
+  }
+
+  .rueckfrage::backdrop { background: rgba(0, 12, 20, 0.6); }
+  .rueckfrage__titel { margin: 0 0 0.5rem; font-size: 1.25rem; font-weight: 400; color: var(--farbe-akzent-hell); }
+  .rueckfrage__text { margin: 0 0 1.4rem; color: var(--gedaempft); }
+  .rueckfrage__knoepfe { display: flex; justify-content: flex-end; gap: 0.6rem; }
+
+  /* --- Statusmeldung ------------------------------------------------------ */
+
+  .status {
+    position: fixed;
+    left: 50%;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    width: max-content;
+    max-width: calc(100% - 32px);
+    padding: 0.8rem 1rem 0.8rem 0.9rem;
+    border: 1px solid var(--linie-stark);
+    border-radius: 14px;
+    background: var(--flaeche-hoch);
+    box-shadow: var(--schatten);
+    transform: translateX(-50%);
+    animation: auftauchen 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  @keyframes auftauchen { from { transform: translate(-50%, 16px); opacity: 0; } }
+
+  .status__text { display: flex; flex-direction: column; font-size: 0.9rem; line-height: 1.35; }
+  .status__text strong { color: var(--farbe-akzent-hell); }
+  .status__text span { color: var(--gedaempft); }
+
+  .status__zeichen { flex: none; width: 22px; height: 22px; border-radius: 50%; }
+  .status__zeichen[data-art="laeuft"] { border: 2px solid var(--linie); border-top-color: var(--farbe-akzent-hell); animation: drehen 0.8s linear infinite; }
+  .status__zeichen[data-art="fertig"] { background: var(--gruen); position: relative; }
+  .status__zeichen[data-art="fertig"]::after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 4px;
+    width: 6px;
+    height: 10px;
+    border-right: 2px solid var(--farbe-grund);
+    border-bottom: 2px solid var(--farbe-grund);
+    transform: rotate(45deg);
+  }
+  .status__zeichen[data-art="fehler"] { background: var(--rot); }
+
+  .status__link {
+    margin-left: 0.25rem;
+    padding: 0.35em 0.8em;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--farbe-akzent) 25%, transparent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  /* --- Telefon ------------------------------------------------------------ */
+
+  @media (max-width: 560px) {
+    .uebersicht { padding-top: 1.5rem; }
+
+    /* Der Hauptknopf wandert nach unten, wo der Daumen ist. */
+    .uebersicht__kopf [data-neu] {
+      position: fixed;
+      right: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index: 30;
+      min-height: 54px;
+      padding: 0 1.3rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .werkzeuge { flex-direction: column; align-items: stretch; }
+    .reiter { display: grid; grid-template-columns: 1fr 1fr; }
+    .reiter__knopf { justify-content: center; }
+    .suche { max-width: none; flex-basis: auto; }
+
+    .karte {
+      grid-template-columns: 3.9rem 2px minmax(0, 1fr) auto;
+      gap: 0 0.8rem;
+      padding: 0.85rem 0.85rem 0.85rem 0.5rem;
+    }
+
+    .karte__seite { display: none; }
+    .karte__titel { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .karte__jahr { font-size: 1.45rem; }
+    .karte__tag { font-size: 0.78rem; }
+
+    .tafel { width: 100vw; border-left: 0; }
+    .tafel[open] { animation-name: hochfahren; }
+
+    .tafel__rumpf { padding-inline: 16px; }
+    .tafel__kopf, .tafel__fuss { padding-inline: 16px; }
+
+    .sprachkopf { display: none; }
+    .paar { grid-template-columns: 1fr; }
+    .paar .feld:last-child { margin-top: -0.3rem; }
+
+    .tafel__fuss [data-schliessen] { display: none; }
+    .tafel__fuss [data-speichern] { flex: 1; }
+
+    .vorschau { padding: 1.1rem 0.9rem; }
+
+    /* Die Meldung steht ueber dem Hauptknopf, nicht auf ihm. */
+    .status { bottom: calc(86px + env(safe-area-inset-bottom)); }
+    .vorschau-termin { font-size: 14px; }
+  }
+
+  @keyframes hochfahren { from { transform: translateY(30px); opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
