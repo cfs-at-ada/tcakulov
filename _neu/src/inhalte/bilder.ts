@@ -13,7 +13,7 @@ import media from '../bilder/Media-spiegel.jpg';
  * Handy auf 200–250 % vergroessert, und Retina-Schirme verdoppeln den Bedarf.
  */
 
-export const QUALITAET = 82;
+export const QUALITAET = 75;
 
 export const titelbilder = { vita, termine, lehre, media, kontakt: vita } as const;
 export type Titelseite = keyof typeof titelbilder;

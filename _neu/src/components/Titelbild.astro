@@ -16,6 +16,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 ---
 
 <div class:list={['titelbild', `titelbild--${seite}`]} style={fassungen}>
+  <div class="titelbild__grund" aria-hidden="true"></div>
   <div class="titelbild__name">GERMAN <br /> TCAKULOV</div>
 </div>
 
@@ -27,29 +28,58 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: var(--titel-gross-jpg);
+    --titel-bild: var(--titel-gross-jpg);
   }
 
   @media screen and (max-width: 1280px) {
-    .titelbild { background-image: var(--titel-mittel-jpg); }
+    .titelbild { --titel-bild: var(--titel-mittel-jpg); }
   }
 
   @media screen and (max-width: 736px) {
-    .titelbild { background-image: var(--titel-klein-jpg); }
+    .titelbild { --titel-bild: var(--titel-klein-jpg); }
   }
 
   /* WebP, wo der Browser die Auswahl nach Dateityp beherrscht */
   @supports (background-image: image-set(url("x.webp") type("image/webp"))) {
-    .titelbild { background-image: var(--titel-gross); }
+    .titelbild { --titel-bild: var(--titel-gross); }
 
     @media screen and (max-width: 1280px) {
-      .titelbild { background-image: var(--titel-mittel); }
+      .titelbild { --titel-bild: var(--titel-mittel); }
     }
 
     @media screen and (max-width: 736px) {
-      .titelbild { background-image: var(--titel-klein); }
+      .titelbild { --titel-bild: var(--titel-klein); }
     }
   }
+
+  /* Das Bild malt eine eigene Ebene. Wo es beim Blaettern stehen bleibt,
+     ist diese Ebene fest am Fenster verankert und auf das Titelbild
+     zugeschnitten. Das sieht aus wie `background-attachment: fixed`, wird
+     aber von der Grafikkarte verschoben statt bei jedem Bildlauf neu
+     gezeichnet – und ruckelt darum nicht. */
+  .titelbild__grund {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0);
+    background-size: inherit;
+    background-position: inherit;
+    background-repeat: inherit;
+  }
+
+  .titelbild__grund::before {
+    content: '';
+    position: var(--titel-lage, absolute);
+    inset: 0;
+    background-image: var(--titel-bild);
+    background-size: inherit;
+    background-position: inherit;
+    background-repeat: inherit;
+    will-change: transform;
+  }
+
+  /* Offenes Menue verschiebt den Seitenrumpf; dort traegt die feste
+     Verankerung nicht, wie zuvor bei `background-attachment: fixed`. */
+  :global(body.menue-offen) .titelbild__grund::before { position: absolute; }
 
   .titelbild__name {
     position: fixed;
@@ -76,7 +106,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
   .titelbild--vita {
     background-position: 50% 30%;
-    background-attachment: fixed;
+    --titel-lage: fixed;
     margin-bottom: 30px;
   }
 
@@ -86,7 +116,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     .titelbild--vita {
       max-height: 95vh;
       background-position: 40% 5%;
-      background-attachment: scroll;
+      --titel-lage: absolute;
     }
   }
 
@@ -94,7 +124,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     .titelbild--vita {
       max-height: 60vh;
       background-position: 36% top;
-      background-attachment: scroll;
+      --titel-lage: absolute;
     }
   }
 
@@ -103,7 +133,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
   .titelbild--termine {
     width: 100%;
     background-position: center;
-    background-attachment: fixed;
+    --titel-lage: fixed;
     margin-bottom: 3em;
   }
 
@@ -112,7 +142,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
   @media screen and (min-width: 737px) and (max-width: 1080px) {
     .titelbild--termine {
       background-position: 30% top;
-      background-attachment: scroll;
+      --titel-lage: absolute;
     }
   }
 
@@ -121,7 +151,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       max-height: 60vh;
       background-size: 250%;
       background-position: 40% 45%;
-      background-attachment: scroll;
+      --titel-lage: absolute;
     }
   }
 
@@ -134,7 +164,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
   .titelbild--lehre {
     background-size: 120%;
     background-position: 90% 65%;
-    background-attachment: fixed;
+    --titel-lage: fixed;
     margin-bottom: 45px;
   }
 
@@ -149,7 +179,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       max-height: 60vh;
       background-size: 100%;
       background-position: 65% 80%;
-      background-attachment: scroll;
+      --titel-lage: absolute;
     }
   }
 
@@ -158,7 +188,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       max-height: 60vh;
       background-size: 100%;
       background-position: 65% 90%;
-      background-attachment: scroll;
+      --titel-lage: absolute;
     }
   }
 
@@ -167,7 +197,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       max-height: 60vh;
       background-size: 150%;
       background-position: 65% 70%;
-      background-attachment: scroll;
+      --titel-lage: absolute;
     }
   }
 
@@ -176,7 +206,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       max-height: 60vh;
       background-size: 200%;
       background-position: 65% 70%;
-      background-attachment: scroll;
+      --titel-lage: absolute;
     }
   }
 
@@ -184,7 +214,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
   .titelbild--media {
     background-position: center;
-    background-attachment: fixed;
+    --titel-lage: fixed;
     margin-bottom: 3em;
   }
 
@@ -203,7 +233,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       max-height: 60vh;
       background-size: 200%;
       background-position: 57% 70%;
-      background-attachment: scroll;
+      --titel-lage: absolute;
     }
   }
 
@@ -211,7 +241,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
   .titelbild--kontakt {
     background-position: 50% 30%;
-    background-attachment: scroll;
+    --titel-lage: absolute;
     margin-bottom: 3em;
   }
 
@@ -235,7 +265,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
   @media only screen and (orientation: landscape) {
     :global(html.is-ipad) .titelbild--vita {
-      background-attachment: scroll;
+      --titel-lage: absolute;
       background-size: 110%;
       background-position: left top;
       margin-bottom: -25px;
@@ -244,7 +274,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     }
 
     :global(html.is-ipad) .titelbild--termine {
-      background-attachment: scroll;
+      --titel-lage: absolute;
       background-size: 110%;
       background-position: left top;
       max-width: 100vw;
@@ -252,7 +282,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     }
 
     :global(html.is-ipad) .titelbild--lehre {
-      background-attachment: scroll;
+      --titel-lage: absolute;
       background-size: 110%;
       background-position: right bottom;
       max-width: 100vw;
@@ -262,7 +292,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     :global(html.is-ipad) .titelbild--lehre .titelbild__name { font-size: 4em; }
 
     :global(html.is-ipad) .titelbild--media {
-      background-attachment: scroll;
+      --titel-lage: absolute;
       background-size: 110%;
       background-position: right top;
       max-width: 100vw;
@@ -272,7 +302,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
   @media only screen and (orientation: portrait) {
     :global(html.is-ipad) .titelbild--media {
-      background-attachment: scroll;
+      --titel-lage: absolute;
       background-size: 190%;
       background-position: 55% top;
       margin-bottom: -46px;
