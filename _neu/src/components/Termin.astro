@@ -177,20 +177,25 @@ const aktionen = form === 'termin' && !abgesagt;
     font-size: max(0.85em, 12px);
   }
 
+  /* Zurueckhaltend wie der Fliesstext: duenn, normale Schreibung. */
   .termin__aktion {
     display: inline-flex;
     align-items: center;
-    gap: 0.4em;
+    gap: 0.45em;
     color: var(--farbe-akzent);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-weight: 100;
     text-decoration: none;
     transition: color 0.2s ease;
   }
 
+  .termin__aktion :global(svg) { font-size: 0.9em; }
+
   .termin__aktion:hover,
-  .termin__aktion:focus-visible { color: var(--farbe-text); }
+  .termin__aktion:focus-visible {
+    color: var(--farbe-akzent-hell);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
 
   .termin__aktion--tickets {
     padding: 0.15em 0.75em;
@@ -235,7 +240,6 @@ const aktionen = form === 'termin' && !abgesagt;
     text-transform: uppercase;
     white-space: nowrap;
     color: var(--farbe-akzent-hell);
-    opacity: 0.7;
     pointer-events: none;
   }
 
