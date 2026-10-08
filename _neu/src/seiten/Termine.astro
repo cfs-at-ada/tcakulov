@@ -22,7 +22,6 @@ const texte = terminTexte[sprache];
  */
 const archiv = [...archivfaehig].reverse();
 const jahre = [...new Set(archiv.map((t) => t.start.slice(0, 4)))];
-const offenesJahr = vergangene[0]?.start.slice(0, 4);
 ---
 
 <Grundgeruest
@@ -58,10 +57,9 @@ const offenesJahr = vergangene[0]?.start.slice(0, 4);
       const imJahr = archiv.filter((t) => t.start.startsWith(j));
       const sichtbar = imJahr.filter((t) => istVergangen(t, stichtag)).length;
       return (
-        <details class="archiv__jahr" data-archiv-jahr open={j === offenesJahr} hidden={sichtbar === 0}>
+        <details class="archiv__jahr" data-archiv-jahr hidden={sichtbar === 0}>
           <summary class="archiv__kopf">
             <span class="archiv__jahreszahl">{j}</span>
-            <span class="archiv__zahl" data-jahr-anzahl>{sichtbar}</span>
             <span class="archiv__pfeil" aria-hidden="true"></span>
           </summary>
           <ol class="archiv__liste">
@@ -163,17 +161,6 @@ const offenesJahr = vergangene[0]?.start.slice(0, 4);
     font-size: 2.2em;
     font-weight: 100;
     line-height: 1.1;
-  }
-
-  .archiv__zahl {
-    min-width: 1.9em;
-    padding: 0.1em 0.55em;
-    border: 1px solid color-mix(in srgb, var(--farbe-akzent) 60%, transparent);
-    border-radius: 1em;
-    font-size: max(0.8em, 12px);
-    line-height: 1.5;
-    text-align: center;
-    color: var(--farbe-akzent);
   }
 
   .archiv__pfeil {

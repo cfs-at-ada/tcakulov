@@ -33,8 +33,6 @@ export function terminstandAktualisieren(): void {
         if (!el.hidden) anzahl++;
       });
       jahr.hidden = anzahl === 0;
-      const zahl = jahr.querySelector('[data-jahr-anzahl]');
-      if (zahl) zahl.textContent = String(anzahl);
       gesamt += anzahl;
     });
     archiv.hidden = gesamt === 0;
@@ -44,10 +42,6 @@ export function terminstandAktualisieren(): void {
       const vorlage = gesamt === 1 ? hinweis.dataset.vorlageEins : hinweis.dataset.vorlageViele;
       if (vorlage) hinweis.textContent = vorlage.replace(/\d+/, String(gesamt));
     }
-
-    // Immer das juengste sichtbare Jahr aufgeklappt
-    const erstes = archiv.querySelector<HTMLDetailsElement>('[data-archiv-jahr]:not([hidden])');
-    if (erstes && !archiv.querySelector('[data-archiv-jahr][open]:not([hidden])')) erstes.open = true;
   }
 
   // Startseite: naechstes Konzert
