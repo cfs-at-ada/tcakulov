@@ -22,3 +22,23 @@ export function uebergaengeFreigeben(): void {
     window.setTimeout(() => document.body.classList.remove('is-preload'), 100);
   });
 }
+
+/**
+ * Haelt die Hoehe des Titelbilds auf dem Telefon fest. Safari blendet beim
+ * Blaettern Adress- und Werkzeugleiste ein und aus; haengt die Hoehe an der
+ * Fenstergroesse, springt das Bild dabei und der Name wandert mit. Neu
+ * gemessen wird auf Touch-Geraeten nur, wenn sich die Breite aendert
+ * (Drehen des Geraets); am Rechner folgt die Hoehe dem Fenster.
+ */
+export function titelhoeheFestlegen(): void {
+  const wurzel = document.documentElement;
+  const touch = window.matchMedia('(pointer: coarse)').matches;
+  let breite = 0;
+  const messen = () => {
+    if (touch && window.innerWidth === breite) return;
+    breite = window.innerWidth;
+    wurzel.style.setProperty('--titel-hoehe', `${window.innerHeight}px`);
+  };
+  messen();
+  window.addEventListener('resize', messen);
+}

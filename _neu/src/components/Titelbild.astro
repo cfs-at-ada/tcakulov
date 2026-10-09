@@ -366,6 +366,9 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       max-width: none;
       height: 100vh;
       height: 100svh;
+      /* Feste Hoehe aus dem Skript: Blendet Safari beim Blaettern seine
+         Leisten ein und aus, bleibt das Bild trotzdem ruhig. */
+      height: var(--titel-hoehe, 100svh);
       max-height: none;
       background-size: cover;
     }
@@ -469,24 +472,24 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
   /* Vita und Kontakt, 16:9, Kopf um 31 % der Bildhoehe */
   @media screen and (max-width: 1080px) and (orientation: landscape) and (min-aspect-ratio: 16/9) {
     :global(html) .titelbild.titelbild:is(.titelbild--vita, .titelbild--kontakt) {
-      background-position-y: clamp(calc(100svh - 56.25vw), calc(50svh - 17.4vw), 0px);
+      background-position-y: clamp(calc(var(--titel-hoehe, 100svh) - 56.25vw), calc(var(--titel-hoehe, 100svh) / 2 - 17.4vw), 0px);
     }
   }
 
   /* Termine und Media, 3:2; Termine um 45 %, Media um 62 % */
   @media screen and (max-width: 1080px) and (orientation: landscape) and (min-aspect-ratio: 3/2) {
     :global(html) .titelbild.titelbild--termine {
-      background-position-y: clamp(calc(100svh - 66.67vw), calc(50svh - 30vw), 0px);
+      background-position-y: clamp(calc(var(--titel-hoehe, 100svh) - 66.67vw), calc(var(--titel-hoehe, 100svh) / 2 - 30vw), 0px);
     }
     :global(html) .titelbild.titelbild--media {
-      background-position-y: clamp(calc(100svh - 66.67vw), calc(50svh - 41.3vw), 0px);
+      background-position-y: clamp(calc(var(--titel-hoehe, 100svh) - 66.67vw), calc(var(--titel-hoehe, 100svh) / 2 - 41.3vw), 0px);
     }
   }
 
   /* Lehre, fast quadratisch, Kopf und Bratsche um 45 % */
   @media screen and (max-width: 1080px) and (orientation: landscape) {
     :global(html) .titelbild.titelbild--lehre {
-      background-position-y: clamp(calc(100svh - 84.4vw), calc(50svh - 38vw), 0px);
+      background-position-y: clamp(calc(var(--titel-hoehe, 100svh) - 84.4vw), calc(var(--titel-hoehe, 100svh) / 2 - 38vw), 0px);
     }
   }
 
