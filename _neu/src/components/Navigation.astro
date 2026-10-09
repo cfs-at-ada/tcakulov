@@ -17,8 +17,11 @@ interface Props {
 
 const { sprache, aktiv, seite, marke } = Astro.props;
 const punkte = navigation[sprache];
+const andere: Sprache = sprache === 'de' ? 'en' : 'de';
 ---
 
+{/* Breite Fassung: die Menuepunkte als feine Zeile unten rechts im
+    Titelbild. Seiten ohne Titelbild tragen sie oben rechts. */}
 <nav id="hauptnavigation">
   <ul>
     {punkte.map((punkt) => {
@@ -31,65 +34,47 @@ const punkte = navigation[sprache];
       );
     })}
     <li class="sprachwechsel">
-      <a href={sprachwechsel[sprache][seite]}>DE | EN</a>
+      <a href={sprachwechsel[sprache][seite]} hreflang={andere} lang={andere}>{andere.toUpperCase()}</a>
     </li>
   </ul>
 </nav>
 
 <style>
   #hauptnavigation {
-    position: fixed;
-    bottom: 2.75vh;
-    right: 1vw;
-    left: auto;
-    top: auto;
-    width: auto;
-    text-align: right;
-    text-transform: uppercase;
-    cursor: default;
+    position: absolute;
+    top: calc(100vh - 78px);
+    right: 64px;
+    z-index: 6;
   }
 
+  :global(body.ohne-titelbild) #hauptnavigation { top: 44px; }
+
   #hauptnavigation ul {
-    position: relative;
-    z-index: 1001;
+    display: flex;
+    gap: 34px;
     margin: 0;
     padding: 0;
     list-style: none;
-    font-size: 1.3em;
-    font-weight: 100;
   }
 
-  #hauptnavigation li {
-    display: block;
-    margin: 0;
-    position: relative;
-    top: 0;
-    line-height: 0.6em;
-    transition: top 0.15s ease-in-out;
-  }
-
-  #hauptnavigation li.sprachwechsel {
-    padding-top: 1em;
-  }
+  #hauptnavigation li { margin: 0; padding: 0; }
 
   #hauptnavigation a {
-    position: relative;
     display: block;
-    top: -6px;
-    padding: 6px 1.5em 0.25em 1.5em;
-    color: var(--farbe-text);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
     text-decoration: none;
-    outline: 0;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-    transition: background-color 0.075s ease-in-out, color 0.075s ease-in-out;
+    color: var(--farbe-text);
+    transition: color 0.2s ease;
   }
 
-  #hauptnavigation li:hover { top: 3px; }
-  #hauptnavigation li:hover a { background: transparent; color: var(--farbe-akzent-hell); }
+  #hauptnavigation a.aktiv,
+  #hauptnavigation .sprachwechsel a { color: var(--farbe-akzent); }
 
-  #hauptnavigation a.aktiv { color: var(--farbe-akzent); }
-  #hauptnavigation a.aktiv:hover { color: var(--farbe-akzent-hell); }
+  #hauptnavigation a:hover { color: var(--farbe-akzent-hell); }
 
   /* Unterhalb von 1080px uebernimmt die Menuetafel. */
   @media screen and (max-width: 1080px) {

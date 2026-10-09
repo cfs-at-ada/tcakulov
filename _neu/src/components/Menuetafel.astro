@@ -47,7 +47,9 @@ const andere: Sprache = sprache === 'de' ? 'en' : 'de';
     display: none;
   }
 
-  @media screen and (max-width: 1080px) {
+  /* Schmal steht der Knopf immer da, breit erst, wenn die Menuezeile im
+     Titelbild aus dem Blick ist. Die Tafel selbst gilt fuer alle Breiten. */
+  @media screen {
     .menueknopf {
       display: block;
       position: fixed;
@@ -166,6 +168,37 @@ const andere: Sprache = sprache === 'de' ? 'en' : 'de';
     }
 
     #menuetafel .sprachen [aria-current] { color: var(--farbe-akzent); }
+  }
+
+  @media screen and (min-width: 1081px) {
+    .menueknopf {
+      top: 22px;
+      right: 40px;
+      padding: 13px 20px;
+      font-size: 12px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0s linear 0.3s, background-color 0.3s ease, color 0.3s ease;
+    }
+
+    :global(body.ueber-inhalt) .menueknopf,
+    :global(body.menue-offen) .menueknopf {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .menueknopf:hover { color: var(--farbe-text); }
+
+    .kopfname {
+      top: 44px;
+      left: 64px;
+      font-size: 12px;
+      letter-spacing: 0.28em;
+    }
+
+    #menuetafel .verweis:hover,
+    #menuetafel .sprachen a:hover { color: var(--farbe-akzent-hell); }
   }
 
   /* Niedrige Fenster (Telefon quer): Sprachwahl folgt der Liste. */

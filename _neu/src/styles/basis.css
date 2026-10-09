@@ -149,6 +149,11 @@ article:last-child {
   body, input, textarea, select { font-size: 11pt; }
 }
 
+/* Breit: Platz fuer Namen und Menuezeile oben */
+@media screen and (min-width: 1081px) {
+  body.ohne-titelbild { padding-top: 110px; }
+}
+
 @media screen and (max-width: 1080px) {
   html, body { overflow-x: hidden; }
   /* Ohne Titelbild Platz fuer Namen und Menueknopf oben */

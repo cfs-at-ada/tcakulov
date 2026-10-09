@@ -17,7 +17,6 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
 <div class:list={['titelbild', `titelbild--${seite}`]} style={fassungen}>
   <div class="titelbild__grund" aria-hidden="true"></div>
-  <div class="titelbild__name">GERMAN <br /> TCAKULOV</div>
   <div class="titelbild__unterschrift">German<br />Tcakulov<small>Viola</small></div>
 </div>
 
@@ -80,25 +79,52 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
   .titelbild__unterschrift { display: none; }
 
-  .titelbild__name {
-    position: fixed;
-    top: 40vh;
-    right: 3.1vw;
-    z-index: 0;
-    color: var(--farbe-grund);
-    text-align: right;
-    line-height: 0.9em;
-    letter-spacing: -0.05em;
-    transition: opacity 0.75s ease;
-    /* Der Namenszug ist Zierrat. Er steht fest im Bild und liegt beim
-       Blaettern ueber dem Inhalt darunter – auch noch, wenn er laengst
-       ausgeblendet ist. Ohne diese Zeile faengt er dort Klicks ab. */
-    pointer-events: none;
+  /* Breit: Der Name steht rechtsbuendig unten im dunklen Verlauf, knapp
+     ueber der Menuezeile. */
+  @media screen and (min-width: 1081px) {
+    .titelbild::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 48%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(rgba(0, 48, 73, 0), var(--farbe-grund));
+    }
+
+    .titelbild__unterschrift {
+      display: block;
+      position: absolute;
+      right: 64px;
+      bottom: 118px;
+      z-index: 2;
+      /* Die Sperrung haengt rechts an und wird dort wieder eingezogen. */
+      margin-right: -0.16em;
+      font-size: clamp(52px, 3.4vw + 20px, 84px);
+      font-weight: 150;
+      line-height: 1.05;
+      letter-spacing: 0.16em;
+      text-align: right;
+      text-transform: uppercase;
+      color: var(--farbe-text);
+    }
+
+    .titelbild__unterschrift small {
+      display: block;
+      margin-top: 20px;
+      margin-right: -0.3em;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.46em;
+      color: var(--farbe-akzent);
+    }
   }
 
-  /* Unterhalb von 1080px verdeckt die Titelleiste den Namenszug. */
-  @media screen and (max-width: 1080px) {
-    .titelbild__name { display: none; }
+  /* Niedrige breite Fenster: Name kleiner, damit er im Bild bleibt. */
+  @media screen and (min-width: 1081px) and (max-height: 760px) {
+    .titelbild__unterschrift { bottom: 104px; font-size: clamp(44px, 7.5vh, 70px); }
   }
 
   /* --- Vita ------------------------------------------------------------- */
@@ -109,7 +135,6 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     margin-bottom: 30px;
   }
 
-  .titelbild--vita .titelbild__name { font-size: 5em; }
 
   @media screen and (min-width: 737px) and (max-width: 1080px) {
     .titelbild--vita {
@@ -136,7 +161,6 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     margin-bottom: 3em;
   }
 
-  .titelbild--termine .titelbild__name { font-size: 5em; }
 
   @media screen and (min-width: 737px) and (max-width: 1080px) {
     .titelbild--termine {
@@ -160,18 +184,16 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
   /* --- Lehre ------------------------------------------------------------ */
 
+  /* Breit gross gezogen, damit er links steht und rechts Platz fuer den
+     Namen bleibt. */
   .titelbild--lehre {
-    background-size: 120%;
-    background-position: 90% 65%;
+    background-size: 150%;
+    background-position: 100% 55%;
     --titel-lage: fixed;
     margin-bottom: 45px;
   }
 
-  .titelbild--lehre .titelbild__name { font-size: 4em; }
 
-  @media screen and (min-width: 1081px) and (max-width: 1180px) {
-    .titelbild--lehre .titelbild__name { font-size: 3.75em; }
-  }
 
   @media screen and (min-width: 1000px) and (max-width: 1080px) {
     .titelbild--lehre {
@@ -217,11 +239,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     margin-bottom: 3em;
   }
 
-  .titelbild--media .titelbild__name { font-size: 5em; }
 
-  @media screen and (min-width: 1080px) and (max-width: 1180px) {
-    .titelbild--media .titelbild__name { font-size: 4.3em; }
-  }
 
   @media screen and (min-width: 736px) and (max-width: 1080px) {
     .titelbild--media { background-position: 57% 70%; }
@@ -244,7 +262,6 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     margin-bottom: 3em;
   }
 
-  .titelbild--kontakt .titelbild__name { font-size: 5em; }
 
   @media screen and (min-width: 737px) and (max-width: 1080px) {
     .titelbild--kontakt { background-position: 40% top; }
@@ -288,7 +305,6 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       max-height: 100vh;
     }
 
-    :global(html.is-ipad) .titelbild--lehre .titelbild__name { font-size: 4em; }
 
     :global(html.is-ipad) .titelbild--media {
       --titel-lage: absolute;

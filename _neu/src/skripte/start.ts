@@ -1,6 +1,5 @@
 import { geraetKennzeichnen, uebergaengeFreigeben } from './geraet';
 import { menueEinrichten } from './menue';
-import { titelbildEinrichten } from './titelbild';
 import { portraitEinrichten } from './portrait';
 import { bildschauEinrichten } from './bildschau';
 import { terminstandAktualisieren } from './terminstand';
@@ -11,7 +10,6 @@ import { kopierenEinrichten } from './kopieren';
 geraetKennzeichnen();
 uebergaengeFreigeben();
 menueEinrichten();
-titelbildEinrichten();
 portraitEinrichten();
 bildschauEinrichten();
 terminstandAktualisieren();
