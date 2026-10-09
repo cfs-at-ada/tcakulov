@@ -432,8 +432,71 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     }
   }
 
-  /* Niedrige Fenster (Telefon quer): Name etwas kleiner und tiefer. */
-  @media screen and (max-width: 1080px) and (max-height: 480px) {
-    .titelbild__unterschrift { bottom: 24px; font-size: 26px; }
+  /* --- Querformat bis 1080px (Telefon quer, kleine Tablets quer) ------- */
+  /* Der Name rueckt wie am PC nach rechts unten, das Gesicht bleibt links
+     frei. Ist das Fenster breiter als das Bild, fuellt das Bild die Breite
+     und wird nur oben und unten beschnitten. Dann richtet eine Rechnung den
+     Ausschnitt auf den Kopf aus: Bildhoehe = Fensterbreite / Seitenverhaeltnis,
+     der Kopf (Anteil c der Bildhoehe) kommt in die Fenstermitte, ohne dass
+     ein Rand frei wird. */
+  @media screen and (max-width: 1080px) and (orientation: landscape) {
+    .titelbild__unterschrift {
+      left: auto;
+      right: calc(28px + env(safe-area-inset-right, 0px));
+      bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+      padding-left: 0;
+      margin-right: -0.16em;
+      font-size: clamp(24px, 4vh + 11px, 44px);
+      line-height: 1.05;
+      letter-spacing: 0.16em;
+      text-align: right;
+    }
+
+    .titelbild__unterschrift small {
+      margin-top: 0.5em;
+      margin-left: 0;
+      margin-right: -0.3em;
+      padding-left: 0;
+      font-size: max(10px, 0.3em);
+    }
+
+    :global(html) .titelbild.titelbild:is(.titelbild--vita, .titelbild--kontakt) { background-size: cover; background-position: 50% 0; }
+    :global(html) .titelbild.titelbild--lehre   { background-size: cover; background-position: 50% 0; }
+    :global(html) .titelbild.titelbild--termine { background-size: cover; background-position: 50% 0; }
+    :global(html) .titelbild.titelbild--media   { background-size: cover; background-position: 50% 0; }
+  }
+
+  /* Vita und Kontakt, 16:9, Kopf um 31 % der Bildhoehe */
+  @media screen and (max-width: 1080px) and (orientation: landscape) and (min-aspect-ratio: 16/9) {
+    :global(html) .titelbild.titelbild:is(.titelbild--vita, .titelbild--kontakt) {
+      background-position-y: clamp(calc(100svh - 56.25vw), calc(50svh - 17.4vw), 0px);
+    }
+  }
+
+  /* Termine und Media, 3:2; Termine um 45 %, Media um 62 % */
+  @media screen and (max-width: 1080px) and (orientation: landscape) and (min-aspect-ratio: 3/2) {
+    :global(html) .titelbild.titelbild--termine {
+      background-position-y: clamp(calc(100svh - 66.67vw), calc(50svh - 30vw), 0px);
+    }
+    :global(html) .titelbild.titelbild--media {
+      background-position-y: clamp(calc(100svh - 66.67vw), calc(50svh - 41.3vw), 0px);
+    }
+  }
+
+  /* Lehre, fast quadratisch, Kopf und Bratsche um 45 % */
+  @media screen and (max-width: 1080px) and (orientation: landscape) {
+    :global(html) .titelbild.titelbild--lehre {
+      background-position-y: clamp(calc(100svh - 84.4vw), calc(50svh - 38vw), 0px);
+    }
+  }
+
+  /* --- Tablets quer ueber 1080px ------------------------------------------ */
+  /* Die alten Tablet-Regeln oben setzen eigene Ausschnitte; hier gilt wie am
+     PC derselbe Bildausschnitt, nur ohne festes Bild. */
+  @media screen and (min-width: 1081px) {
+    :global(html.is-ipad) .titelbild.titelbild:is(.titelbild--vita, .titelbild--kontakt) { background-size: cover; background-position: 50% 30%; }
+    :global(html.is-ipad) .titelbild.titelbild--termine { background-size: cover; background-position: center; }
+    :global(html.is-ipad) .titelbild.titelbild--lehre   { background-size: 150%; background-position: 100% 55%; }
+    :global(html.is-ipad) .titelbild.titelbild--media   { background-size: cover; background-position: center; }
   }
 </style>

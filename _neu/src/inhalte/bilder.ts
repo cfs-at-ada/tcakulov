@@ -20,7 +20,7 @@ export type Titelseite = keyof typeof titelbilder;
 
 /** Breiten der Titelbilder je Bildschirmklasse, nie groesser als das Original.
  *  Auf dem Telefon fuellt das Bild den ganzen Schirm, darum auch dort 2600. */
-const TITELBREITEN = { klein: 2600, mittel: 2600, gross: 3600 } as const;
+const TITELBREITEN = { klein: 2600, mittel: 3600, gross: 3600 } as const;
 
 export async function titelbildFassungen(bild: ImageMetadata) {
   const fassungen: Record<string, string> = {};
