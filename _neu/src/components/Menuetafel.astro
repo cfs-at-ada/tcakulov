@@ -7,142 +7,175 @@ interface Props {
   seite: Seitenschluessel;
   aktiv?: Seitenschluessel;
   marke?: string;
+  /** Seiten ohne Titelbild tragen den Namen klein oben links. */
+  mitTitelbild: boolean;
 }
 
-const { sprache, seite, aktiv, marke } = Astro.props;
+const { sprache, seite, aktiv, marke, mitTitelbild } = Astro.props;
 const punkte = navigation[sprache];
+const knopf = sprache === 'de' ? { zu: 'Menü', offen: 'Schließen' } : { zu: 'Menu', offen: 'Close' };
+const andere: Sprache = sprache === 'de' ? 'en' : 'de';
 ---
 
-{/* Schmale Fassung der Navigation: feste Titelleiste plus ausfahrende Tafel.
-    In der alten Seite baute jQuery beides zur Laufzeit zusammen; hier steht
-    es im Markup und funktioniert auch ohne Skript. */}
+{/* Schmale Fassung der Navigation: Ein schlichtes „Menü“ oben rechts
+    oeffnet eine ruhige Vollbildtafel. Ohne Skript fuehrt der Verweis per
+    Sprungmarke zur Tafel, die dann per :target sichtbar wird. */}
 
-<div id="titelleiste">
-  <a class="schalter" href="#menuetafel" aria-label="Menü" aria-controls="menuetafel" aria-expanded="false"></a>
-  <span class="titel">German Tcakulov</span>
-</div>
+{!mitTitelbild && <a class="kopfname" href={punkte[0].ziel}>German Tcakulov</a>}
+
+<a class="menueknopf" href="#menuetafel" aria-controls="menuetafel" aria-expanded="false"
+   data-zu={knopf.zu} data-offen={knopf.offen}>{knopf.zu}</a>
 
 <div id="menuetafel">
   <nav>
     {punkte.map((punkt) => (
-      <a class="verweis" href={punkt.schluessel === aktiv && marke ? marke : punkt.ziel}>{punkt.text}</a>
+      <a class:list={['verweis', { aktiv: punkt.schluessel === aktiv }]}
+         href={punkt.schluessel === aktiv && marke ? marke : punkt.ziel}>{punkt.text}</a>
     ))}
-    <a class="verweis" href={sprachwechsel[sprache][seite]}>DE | EN</a>
   </nav>
+  <div class="sprachen">
+    <span aria-current="true">{sprache.toUpperCase()}</span>
+    <span aria-hidden="true">·</span>
+    <a href={sprachwechsel[sprache][seite]} hreflang={andere} lang={andere}>{andere.toUpperCase()}</a>
+  </div>
 </div>
 
 <style>
-  #titelleiste,
+  .kopfname,
+  .menueknopf,
   #menuetafel {
     display: none;
   }
 
   @media screen and (max-width: 1080px) {
-    #titelleiste {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .menueknopf {
+      display: block;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 66px;
-      z-index: 10001;
-      background-color: var(--farbe-grund);
-      backface-visibility: hidden;
-      transition: transform 0.5s ease;
+      top: calc(10px + env(safe-area-inset-top, 0px));
+      right: calc(8px + env(safe-area-inset-right, 0px));
+      z-index: 10003;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-family: var(--schrift);
+      font-size: clamp(11px, 0.5vw + 9px, 14px);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: #fff;
+      -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    #titelleiste .titel {
-      display: flex;
-      position: relative;
-      z-index: 1000;
-      font-weight: 400;
-      font-size: 1.75em;
-      line-height: 66px;
-      text-align: center;
-      text-transform: uppercase;
+    /* Ueber dem Text bekommt der Knopf einen leisen Glasgrund. */
+    :global(body.ueber-inhalt) .menueknopf {
+      background-color: rgba(0, 48, 73, 0.72);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
       color: var(--farbe-akzent-hell);
     }
 
-    #titelleiste .schalter {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 80px;
-      height: 60px;
-      z-index: 1001;
-      text-decoration: none;
-    }
-
-    #titelleiste .schalter::before {
-      /* Das „bars“-Zeichen von Font Awesome 5 als eingebettetes SVG, in
-         derselben Groesse wie zuvor (25px Schrift); Farbe = --farbe-akzent. */
-      content: '';
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23A78768' d='M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 21.875px 25px;
-      display: inline-block;
-      position: absolute;
-      left: env(safe-area-inset-left, 0px);
-      top: 0;
-      width: 44px;
-      height: 44px;
-      background-color: var(--farbe-grund);
-      color: var(--farbe-akzent);
-      text-align: center;
-      line-height: 44px;
-      font-size: 25px;
-      text-decoration: none;
-      transform: translateY(23.5%);
-    }
-
-    #titelleiste .schalter:active::before {
+    :global(body.menue-offen) .menueknopf {
       background-color: transparent;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      color: var(--farbe-akzent-hell);
+    }
+
+    .kopfname {
+      display: block;
+      position: absolute;
+      top: calc(22px + env(safe-area-inset-top, 0px));
+      left: calc(22px + env(safe-area-inset-left, 0px));
+      z-index: 2;
+      font-family: var(--schrift);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--farbe-akzent-hell);
     }
 
     #menuetafel {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 275px;
-      height: 100%;
+      inset: 0;
       z-index: 10002;
+      padding: 80px 20px;
       overflow-y: auto;
       background-color: var(--farbe-grund);
-      /* So im Original – faellt wie die Seite auf die Systemschrift zurueck. */
-      font-family: 'Source Sans Pro', sans-serif;
-      text-transform: uppercase;
-      font-weight: 400;
-      font-size: 1.25em;
-      backface-visibility: hidden;
-      transform: translateX(-275px);
-      transition: transform 0.5s ease;
-      -webkit-overflow-scrolling: touch;
+      font-family: var(--schrift);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+    }
+
+    :global(body.menue-offen) { overflow: hidden; }
+
+    :global(body.menue-offen) #menuetafel,
+    #menuetafel:target {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.35s ease;
     }
 
     #menuetafel nav {
-      position: relative;
-      z-index: 1000;
-      margin-top: 3em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(26px, 2vw + 18px, 40px);
     }
 
     #menuetafel .verweis {
-      display: block;
-      height: 44px;
-      line-height: 44px;
-      padding: 0 1em 0 2em;
-      margin-top: 0.5em;
-      font-size: 1.3em;
-      color: var(--farbe-akzent-hell);
+      /* Die Sperrung haengt rechts an; links ausgeglichen sitzt das Wort mittig. */
+      padding-left: 0.3em;
+      font-size: clamp(20px, 1.4vw + 15px, 30px);
+      font-weight: 300;
+      line-height: 1.2;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
       text-decoration: none;
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      color: var(--farbe-text);
+      -webkit-tap-highlight-color: transparent;
     }
 
-    :global(body.menue-offen) #titelleiste { transform: translateX(275px); }
-    :global(body.menue-offen) #menuetafel  { transform: translateX(0); }
+    #menuetafel .verweis.aktiv { color: var(--farbe-akzent); }
+
+    #menuetafel .sprachen {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+      display: flex;
+      justify-content: center;
+      gap: 0.9em;
+      font-size: clamp(12px, 0.4vw + 10px, 15px);
+      letter-spacing: 0.3em;
+      color: var(--farbe-akzent);
+    }
+
+    #menuetafel .sprachen a {
+      color: var(--farbe-akzent-hell);
+      text-decoration: none;
+    }
+
+    #menuetafel .sprachen [aria-current] { color: var(--farbe-akzent); }
+  }
+
+  /* Niedrige Fenster (Telefon quer): Sprachwahl folgt der Liste. */
+  @media screen and (max-width: 1080px) and (max-height: 480px) {
+    #menuetafel { justify-content: flex-start; padding-top: 56px; }
+    #menuetafel nav { gap: 14px; }
+    #menuetafel .sprachen { position: static; margin-top: 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #menuetafel, .menueknopf { transition: none; }
   }
 </style>
-

@@ -18,6 +18,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 <div class:list={['titelbild', `titelbild--${seite}`]} style={fassungen}>
   <div class="titelbild__grund" aria-hidden="true"></div>
   <div class="titelbild__name">GERMAN <br /> TCAKULOV</div>
+  <div class="titelbild__unterschrift">German<br />Tcakulov<small>Viola</small></div>
 </div>
 
 
@@ -77,9 +78,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     will-change: transform;
   }
 
-  /* Offenes Menue verschiebt den Seitenrumpf; dort traegt die feste
-     Verankerung nicht, wie zuvor bei `background-attachment: fixed`. */
-  :global(body.menue-offen) .titelbild__grund::before { position: absolute; }
+  .titelbild__unterschrift { display: none; }
 
   .titelbild__name {
     position: fixed;
@@ -337,5 +336,88 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       height: 100vh;
       max-height: 100vh;
     }
+  }
+
+  /* --- Schmale Ansicht: Bild ueber den ganzen Schirm -------------------- */
+  /* Unterhalb von 1080px beginnt die Seite ohne Leiste direkt mit dem Bild.
+     Es fuellt den Schirm, laeuft unten ins Nachtblau aus und traegt dort den
+     Namen. Der vorangestellte `html`-Selektor sticht die Geraeteregeln oben. */
+
+  @media screen and (max-width: 1080px) {
+    :global(html) .titelbild:is(.titelbild--vita, .titelbild--termine, .titelbild--lehre, .titelbild--media, .titelbild--kontakt) {
+      --titel-lage: absolute;
+      width: 100%;
+      max-width: none;
+      height: 100vh;
+      height: 100svh;
+      max-height: none;
+      background-size: cover;
+    }
+
+    /* Der Ausschnitt rueckt ihn jeweils in die Mitte. Wo er im Bild klein
+       ist, wird etwas hineingezoomt. */
+    :global(html) .titelbild.titelbild--vita    { background-position: 32% 20%; margin-bottom: 30px; }
+    :global(html) .titelbild.titelbild--kontakt { background-position: 32% 20%; margin-bottom: 3em; }
+    :global(html) .titelbild.titelbild--lehre   { background-position: 58% 30%; margin-bottom: 45px; }
+    :global(html) .titelbild.titelbild--termine { background-size: auto 150%; background-position: 41% 41%; margin-bottom: 3em; }
+    :global(html) .titelbild.titelbild--media   { background-size: auto 150%; background-position: 38% 80%; margin-bottom: 3em; }
+
+    /* Oben ein leiser Schatten, damit der Menueknopf auf hellem Himmel
+       lesbar bleibt; unten der Uebergang ins Nachtblau. */
+    .titelbild::before,
+    .titelbild::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .titelbild::before {
+      top: 0;
+      height: 110px;
+      background: linear-gradient(rgba(0, 25, 40, 0.5), rgba(0, 25, 40, 0));
+    }
+
+    .titelbild::after {
+      bottom: -1px;
+      height: 45%;
+      background: linear-gradient(rgba(0, 48, 73, 0), var(--farbe-grund));
+    }
+
+    .titelbild__unterschrift {
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(44px + env(safe-area-inset-bottom, 0px));
+      z-index: 2;
+      /* Die Sperrung haengt rechts an; links ausgeglichen steht der Name mittig. */
+      padding-left: 0.22em;
+      font-size: clamp(30px, 3.6vw + 16px, 46px);
+      font-weight: 200;
+      line-height: 1.15;
+      letter-spacing: 0.22em;
+      text-align: center;
+      text-transform: uppercase;
+      color: var(--farbe-text);
+    }
+
+    .titelbild__unterschrift small {
+      display: block;
+      margin-top: 0.4em;
+      padding-left: 0.4em;
+      margin-left: -0.22em;
+      font-size: max(11px, 0.36em);
+      font-weight: 400;
+      letter-spacing: 0.4em;
+      color: var(--farbe-akzent);
+    }
+  }
+
+  /* Niedrige Fenster (Telefon quer): Name etwas kleiner und tiefer. */
+  @media screen and (max-width: 1080px) and (max-height: 480px) {
+    .titelbild__unterschrift { bottom: 24px; font-size: 26px; }
   }
 </style>

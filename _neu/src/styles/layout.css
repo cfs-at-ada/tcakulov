@@ -60,11 +60,7 @@
 #seitenrumpf > section { margin-bottom: 0; }
 
 @media screen and (max-width: 1080px) {
-  #seitenrumpf {
-    backface-visibility: hidden;
-    transition: transform 0.5s ease;
-    padding-bottom: 1px;
-  }
+  #seitenrumpf { padding-bottom: 1px; }
 }
 
 #hauptteil {
@@ -89,11 +85,6 @@
 
 .sprungmarke        { scroll-margin-top: -3px; }
 .sprungmarke-oben   { scroll-margin-top: 80px; }
-
-/* Beim geoeffneten Menue wandert die Seite nach rechts. */
-@media screen and (max-width: 1080px) {
-  body.menue-offen #seitenrumpf { transform: translateX(275px); }
-}
 
 /* Seiten, die buendig oben beginnen, legen den Rasterabstand ab. */
 .raster.ohne-abstand-oben { margin-top: 0; }

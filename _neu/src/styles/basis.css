@@ -151,7 +151,8 @@ article:last-child {
 
 @media screen and (max-width: 1080px) {
   html, body { overflow-x: hidden; }
-  body { padding-top: 66px; }
+  /* Ohne Titelbild Platz fuer Namen und Menueknopf oben */
+  body.ohne-titelbild { padding-top: 66px; }
 }
 
 @media screen and (max-width: 736px) {

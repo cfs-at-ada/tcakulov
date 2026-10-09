@@ -55,6 +55,7 @@ const { titel, beschreibung } = seo[sprache][seite];
 const vorschaubild = adresse((await teilbild()).src);
 // Vorschau (z. B. auf github.io): Suchmaschinen sollen nur die echte Domain kennen.
 const vorschau = !Astro.site?.hostname.endsWith('germantcakulov.com');
+const mitTitelbild = Astro.slots.has('titelbild');
 ---
 
 <!doctype html>
@@ -91,7 +92,7 @@ const vorschau = !Astro.site?.hostname.endsWith('germantcakulov.com');
     <slot name="kopf" />
   </head>
 
-  <body class="is-preload">
+  <body class:list={['is-preload', { 'ohne-titelbild': !mitTitelbild }]}>
     <div id="seitenrumpf">
       <slot name="titelbild" />
 
@@ -110,7 +111,7 @@ const vorschau = !Astro.site?.hostname.endsWith('germantcakulov.com');
       <Fusszeile sprache={sprache} abstandOben={fusszeileAbstand} />
     </div>
 
-    <Menuetafel sprache={sprache} seite={seite} aktiv={aktiv} marke={marke} />
+    <Menuetafel sprache={sprache} seite={seite} aktiv={aktiv} marke={marke} mitTitelbild={mitTitelbild} />
 
     <script>
       import '../skripte/start';

@@ -18,8 +18,9 @@ export const QUALITAET = 75;
 export const titelbilder = { vita, termine, lehre, media, kontakt: vita } as const;
 export type Titelseite = keyof typeof titelbilder;
 
-/** Breiten der Titelbilder je Bildschirmklasse, nie groesser als das Original. */
-const TITELBREITEN = { klein: 2000, mittel: 2600, gross: 3600 } as const;
+/** Breiten der Titelbilder je Bildschirmklasse, nie groesser als das Original.
+ *  Auf dem Telefon fuellt das Bild den ganzen Schirm, darum auch dort 2600. */
+const TITELBREITEN = { klein: 2600, mittel: 2600, gross: 3600 } as const;
 
 export async function titelbildFassungen(bild: ImageMetadata) {
   const fassungen: Record<string, string> = {};

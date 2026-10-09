@@ -1,65 +1,53 @@
-/** Ausfahrende Menuetafel der schmalen Ansicht. */
+/** Vollbild-Menue der schmalen Ansicht. */
 
-const VERZOEGERUNG = 510;
+const VERZOEGERUNG = 300;
 
 export function menueEinrichten(): void {
   const tafel = document.getElementById('menuetafel');
-  const schalter = document.querySelector<HTMLAnchorElement>('#titelleiste .schalter');
-  if (!tafel || !schalter) return;
+  const knopf = document.querySelector<HTMLAnchorElement>('.menueknopf');
+  if (!tafel || !knopf) return;
+
+  const istOffen = () => document.body.classList.contains('menue-offen');
 
   const setzen = (offen: boolean) => {
     document.body.classList.toggle('menue-offen', offen);
-    schalter.setAttribute('aria-expanded', String(offen));
+    knopf.setAttribute('aria-expanded', String(offen));
+    knopf.textContent = (offen ? knopf.dataset.offen : knopf.dataset.zu) ?? '';
     if (!offen) window.setTimeout(() => { tafel.scrollTop = 0; }, VERZOEGERUNG);
   };
 
-  const schliessen = () => {
-    if (document.body.classList.contains('menue-offen')) setzen(false);
-  };
-
-  schalter.addEventListener('click', (e) => {
+  knopf.addEventListener('click', (e) => {
     e.preventDefault();
-    e.stopPropagation();
-    setzen(!document.body.classList.contains('menue-offen'));
+    setzen(!istOffen());
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && istOffen()) {
+      setzen(false);
+      knopf.focus();
+    }
   });
 
   // Ein Verweis schliesst die Tafel erst und wechselt dann die Seite,
   // damit die Bewegung nicht abgeschnitten wird.
   tafel.addEventListener('click', (e) => {
-    e.stopPropagation();
     const ziel = (e.target as HTMLElement).closest('a');
     if (!ziel) return;
     const adresse = ziel.getAttribute('href');
-    if (!adresse || adresse === '#' || adresse === '#menuetafel') return;
+    if (!adresse) return;
     e.preventDefault();
-    schliessen();
+    setzen(false);
     window.setTimeout(() => { window.location.href = adresse; }, VERZOEGERUNG);
   });
 
-  document.body.addEventListener('click', schliessen);
-  document.body.addEventListener('touchend', schliessen);
-
-  // Nach links wischen schliesst die Tafel.
-  let startX: number | null = null;
-  let startY: number | null = null;
-
-  tafel.addEventListener('touchstart', (e) => {
-    e.stopPropagation();
-    startX = e.touches[0].pageX;
-    startY = e.touches[0].pageY;
-  });
-
-  tafel.addEventListener('touchend', (e) => e.stopPropagation());
-
-  tafel.addEventListener('touchmove', (e) => {
-    e.stopPropagation();
-    if (startX === null || startY === null) return;
-    const dx = startX - e.touches[0].pageX;
-    const dy = startY - e.touches[0].pageY;
-    if (dy < 20 && dy > -20 && dx > 50) {
-      startX = null;
-      startY = null;
-      schliessen();
-    }
-  });
+  // Sobald der Knopf ueber dem Text statt ueber dem Bild steht, bekommt
+  // er einen Grund, damit er lesbar bleibt.
+  const bild = document.querySelector<HTMLElement>('.titelbild');
+  const pruefen = () => {
+    const grenze = bild ? bild.offsetHeight - 60 : 10;
+    document.body.classList.toggle('ueber-inhalt', window.scrollY > grenze);
+  };
+  window.addEventListener('scroll', pruefen, { passive: true });
+  window.addEventListener('resize', pruefen);
+  pruefen();
 }
