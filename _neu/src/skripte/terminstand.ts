@@ -36,12 +36,6 @@ export function terminstandAktualisieren(): void {
       gesamt += anzahl;
     });
     archiv.hidden = gesamt === 0;
-
-    const hinweis = archiv.querySelector<HTMLElement>('[data-archiv-anzahl]');
-    if (hinweis) {
-      const vorlage = gesamt === 1 ? hinweis.dataset.vorlageEins : hinweis.dataset.vorlageViele;
-      if (vorlage) hinweis.textContent = vorlage.replace(/\d+/, String(gesamt));
-    }
   }
 
   // Startseite: naechstes Konzert

@@ -72,7 +72,6 @@ export const kurse = kommendeKurse.length
 export const terminTexte: Record<Sprache, {
   titel: string;
   archiv: string;
-  archivHinweis: (anzahl: number) => string;
   keine: string;
   naechstes: string;
   uhr: (zeit: string) => string;
@@ -85,7 +84,6 @@ export const terminTexte: Record<Sprache, {
   de: {
     titel: 'Termine',
     archiv: 'Archiv',
-    archivHinweis: (n) => `${n} vergangene ${n === 1 ? 'Termin' : 'Termine'}`,
     keine: 'Neue Termine folgen in Kürze.',
     naechstes: 'NÄCHSTES KONZERT',
     uhr: (zeit) => `${zeit} Uhr`,
@@ -98,7 +96,6 @@ export const terminTexte: Record<Sprache, {
   en: {
     titel: 'Calendar',
     archiv: 'Archive',
-    archivHinweis: (n) => `${n} past ${n === 1 ? 'event' : 'events'}`,
     keine: 'New dates will be announced soon.',
     naechstes: 'upcoming concert',
     uhr: (zeit) => zeit,

@@ -46,12 +46,7 @@ const jahre = [...new Set(archiv.map((t) => t.start.slice(0, 4)))];
   </article>
 
   <section class="archiv" id="archiv" data-archiv hidden={vergangene.length === 0}>
-    <h2 class="archiv__titel">
-      {texte.archiv}
-      <span class="archiv__anzahl" data-archiv-anzahl data-vorlage-eins={texte.archivHinweis(1)} data-vorlage-viele={texte.archivHinweis(2)}>
-        {texte.archivHinweis(vergangene.length)}
-      </span>
-    </h2>
+    <h2 class="archiv__titel">{texte.archiv}</h2>
 
     {jahre.map((j) => {
       const imJahr = archiv.filter((t) => t.start.startsWith(j));
@@ -128,14 +123,6 @@ const jahre = [...new Set(archiv.map((t) => t.start.slice(0, 4)))];
     font-size: 2em;
     font-weight: 400;
     color: var(--farbe-akzent);
-  }
-
-  .archiv__anzahl {
-    font-size: 0.5em;
-    font-weight: 100;
-    text-transform: none;
-    letter-spacing: 0;
-    color: var(--farbe-akzent-hell);
   }
 
   .archiv__jahr {
