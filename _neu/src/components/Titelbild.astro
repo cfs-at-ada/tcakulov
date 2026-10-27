@@ -79,6 +79,14 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
   .titelbild__unterschrift { display: none; }
 
+  /* Die Sperrung des Namens als feste Laenge, damit VIOLA sie in seiner
+     eigenen Schriftgroesse ausgleichen kann. */
+  @property --name-sperrung {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+  }
+
   /* Breit: Der Name steht rechtsbuendig unten im dunklen Verlauf, knapp
      ueber der Menuezeile. */
   @media screen and (min-width: 1081px) {
@@ -103,9 +111,10 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       /* Die Sperrung haengt rechts an und wird dort wieder eingezogen. */
       margin-right: -0.16em;
       font-size: clamp(52px, 3.4vw + 20px, 84px);
-      font-weight: 150;
+      font-weight: 400;
       line-height: 1.05;
       letter-spacing: 0.16em;
+      --name-sperrung: 0.16em;
       text-align: right;
       text-transform: uppercase;
       color: var(--farbe-text);
@@ -114,7 +123,9 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     .titelbild__unterschrift small {
       display: block;
       margin-top: 20px;
-      margin-right: -0.3em;
+      /* Eigene Sperrung einziehen, die des Namens wieder zugeben: So enden
+         VIOLA und der Name rechts buendig. */
+      margin-right: calc(var(--name-sperrung) - 0.46em);
       font-size: 13px;
       font-weight: 400;
       letter-spacing: 0.46em;
@@ -415,7 +426,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       /* Die Sperrung haengt rechts an; links ausgeglichen steht der Name mittig. */
       padding-left: 0.22em;
       font-size: clamp(30px, 3.6vw + 16px, 46px);
-      font-weight: 200;
+      font-weight: 400;
       line-height: 1.15;
       letter-spacing: 0.22em;
       text-align: center;
@@ -452,13 +463,14 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       font-size: clamp(24px, 4vh + 11px, 44px);
       line-height: 1.05;
       letter-spacing: 0.16em;
+      --name-sperrung: 0.16em;
       text-align: right;
     }
 
     .titelbild__unterschrift small {
       margin-top: 0.5em;
       margin-left: 0;
-      margin-right: -0.3em;
+      margin-right: calc(var(--name-sperrung) - 0.4em);
       padding-left: 0;
       font-size: max(10px, 0.3em);
     }
@@ -501,5 +513,27 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     :global(html.is-ipad) .titelbild.titelbild--termine { background-size: cover; background-position: center; }
     :global(html.is-ipad) .titelbild.titelbild--lehre   { background-size: 150%; background-position: 100% 55%; }
     :global(html.is-ipad) .titelbild.titelbild--media   { background-size: cover; background-position: center; }
+  }
+
+  /* --- Vita und Kontakt: leiserer Verlauf --------------------------------- */
+  /* Die Bratsche liegt am unteren Bildrand; der Verlauf setzt spaeter ein
+     und wird erst ganz unten dicht, damit sie sichtbar bleibt. */
+  .titelbild:is(.titelbild--vita, .titelbild--kontakt)::after {
+    background: linear-gradient(rgba(0, 48, 73, 0), rgba(0, 48, 73, 0.45) 55%, var(--farbe-grund));
+  }
+
+  @media screen and (min-width: 1081px) {
+    .titelbild:is(.titelbild--vita, .titelbild--kontakt)::after { height: 34%; }
+  }
+
+  @media screen and (max-width: 1080px) {
+    .titelbild:is(.titelbild--vita, .titelbild--kontakt)::after { height: 32%; }
+  }
+
+  /* --- Media hochkant auf dem Tablet ------------------------------------ */
+  /* Hochkant ab 3:5 passt er samt Saeule und Koffer ins Bild. Auf dem
+     schmaleren Telefon bleibt der engere Ausschnitt nur auf ihn. */
+  @media screen and (max-width: 1080px) and (orientation: portrait) and (min-aspect-ratio: 3/5) {
+    :global(html) .titelbild.titelbild--media { background-size: cover; background-position: 61% 0; }
   }
 </style>
