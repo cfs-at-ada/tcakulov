@@ -57,6 +57,27 @@ export function vorlaufEinrichten(): void {
     };
     nachfassen();
   });
+
+  // Zieht der Besucher die Seite ganz nach oben (etwa zum Neuladen, ohne es
+  // auszuloesen), steht sie bei 0 und Safari zeigt wieder den Streifen. Kommt
+  // die Seite nach dem Loslassen innerhalb des Vorlaufs zur Ruhe, gleitet sie
+  // zurueck auf den Vorlauf.
+  let finger = false;
+  let ruhe = 0;
+  const zurueck = () => {
+    if (finger || document.body.classList.contains('menue-offen')) return;
+    if (!window.matchMedia('(orientation: portrait)').matches) return;
+    const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
+    if (vorlauf && window.scrollY < vorlauf - 1) window.scrollTo({ top: vorlauf, behavior: 'smooth' });
+  };
+  const abwarten = () => {
+    window.clearTimeout(ruhe);
+    ruhe = window.setTimeout(zurueck, 150);
+  };
+  window.addEventListener('touchstart', () => { finger = true; window.clearTimeout(ruhe); }, { passive: true });
+  window.addEventListener('touchend', () => { finger = false; abwarten(); }, { passive: true });
+  window.addEventListener('touchcancel', () => { finger = false; abwarten(); }, { passive: true });
+  window.addEventListener('scroll', () => { if (!finger) abwarten(); }, { passive: true });
 }
 
 /**
