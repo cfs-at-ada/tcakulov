@@ -557,7 +557,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     :global(body.ueber-inhalt) .titelbild__kappe,
     :global(body.menue-offen) .titelbild__kappe { background-color: var(--farbe-grund); }
 
-    /* Startseite und Termine: heller Himmel, darum nur ein Hauch Schatten;
+    /* Startseite, Termine und Lehre: heller Himmel, darum nur ein Hauch Schatten;
        Kappe und Bildrand haben denselben Ton, damit nichts wie eine Vignette
        wirkt. */
     .titelbild--vita    { --kappe: #d6d8da; }
@@ -568,10 +568,24 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
       -webkit-mask-image: linear-gradient(#000 20%, rgba(0, 0, 0, 0.5) 55%, transparent);
       mask-image: linear-gradient(#000 20%, rgba(0, 0, 0, 0.5) 55%, transparent);
     }
-    .titelbild:is(.titelbild--vita, .titelbild--termine)::before { background: linear-gradient(rgba(0, 25, 40, 0.06), rgba(0, 25, 40, 0)); }
+    .titelbild:is(.titelbild--vita, .titelbild--termine, .titelbild--lehre)::before { background: linear-gradient(rgba(0, 25, 40, 0.06), rgba(0, 25, 40, 0)); }
     .titelbild--kontakt { --kappe: #727e86; }
-    .titelbild--lehre   { --kappe: #62717b; }
     .titelbild--media   { --kappe: #677880; }
+  }
+
+  /* --- Vorlauf: echtes Bild hinter der Uhrzeit (Telefon hochkant) ------ */
+  /* Ist die Seite ein Stueck gescrollt und steht oben kein festes Element,
+     zeigt Safari den Seiteninhalt hinter der Statusleiste. Das Bild wird
+     darum um den Vorlauf hoeher, und `vorlaufEinrichten()` startet die Seite
+     um genau diesen Betrag gescrollt. Eine Kappe darf hier nicht stehen. */
+  @media screen and (max-width: 1080px) and (orientation: portrait) {
+    :global(html.is-mobile:has(.titelbild--lehre)) { --vorlauf: 60px; }
+    :global(html.is-mobile) .titelbild.titelbild--lehre {
+      height: calc(var(--titel-hoehe, 100svh) + var(--vorlauf, 0px));
+      /* Weiter nach rechts, damit die Schnecke der Bratsche ganz im Bild ist. */
+      background-position-x: 65.7%;
+    }
+    :global(html.is-mobile) .titelbild--lehre .titelbild__kappe { display: none; }
   }
 
   /* --- Media hochkant auf dem Tablet ------------------------------------ */

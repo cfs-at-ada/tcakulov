@@ -24,6 +24,25 @@ export function uebergaengeFreigeben(): void {
 }
 
 /**
+ * Telefon hochkant: Safari zeigt Seiteninhalt hinter der Uhrzeit erst, wenn
+ * die Seite ein Stueck gescrollt ist. Das Titelbild ragt darum um einen
+ * Vorlauf nach oben (siehe `--vorlauf` im Titelbild), und die Seite startet
+ * um genau diesen Vorlauf gescrollt. So laeuft das Foto bis unter die
+ * Statusleiste, ohne einfarbigen Streifen.
+ */
+export function vorlaufEinrichten(): void {
+  const wurzel = document.documentElement;
+  if (!wurzel.classList.contains('is-mobile') || !document.querySelector('.titelbild')) return;
+  const springen = () => {
+    if (window.scrollY !== 0 || location.hash || !window.matchMedia('(orientation: portrait)').matches) return;
+    const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
+    if (vorlauf) window.scrollTo(0, vorlauf);
+  };
+  if (document.readyState === 'complete') springen();
+  else window.addEventListener('load', springen);
+}
+
+/**
  * Haelt die Hoehe des Titelbilds auf dem Telefon fest. Safari blendet beim
  * Blaettern Adress- und Werkzeugleiste ein und aus; haengt die Hoehe an der
  * Fenstergroesse, springt das Bild dabei und der Name wandert mit. Neu
