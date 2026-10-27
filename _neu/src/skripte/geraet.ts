@@ -38,8 +38,11 @@ export function vorlaufEinrichten(): void {
     const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
     if (vorlauf) window.scrollTo(0, vorlauf);
   };
-  if (document.readyState === 'complete') springen();
-  else window.addEventListener('load', springen);
+  // Sofort springen, nicht erst nach dem Laden der Bilder: sonst steht bis
+  // dahin der einfarbige Streifen unter der Uhrzeit. Nach dem Laden noch
+  // einmal, falls Safari die Position inzwischen zurueckgesetzt hat.
+  springen();
+  window.addEventListener('load', springen);
 }
 
 /**

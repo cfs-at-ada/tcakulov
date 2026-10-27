@@ -71,8 +71,8 @@ const andere: Sprache = sprache === 'de' ? 'en' : 'de';
     }
 
     /* Ueber dem Text bekommt der Knopf einen leisen Glasgrund. */
-    /* Auf Startseite, Termine und Lehre steht der Knopf auf hellem Himmel: Kupfer wie VIOLA. */
-    :global(body:has(.titelbild--vita, .titelbild--termine, .titelbild--lehre)) .menueknopf { color: var(--farbe-akzent); }
+    /* Auf Startseite, Kontakt, Termine, Lehre und Media steht der Knopf auf hellem Himmel: Kupfer wie VIOLA. */
+    :global(body:has(.titelbild--vita, .titelbild--kontakt, .titelbild--termine, .titelbild--lehre, .titelbild--media)) .menueknopf { color: var(--farbe-akzent); }
 
     :global(body.ueber-inhalt) .menueknopf {
       background-color: rgba(0, 48, 73, 0.72);
@@ -121,7 +121,12 @@ const andere: Sprache = sprache === 'de' ? 'en' : 'de';
       transition: opacity 0.35s ease, visibility 0s linear 0.35s;
     }
 
-    :global(body.menue-offen) { overflow: hidden; }
+    /* Kein `overflow: hidden` auf dem body: Safari setzt sonst die Bildlaufposition
+       zurueck, und unter der Uhrzeit blitzt der einfarbige Streifen auf. */
+    #menuetafel { overscroll-behavior: contain; }
+
+    /* Geschlossen ganz aus dem Baum, sonst faerbt Safari den Streifen danach. */
+    #menuetafel.weg { display: none; }
 
     :global(body.menue-offen) #menuetafel,
     #menuetafel:target {

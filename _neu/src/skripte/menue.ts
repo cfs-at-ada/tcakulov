@@ -9,7 +9,18 @@ export function menueEinrichten(): void {
 
   const istOffen = () => document.body.classList.contains('menue-offen');
 
+  let wegnehmen = 0;
+  tafel.classList.add('weg');
+
   const setzen = (offen: boolean) => {
+    window.clearTimeout(wegnehmen);
+    if (offen) {
+      // Erst einhaengen, dann im naechsten Bild einblenden, damit der Uebergang laeuft.
+      tafel.classList.remove('weg');
+      void tafel.offsetHeight;
+    } else {
+      wegnehmen = window.setTimeout(() => tafel.classList.add('weg'), 400);
+    }
     document.body.classList.toggle('menue-offen', offen);
     knopf.setAttribute('aria-expanded', String(offen));
     knopf.textContent = (offen ? knopf.dataset.offen : knopf.dataset.zu) ?? '';
@@ -28,17 +39,33 @@ export function menueEinrichten(): void {
     }
   });
 
-  // Ein Verweis schliesst die Tafel erst und wechselt dann die Seite,
-  // damit die Bewegung nicht abgeschnitten wird.
+  // Ein Verweis zu einer anderen Seite laesst die Tafel stehen: Das Nachtblau
+  // geht direkt in die neue Seite ueber, statt kurz die alte zu zeigen.
+  // Nur eine Sprungmarke auf derselben Seite schliesst die Tafel erst.
   tafel.addEventListener('click', (e) => {
     const ziel = (e.target as HTMLElement).closest('a');
     if (!ziel) return;
     const adresse = ziel.getAttribute('href');
     if (!adresse) return;
+    const neu = new URL(adresse, location.href);
+    if (neu.pathname !== location.pathname) return;
     e.preventDefault();
     setzen(false);
     window.setTimeout(() => { window.location.href = adresse; }, VERZOEGERUNG);
   });
+
+  // Beim Verlassen die Tafel sofort schliessen, damit die Seite beim
+  // Zurueckblaettern aus dem Zwischenspeicher sauber dasteht.
+  const sofortZu = () => {
+    if (!istOffen()) return;
+    tafel.style.transition = 'none';
+    setzen(false);
+    window.clearTimeout(wegnehmen);
+    tafel.classList.add('weg');
+    requestAnimationFrame(() => { tafel.style.transition = ''; });
+  };
+  window.addEventListener('pagehide', sofortZu);
+  window.addEventListener('pageshow', (e) => { if (e.persisted) sofortZu(); });
 
   // Sobald der Knopf ueber dem Text statt ueber dem Bild steht, bekommt
   // er einen Grund, damit er lesbar bleibt.
