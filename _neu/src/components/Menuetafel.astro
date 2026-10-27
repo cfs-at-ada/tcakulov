@@ -71,8 +71,8 @@ const andere: Sprache = sprache === 'de' ? 'en' : 'de';
     }
 
     /* Ueber dem Text bekommt der Knopf einen leisen Glasgrund. */
-    /* Auf der Startseite steht der Knopf auf hellem Himmel: Kupfer wie VIOLA. */
-    :global(body:has(.titelbild--vita)) .menueknopf { color: var(--farbe-akzent); }
+    /* Auf Startseite und Termine steht der Knopf auf hellem Himmel: Kupfer wie VIOLA. */
+    :global(body:has(.titelbild--vita, .titelbild--termine)) .menueknopf { color: var(--farbe-akzent); }
 
     :global(body.ueber-inhalt) .menueknopf {
       background-color: rgba(0, 48, 73, 0.72);
