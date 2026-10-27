@@ -578,15 +578,42 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
      darum um den Vorlauf hoeher, und `vorlaufEinrichten()` startet die Seite
      um genau diesen Betrag gescrollt. Eine Kappe darf hier nicht stehen. */
   @media screen and (max-width: 1080px) and (orientation: portrait) {
-    :global(html.is-mobile:has(.titelbild--lehre, .titelbild--termine)) { --vorlauf: 60px; }
-    :global(html.is-mobile) .titelbild:is(.titelbild--lehre, .titelbild--termine) {
+    :global(html.is-mobile:has(.titelbild--vita, .titelbild--lehre, .titelbild--termine)) { --vorlauf: 60px; }
+    /* Vita: Das Querformat-Foto hat kaum Luft ueber dem Kopf. Es behaelt
+       darum seine Groesse und sitzt unten; den Vorlauf hinter der Uhrzeit
+       fuellt sein oberer Rand. */
+    :global(html.is-mobile) .titelbild.titelbild--vita {
+      background-size: auto calc(100% - var(--vorlauf));
+      background-position: 32% 100%;
+    }
+    :global(html.is-mobile) .titelbild.titelbild--vita::before {
+      height: var(--vorlauf);
+      /* Nur die obersten Zeilen des Fotos, dreifach gestreckt und gespiegelt:
+         so setzt sich der Rand nahtlos fort, ohne dass das Haar hineinreicht.
+         Die Breite entspricht dem Hauptbild (3840 x 2159). */
+      background-image: var(--titel-bild);
+      background-size: calc(var(--titel-hoehe, 100svh) * 1.7786) calc(var(--titel-hoehe, 100svh) * 3);
+      background-position: 32% 0;
+      background-repeat: no-repeat;
+      transform: scaleY(-1);
+    }
+    :global(html.is-mobile) .titelbild:is(.titelbild--vita, .titelbild--lehre, .titelbild--termine) {
       height: calc(var(--titel-hoehe, 100svh) + var(--vorlauf, 0px));
+    }
+    /* Vita: Hinter MENUE liegt ein dunkler Fleck; ein weicher heller Hof
+       im Ton des Hintergrunds hebt ihn auf. */
+    :global(html.is-mobile) .titelbild--vita .titelbild__grund::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 90px 42px at calc(100% - 52px) calc(var(--vorlauf) + 29px), rgba(222, 224, 226, 0.8), rgba(222, 224, 226, 0));
+      pointer-events: none;
     }
     /* Lehre weiter nach rechts, damit die Schnecke der Bratsche ganz im Bild ist. */
     :global(html.is-mobile) .titelbild.titelbild--lehre { background-position-x: 65.7%; }
     /* Termine: er sitzt mittig. */
     :global(html.is-mobile) .titelbild.titelbild--termine { background-position-x: 39.6%; }
-    :global(html.is-mobile) .titelbild:is(.titelbild--lehre, .titelbild--termine) .titelbild__kappe { display: none; }
+    :global(html.is-mobile) .titelbild:is(.titelbild--vita, .titelbild--lehre, .titelbild--termine) .titelbild__kappe { display: none; }
   }
 
   /* --- Media hochkant auf dem Tablet ------------------------------------ */
