@@ -35,11 +35,12 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     if (!vorlauf) return;
     // Bis der Sprung sitzt, bleibt die Seite nachtblau verdeckt; so ruckt
     // nichts sichtbar nach oben. Safari nimmt den Sprung mitunter erst ein,
-    // zwei Bilder spaeter an, darum wird je Bild nachgefasst.
+    // zwei Bilder spaeter an, darum wird je Bild nachgefasst. Sofort, nicht
+    // weich: `scroll-behavior: smooth` wuerde jeden Versuch neu anlaufen lassen.
     w.classList.add('vorlauf-wartet');
     var versuche = 0;
     (function fassen() {
-      window.scrollTo(0, vorlauf);
+      window.scrollTo({ top: vorlauf, behavior: 'instant' });
       if (window.scrollY >= vorlauf - 1 || ++versuche > 60) w.classList.remove('vorlauf-wartet');
       else requestAnimationFrame(fassen);
     })();

@@ -33,16 +33,30 @@ export function uebergaengeFreigeben(): void {
 export function vorlaufEinrichten(): void {
   const wurzel = document.documentElement;
   if (!wurzel.classList.contains('is-mobile') || !document.querySelector('.titelbild')) return;
+  // Sobald der Besucher selbst blaettert, wird nicht mehr nachgefasst.
+  let beruehrt = false;
+  for (const art of ['touchstart', 'wheel', 'keydown']) {
+    window.addEventListener(art, () => { beruehrt = true; }, { once: true, passive: true });
+  }
   const springen = () => {
-    if (window.scrollY !== 0 || location.hash || !window.matchMedia('(orientation: portrait)').matches) return;
+    if (beruehrt || window.scrollY !== 0 || location.hash || !window.matchMedia('(orientation: portrait)').matches) return;
     const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
-    if (vorlauf) window.scrollTo(0, vorlauf);
+    // Sofort, nicht weich: `scroll-behavior: smooth` laesst den Sprung sonst
+    // als Bewegung laufen, die abbrechen kann.
+    if (vorlauf) window.scrollTo({ top: vorlauf, behavior: 'instant' });
   };
   // Sofort springen, nicht erst nach dem Laden der Bilder: sonst steht bis
   // dahin der einfarbige Streifen unter der Uhrzeit. Nach dem Laden noch
-  // einmal, falls Safari die Position inzwischen zurueckgesetzt hat.
+  // einige Bilder lang, falls Safari den Sprung verworfen hat.
   springen();
-  window.addEventListener('load', springen);
+  window.addEventListener('load', () => {
+    let bilder = 0;
+    const nachfassen = () => {
+      springen();
+      if (window.scrollY === 0 && ++bilder < 20) requestAnimationFrame(nachfassen);
+    };
+    nachfassen();
+  });
 }
 
 /**
