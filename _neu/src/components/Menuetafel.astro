@@ -65,12 +65,15 @@ const andere: Sprache = sprache === 'de' ? 'en' : 'de';
       letter-spacing: 0.26em;
       text-transform: uppercase;
       text-decoration: none;
-      color: #fff;
+      color: var(--farbe-text);
       -webkit-tap-highlight-color: transparent;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* Ueber dem Text bekommt der Knopf einen leisen Glasgrund. */
+    /* Auf der Startseite steht der Knopf auf hellem Himmel: Kupfer wie VIOLA. */
+    :global(body:has(.titelbild--vita)) .menueknopf { color: var(--farbe-akzent); }
+
     :global(body.ueber-inhalt) .menueknopf {
       background-color: rgba(0, 48, 73, 0.72);
       -webkit-backdrop-filter: blur(12px);

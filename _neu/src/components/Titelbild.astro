@@ -17,6 +17,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
 <div class:list={['titelbild', `titelbild--${seite}`]} style={fassungen}>
   <div class="titelbild__grund" aria-hidden="true"></div>
+  <div class="titelbild__kappe" aria-hidden="true"></div>
   <div class="titelbild__unterschrift">German<br />Tcakulov<small>Viola</small></div>
 </div>
 
@@ -528,6 +529,48 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
 
   @media screen and (max-width: 1080px) {
     .titelbild:is(.titelbild--vita, .titelbild--kontakt)::after { height: 32%; }
+  }
+
+  /* --- Streifen unter der Uhrzeit (Safari auf dem Telefon) -------------- */
+  /* Safari laesst das Bild nicht unter die Statusleiste, faerbt sie aber
+     wie ein oben fest stehendes Element. Die Kappe traegt darum die Farbe
+     des oberen Bildrands (samt Schatten) und laeuft nach unten unsichtbar
+     aus. Hinter dem Bild und bei offenem Menue tritt sie zurueck, dann
+     faerbt Safari den Streifen wieder nachtblau. */
+  .titelbild__kappe { display: none; }
+
+  @media screen and (max-width: 1080px) {
+    .titelbild__kappe {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      z-index: 1;
+      pointer-events: none;
+      background-color: var(--kappe, transparent);
+      -webkit-mask-image: linear-gradient(#000, transparent);
+      mask-image: linear-gradient(#000, transparent);
+    }
+
+    :global(body.ueber-inhalt) .titelbild__kappe,
+    :global(body.menue-offen) .titelbild__kappe { background-color: var(--farbe-grund); }
+
+    /* Startseite: heller Himmel, darum nur ein Hauch Schatten; Kappe und
+       Bildrand haben denselben Ton, damit nichts wie eine Vignette wirkt. */
+    .titelbild--vita    { --kappe: #d6d8da; }
+    /* Hier laeuft die Kappe weiter ins Bild, bis knapp ans Haar. */
+    .titelbild--vita .titelbild__kappe {
+      height: 70px;
+      -webkit-mask-image: linear-gradient(#000 20%, rgba(0, 0, 0, 0.5) 55%, transparent);
+      mask-image: linear-gradient(#000 20%, rgba(0, 0, 0, 0.5) 55%, transparent);
+    }
+    .titelbild--vita::before { background: linear-gradient(rgba(0, 25, 40, 0.06), rgba(0, 25, 40, 0)); }
+    .titelbild--kontakt { --kappe: #727e86; }
+    .titelbild--termine { --kappe: #717e82; }
+    .titelbild--lehre   { --kappe: #62717b; }
+    .titelbild--media   { --kappe: #677880; }
   }
 
   /* --- Media hochkant auf dem Tablet ------------------------------------ */

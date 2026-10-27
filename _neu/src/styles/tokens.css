@@ -20,10 +20,9 @@
   --farbe-vorlage-text: #6B7770;
   --farbe-vorlage-link: #006376;
 
-  /* Schrift – genau wie im Original: Source Sans 3 wird genannt, aber nicht
-     nachgeladen (dort lief der Pfad ins Leere). Der Browser zeigt daher seine
-     Standardschrift (Mac/iPhone: Helvetica, Windows: Arial) – so sieht die
-     Seite seit jeher aus, und so bleibt sie. */
+  /* Schrift – Source Sans 3, aus `src/schriften/` geladen (siehe unten).
+     Im Original lief der Pfad ins Leere, dort zeigte der Browser seine
+     Standardschrift (Mac/iPhone: Helvetica, Windows: Arial). */
   --schrift: 'Source Sans 3', sans-serif;
 
 
@@ -32,4 +31,63 @@
 
   /* Blocksatz wie im Original */
   --blocksatz: justify;
+}
+
+/* Source Sans 3 in den Schnitten, die die Seite nutzt. Leichtere Angaben
+   (100, 150) fallen auf ExtraLight. */
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('../schriften/SourceSans3-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('../schriften/SourceSans3-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('../schriften/SourceSans3-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('../schriften/SourceSans3-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('../schriften/SourceSans3-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('../schriften/SourceSans3-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('../schriften/SourceSans3-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
 }
