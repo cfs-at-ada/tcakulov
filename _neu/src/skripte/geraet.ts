@@ -101,29 +101,25 @@ export function vorlaufEinrichten(): void {
     let von = NaN;
     let beginn = 0;
     let vorher = NaN;
-    let gesetzt = NaN;
     const schritt = (jetzt: number) => {
       waechter = 0;
       if (finger || !zustaendig()) return;
       const vorlauf = vorlaufLesen();
       const y = Math.max(0, window.scrollY);
       if (!vorlauf || y >= vorlauf - 0.5) return;
-      // Laeuft noch Schwung (leichtes Anstossen), zieht Safari die Seite
-      // weiter nach oben; dagegen anzuschieben zittert. Erst wenn sie steht
-      // (oder oben angekommen ist), beginnt das Zurueckgleiten. Zieht der
-      // Schwung sie waehrenddessen doch zurueck, wird wieder gewartet.
-      if (!isNaN(gesetzt) && y < gesetzt - 1) von = NaN;
+      // Laeuft noch Schwung nach oben (leichtes Anstossen), wird nicht
+      // dagegen angeschoben, das zittert: gewartet wird, solange die Seite
+      // noch weiter nach oben wandert. Danach laeuft der Lauf unbeirrt durch.
       if (isNaN(von)) {
-        const steht = y === vorher || y <= 0;
+        const faellt = !isNaN(vorher) && y < vorher && y > 0;
         vorher = y;
-        gesetzt = NaN;
-        if (!steht) { waechter = window.requestAnimationFrame(schritt); return; }
+        if (faellt) { waechter = window.requestAnimationFrame(schritt); return; }
         von = y;
         beginn = jetzt;
       }
       const t = Math.min(1, (jetzt - beginn) / DAUER);
-      gesetzt = Math.min(vorlauf, Math.max(Math.ceil(von + (vorlauf - von) * kurve(t)), Math.floor(y) + 1));
-      window.scrollTo({ top: gesetzt, behavior: 'instant' });
+      const ziel = Math.min(vorlauf, Math.max(Math.ceil(von + (vorlauf - von) * kurve(t)), Math.floor(y) + 1));
+      window.scrollTo({ top: ziel, behavior: 'instant' });
       waechter = window.requestAnimationFrame(schritt);
     };
     waechter = window.requestAnimationFrame(schritt);
