@@ -86,8 +86,8 @@ export function vorlaufEinrichten(): void {
   }, { passive: false });
 
   // Kommt die Seite trotzdem oberhalb des Vorlaufs an (Schwung von weiter
-  // unten, Zug, der knapp unterhalb der Grenze begann), gleitet sie sofort
-  // zurueck. Die Bewegung ist selbst gesteuert und folgt nach der Zeit einer
+  // unten, Zug, der knapp unterhalb der Grenze begann), gleitet sie nach dem
+  // Ende der Bewegung zurueck. Das ist selbst gesteuert und folgt einer
   // auslaufenden Kurve wie das Zurueckfedern in iOS (rund 0,55 s): erst
   // zuegig, dann weich. Weil oben nichts federt, nimmt Safari die Schritte
   // an; verwirft es doch einen, setzt der naechste Schritt erneut. Ganze
@@ -95,25 +95,32 @@ export function vorlaufEinrichten(): void {
   // voran. Der Lauf endet erst am Vorlauf oder bei erneuter Beruehrung.
   const DAUER = 550;
   const kurve = (t: number) => 1 - Math.pow(1 - t, 3);
+  const RUHE = 100;
   let waechter = 0;
+  let beendet = false;
   const zurueck = () => {
     if (waechter) return;
+    beendet = false;
     let von = NaN;
     let beginn = 0;
     let vorher = NaN;
+    let ruhigSeit = 0;
     const schritt = (jetzt: number) => {
       waechter = 0;
       if (finger || !zustaendig()) return;
       const vorlauf = vorlaufLesen();
       const y = Math.max(0, window.scrollY);
       if (!vorlauf || y >= vorlauf - 0.5) return;
-      // Laeuft noch Schwung nach oben (leichtes Anstossen), wird nicht
-      // dagegen angeschoben, das zittert: gewartet wird, solange die Seite
-      // noch weiter nach oben wandert. Danach laeuft der Lauf unbeirrt durch.
+      // Erst wenn die Bewegung ganz zu Ende ist, wird zurueckgeglitten:
+      // Safari meldet `scrollend`, oder die Seite steht rund 0,1 s still,
+      // oder sie ist oben angekommen. Gegen auslaufenden Schwung
+      // anzuschieben zittert, deshalb geschieht bis dahin nichts.
       if (isNaN(von)) {
-        const faellt = !isNaN(vorher) && y < vorher && y > 0;
-        vorher = y;
-        if (faellt) { waechter = window.requestAnimationFrame(schritt); return; }
+        if (y !== vorher) { vorher = y; ruhigSeit = jetzt; }
+        if (!beendet && y > 0 && jetzt - ruhigSeit < RUHE) {
+          waechter = window.requestAnimationFrame(schritt);
+          return;
+        }
         von = y;
         beginn = jetzt;
       }
@@ -125,10 +132,11 @@ export function vorlaufEinrichten(): void {
     waechter = window.requestAnimationFrame(schritt);
   };
   const loslassen = (e: TouchEvent) => { finger = e.touches.length > 0; zurueck(); };
+  const zuEnde = () => { if (finger) return; zurueck(); beendet = true; };
   window.addEventListener('touchend', loslassen, { passive: true });
   window.addEventListener('touchcancel', loslassen, { passive: true });
   window.addEventListener('scroll', () => { if (!finger) zurueck(); }, { passive: true });
-  window.addEventListener('scrollend', () => { if (!finger) zurueck(); });
+  window.addEventListener('scrollend', zuEnde);
   // Zurueck aus dem Verlauf (Safari stellt die alte Position wieder her).
   window.addEventListener('pageshow', (e) => { if (e.persisted) zurueck(); });
 }
