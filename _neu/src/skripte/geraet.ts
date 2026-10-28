@@ -70,12 +70,10 @@ export function vorlaufEinrichten(): void {
   let finger = false;
   let startY = 0;
   let gesperrt: boolean | null = null;
-  let pruefen = 0;
   window.addEventListener('touchstart', (e) => {
     finger = true;
     startY = e.touches[0]?.clientY ?? 0;
     gesperrt = e.touches.length === 1 ? null : false;
-    window.clearTimeout(pruefen);
   }, { passive: true });
   window.addEventListener('touchmove', (e) => {
     if (gesperrt === null) {
@@ -88,20 +86,34 @@ export function vorlaufEinrichten(): void {
   }, { passive: false });
 
   // Kommt die Seite trotzdem oberhalb des Vorlaufs zur Ruhe (Schwung von
-  // weiter unten), gleitet sie gleich zurueck. Ohne Federn nimmt Safari den
-  // Befehl sofort an; zur Sicherheit wird kurz darauf nachgesehen.
-  const zurueck = (versuch = 0) => {
-    if (finger || !zustaendig()) return;
-    const vorlauf = vorlaufLesen();
-    if (!vorlauf || window.scrollY >= vorlauf - 1) return;
-    window.scrollTo({ top: vorlauf, behavior: 'smooth' });
-    window.clearTimeout(pruefen);
-    if (versuch < 2) pruefen = window.setTimeout(() => zurueck(versuch + 1), 400);
+  // weiter unten, Zug, der knapp unterhalb der Grenze begann), gleitet sie
+  // zurueck. Ein Waechter sieht jedes Bild nach: Steht die Seite ohne Finger
+  // drei Bilder lang still und ist nicht am Vorlauf, geht der Befehl (erneut)
+  // hinaus. So haengt nichts davon ab, ob Safari `scrollend` meldet oder
+  // einen Befehl unterwegs verwirft.
+  let waechter = 0;
+  const zurueck = () => {
+    if (waechter) return;
+    let vorher = NaN;
+    let still = 0;
+    const schritt = () => {
+      waechter = 0;
+      if (finger || !zustaendig()) return;
+      const vorlauf = vorlaufLesen();
+      const y = window.scrollY;
+      if (!vorlauf || y >= vorlauf - 1) return;
+      still = y === vorher ? still + 1 : 0;
+      vorher = y;
+      if (still === 3) window.scrollTo({ top: vorlauf, behavior: 'smooth' });
+      if (still > 3) still = 0;
+      waechter = window.requestAnimationFrame(schritt);
+    };
+    waechter = window.requestAnimationFrame(schritt);
   };
-  const loslassen = () => { finger = false; zurueck(); };
+  const loslassen = (e: TouchEvent) => { finger = e.touches.length > 0; zurueck(); };
   window.addEventListener('touchend', loslassen, { passive: true });
   window.addEventListener('touchcancel', loslassen, { passive: true });
-  window.addEventListener('scrollend', () => { if (!finger) zurueck(); });
+  window.addEventListener('scroll', () => { if (!finger) zurueck(); }, { passive: true });
   // Zurueck aus dem Verlauf (Safari stellt die alte Position wieder her).
   window.addEventListener('pageshow', (e) => { if (e.persisted) zurueck(); });
 }
