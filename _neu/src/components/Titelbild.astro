@@ -606,6 +606,13 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
      um genau diesen Betrag gescrollt. Eine Kappe darf hier nicht stehen. */
   @media screen and (max-width: 1080px) and (orientation: portrait) {
     :global(html.is-mobile:has(.titelbild)) { --vorlauf: 60px; }
+    /* Ganz oben (beim Herunterziehen) faerbt Safari den Streifen mit der
+       Grundfarbe der Seite (body): dann der gemessene Ton des oberen Bildrands
+       statt Nachtblau. Nur oberhalb des Vorlaufs, wo das Titelbild alles deckt. */
+    :global(html.is-mobile.am-anfang:has(.titelbild--vita, .titelbild--kontakt) body) { background-color: #e6e7e9; }
+    :global(html.is-mobile.am-anfang:has(.titelbild--termine) body) { background-color: #e2e0dd; }
+    :global(html.is-mobile.am-anfang:has(.titelbild--lehre) body) { background-color: #bbc2c7; }
+    :global(html.is-mobile.am-anfang:has(.titelbild--media) body) { background-color: #cdd8d8; }
     /* Vita und Kontakt: Das Querformat-Foto hat kaum Luft ueber dem Kopf. Es behaelt
        darum seine Groesse und sitzt unten; den Vorlauf hinter der Uhrzeit
        fuellt sein oberer Rand. */

@@ -61,23 +61,56 @@ export function vorlaufEinrichten(): void {
   // Zieht der Besucher die Seite ganz nach oben (etwa zum Neuladen, ohne es
   // auszuloesen), steht sie bei 0 und Safari zeigt wieder den Streifen. Kommt
   // die Seite nach dem Loslassen innerhalb des Vorlaufs zur Ruhe, gleitet sie
-  // zurueck auf den Vorlauf.
+  // zurueck auf den Vorlauf. Safari verwirft Bildlaufbefehle, solange der
+  // Finger liegt oder die Seite noch federt; darum wird erst auf das Ende der
+  // Bewegung gewartet (`scrollend`, sonst eine kurze Ruhepause) und danach
+  // geprueft, ob der Befehl angekommen ist.
   let finger = false;
   let ruhe = 0;
-  const zurueck = () => {
+  let pruefen = 0;
+  let gleitet = false;
+  const zurueck = (versuch = 0) => {
     if (finger || document.body.classList.contains('menue-offen')) return;
     if (!window.matchMedia('(orientation: portrait)').matches) return;
     const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
-    if (vorlauf && window.scrollY < vorlauf - 1) window.scrollTo({ top: vorlauf, behavior: 'smooth' });
+    if (!vorlauf || window.scrollY >= vorlauf - 1 || (gleitet && versuch === 0)) return;
+    gleitet = true;
+    window.scrollTo({ top: vorlauf, behavior: 'smooth' });
+    window.clearTimeout(pruefen);
+    pruefen = window.setTimeout(() => {
+      gleitet = false;
+      if (versuch < 3) zurueck(versuch + 1);
+    }, 450);
   };
-  const abwarten = () => {
+  const abwarten = (pause: number) => {
     window.clearTimeout(ruhe);
-    ruhe = window.setTimeout(zurueck, 150);
+    ruhe = window.setTimeout(() => zurueck(), pause);
   };
-  window.addEventListener('touchstart', () => { finger = true; window.clearTimeout(ruhe); }, { passive: true });
-  window.addEventListener('touchend', () => { finger = false; abwarten(); }, { passive: true });
-  window.addEventListener('touchcancel', () => { finger = false; abwarten(); }, { passive: true });
-  window.addEventListener('scroll', () => { if (!finger) abwarten(); }, { passive: true });
+  const mitEnde = 'onscrollend' in window;
+  window.addEventListener('touchstart', () => {
+    finger = true;
+    gleitet = false;
+    window.clearTimeout(ruhe);
+    window.clearTimeout(pruefen);
+  }, { passive: true });
+  const loslassen = () => { finger = false; abwarten(mitEnde ? 300 : 150); };
+  window.addEventListener('touchend', loslassen, { passive: true });
+  window.addEventListener('touchcancel', loslassen, { passive: true });
+  // Ruhepause nur als Rueckfall; mit `scrollend` meldet Safari das Ende selbst.
+  window.addEventListener('scroll', () => { if (!finger) abwarten(mitEnde ? 300 : 150); }, { passive: true });
+  if (mitEnde) window.addEventListener('scrollend', () => { if (!finger) zurueck(); });
+  // Zurueck aus dem Verlauf (Safari stellt die alte Position wieder her).
+  window.addEventListener('pageshow', (e) => { if (e.persisted) zurueck(); });
+
+  // Ganz oben nimmt Safari fuer den Streifen die Grundfarbe der Seite. Steht
+  // die Seite oberhalb des Vorlaufs, traegt sie darum den Ton des oberen
+  // Bildrands (siehe Titelbild); dort deckt das Titelbild den ganzen Schirm.
+  const anfang = () => {
+    const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
+    wurzel.classList.toggle('am-anfang', window.scrollY < vorlauf - 1);
+  };
+  anfang();
+  window.addEventListener('scroll', anfang, { passive: true });
 }
 
 /**
