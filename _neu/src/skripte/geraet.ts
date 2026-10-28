@@ -88,12 +88,12 @@ export function vorlaufEinrichten(): void {
   // Kommt die Seite trotzdem oberhalb des Vorlaufs an (Schwung von weiter
   // unten, Zug, der knapp unterhalb der Grenze begann), gleitet sie sofort
   // zurueck. Die Bewegung ist selbst gesteuert und folgt nach der Zeit einer
-  // auslaufenden Kurve wie das Zurueckfedern in iOS (rund 0,35 s): erst
+  // auslaufenden Kurve wie das Zurueckfedern in iOS (rund 0,55 s): erst
   // zuegig, dann weich. Weil oben nichts federt, nimmt Safari die Schritte
   // an; verwirft es doch einen, setzt der naechste Schritt erneut. Ganze
   // Pixel, aufgerundet: Safari kappt Bruchteile, sonst kaeme die Seite nicht
   // voran. Der Lauf endet erst am Vorlauf oder bei erneuter Beruehrung.
-  const DAUER = 350;
+  const DAUER = 550;
   const kurve = (t: number) => 1 - Math.pow(1 - t, 3);
   let waechter = 0;
   const zurueck = () => {
