@@ -93,9 +93,12 @@ export function vorlaufEinrichten(): void {
   // an; verwirft es doch einen, setzt der naechste Schritt erneut. Ganze
   // Pixel, aufgerundet: Safari kappt Bruchteile, sonst kaeme die Seite nicht
   // voran. Der Lauf endet erst am Vorlauf oder bei erneuter Beruehrung.
+  // Kurzer Weg 0,55 s, voller Weg (Seite ganz oben) bis 0,9 s: Je weiter
+  // sie hinausgeschossen ist, desto gedaempfter kommt sie zurueck.
   const DAUER = 550;
+  const DAUER_VOLL = 900;
   const kurve = (t: number) => 1 - Math.pow(1 - t, 3);
-  const RUHE = 100;
+  const RUHE = 250;
   let waechter = 0;
   let beendet = false;
   const zurueck = () => {
@@ -105,6 +108,7 @@ export function vorlaufEinrichten(): void {
     let beginn = 0;
     let vorher = NaN;
     let ruhigSeit = 0;
+    let dauer = DAUER;
     const schritt = (jetzt: number) => {
       waechter = 0;
       if (finger || !zustaendig()) return;
@@ -112,7 +116,8 @@ export function vorlaufEinrichten(): void {
       const y = Math.max(0, window.scrollY);
       if (!vorlauf || y >= vorlauf - 0.5) return;
       // Erst wenn die Bewegung ganz zu Ende ist, wird zurueckgeglitten:
-      // Safari meldet `scrollend`, oder die Seite steht rund 0,1 s still,
+      // Safari meldet `scrollend`, oder die Seite steht eine Viertelsekunde still
+      // (der Schwung laeuft zum Schluss sehr langsam aus),
       // oder sie ist oben angekommen. Gegen auslaufenden Schwung
       // anzuschieben zittert, deshalb geschieht bis dahin nichts.
       if (isNaN(von)) {
@@ -123,8 +128,9 @@ export function vorlaufEinrichten(): void {
         }
         von = y;
         beginn = jetzt;
+        dauer = DAUER + (DAUER_VOLL - DAUER) * (1 - y / vorlauf);
       }
-      const t = Math.min(1, (jetzt - beginn) / DAUER);
+      const t = Math.min(1, (jetzt - beginn) / dauer);
       const ziel = Math.min(vorlauf, Math.max(Math.ceil(von + (vorlauf - von) * kurve(t)), Math.floor(y) + 1));
       window.scrollTo({ top: ziel, behavior: 'instant' });
       waechter = window.requestAnimationFrame(schritt);
