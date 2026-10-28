@@ -30,6 +30,10 @@ export function uebergaengeFreigeben(): void {
  * um genau diesen Vorlauf gescrollt. So laeuft das Foto bis unter die
  * Statusleiste, ohne einfarbigen Streifen.
  */
+/** Mit zwei Fingern hineingezoomt? Dann melden `innerWidth` und
+ *  `innerHeight` nur den vergroesserten Ausschnitt, nicht das Fenster. */
+const gezoomt = () => !!window.visualViewport && Math.abs(window.visualViewport.scale - 1) > 0.01;
+
 export function vorlaufEinrichten(): void {
   const wurzel = document.documentElement;
   if (!wurzel.classList.contains('is-mobile') || !document.querySelector('.titelbild')) return;
@@ -65,8 +69,11 @@ export function vorlaufEinrichten(): void {
   // (`overscroll-behavior`, siehe Titelbild); Safari verwirft sonst
   // Bildlaufbefehle, solange die Seite federt, und das Zurueckgleiten ruckelt.
   const vorlaufLesen = () => parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
+  // Hineingezoomt (zwei Finger) fuehrt der Besucher selbst: dann kein
+  // Zurueckgleiten, sonst zieht es die Ansicht unter den Fingern weg.
   const zustaendig = () =>
-    window.matchMedia('(orientation: portrait)').matches && !document.body.classList.contains('menue-offen');
+    window.matchMedia('(orientation: portrait)').matches && !document.body.classList.contains('menue-offen') &&
+    !gezoomt();
   let finger = false;
   let startY = 0;
   let gesperrt: boolean | null = null;
@@ -159,8 +166,10 @@ export function titelhoeheFestlegen(): void {
   const touch = window.matchMedia('(pointer: coarse)').matches;
   let breite = 0;
   const messen = () => {
-    if (touch && window.innerWidth === breite) return;
-    breite = window.innerWidth;
+    // Beim Zoomen aendert sich `innerWidth` mit; neu gemessen wuerde das Bild
+    // springen und der Name nachruecken. Die Breite des Layouts bleibt fest.
+    if (touch && (gezoomt() || wurzel.clientWidth === breite)) return;
+    breite = wurzel.clientWidth;
     wurzel.style.setProperty('--titel-hoehe', `${window.innerHeight}px`);
   };
   messen();
