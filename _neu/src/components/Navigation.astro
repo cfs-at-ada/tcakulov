@@ -47,6 +47,10 @@ const andere: Sprache = sprache === 'de' ? 'en' : 'de';
     z-index: 6;
   }
 
+  /* iPad: 100vh rechnet ohne Safaris Leisten (Adresse, Tabs), die Zeile
+     laege darunter. Dort gilt die gemessene sichtbare Hoehe. */
+  :global(html.is-ipad) #hauptnavigation { top: calc(var(--titel-hoehe, 100svh) - 78px); }
+
   :global(body.ohne-titelbild) #hauptnavigation { top: 44px; }
 
   #hauptnavigation ul {

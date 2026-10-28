@@ -61,32 +61,25 @@ export function vorlaufEinrichten(): void {
   // Zieht der Besucher die Seite ganz nach oben (etwa zum Neuladen, ohne es
   // auszuloesen), steht sie bei 0 und Safari zeigt wieder den Streifen. Kommt
   // die Seite nach dem Loslassen innerhalb des Vorlaufs zur Ruhe, gleitet sie
-  // zurueck auf den Vorlauf, und zwar gleich beim Loslassen. Safari verwirft
-  // Bildlaufbefehle, solange die Seite noch federt; darum wird jedes Bild
-  // geprueft und der Befehl wiederholt, sobald die Seite stillsteht, ohne am
-  // Vorlauf zu sein.
+  // zurueck auf den Vorlauf, und zwar gleich beim Loslassen. Die Bewegung
+  // laeuft selbst gesteuert Bild fuer Bild (je ein Viertel des Restwegs):
+  // Safaris weicher Bildlauf startet sonst immer wieder neu und kriecht.
+  // Verwirft Safari einen Schritt, weil die Seite noch federt, greift der
+  // naechste.
   let finger = false;
   let lauf = 0;
   const zurueck = () => {
     window.cancelAnimationFrame(lauf);
     const schluss = performance.now() + 2000;
-    let vorher = NaN;
-    let still = 0;
-    let gesendet = false;
     const schritt = () => {
       lauf = 0;
       if (finger || document.body.classList.contains('menue-offen')) return;
       if (!window.matchMedia('(orientation: portrait)').matches) return;
       const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
-      const y = window.scrollY;
+      const y = Math.max(0, window.scrollY);
       if (!vorlauf || y >= vorlauf - 1 || performance.now() > schluss) return;
-      still = y === vorher ? still + 1 : 0;
-      if (!gesendet || still >= 3) {
-        window.scrollTo({ top: vorlauf, behavior: 'smooth' });
-        gesendet = true;
-        still = 0;
-      }
-      vorher = y;
+      const ziel = Math.min(vorlauf, y + Math.max(3, (vorlauf - y) * 0.25));
+      window.scrollTo({ top: ziel, behavior: 'instant' });
       lauf = window.requestAnimationFrame(schritt);
     };
     schritt();
