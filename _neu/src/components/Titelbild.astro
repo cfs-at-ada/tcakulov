@@ -612,7 +612,7 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
      darum um den Vorlauf hoeher, und `vorlaufEinrichten()` startet die Seite
      um genau diesen Betrag gescrollt. Eine Kappe darf hier nicht stehen. */
   @media screen and (max-width: 1080px) and (orientation: portrait) {
-    :global(html.is-mobile:has(.titelbild)) { --vorlauf: 60px; }
+    :global(html.is-mobile:has(.titelbild)) { --vorlauf: 60px; overscroll-behavior-y: none; }
     /* Vita und Kontakt: Das Querformat-Foto hat kaum Luft ueber dem Kopf. Es behaelt
        darum seine Groesse und sitzt unten; den Vorlauf hinter der Uhrzeit
        fuellt sein oberer Rand. */

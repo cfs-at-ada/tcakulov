@@ -58,42 +58,50 @@ export function vorlaufEinrichten(): void {
     nachfassen();
   });
 
-  // Zieht der Besucher die Seite ganz nach oben (etwa zum Neuladen, ohne es
-  // auszuloesen), steht sie bei 0 und Safari zeigt wieder den Streifen. Kommt
-  // die Seite nach dem Loslassen innerhalb des Vorlaufs zur Ruhe, gleitet sie
-  // zurueck auf den Vorlauf, und zwar gleich beim Loslassen. Die Bewegung
-  // laeuft selbst gesteuert Bild fuer Bild (je ein Viertel des Restwegs):
-  // Safaris weicher Bildlauf startet sonst immer wieder neu und kriecht.
-  // Verwirft Safari einen Schritt, weil die Seite noch federt, greift der
-  // naechste.
+  // Oben ist beim Vorlauf Schluss, nicht bei 0: Bei 0 zeigt Safari wieder
+  // den Streifen unter der Uhrzeit. Zieht der Finger an dieser Grenze nach
+  // unten, wird die Geste gar nicht erst zum Bildlauf (so entscheidet iOS
+  // beim ersten Zug). Das Federn an der echten Oberkante ist per CSS aus
+  // (`overscroll-behavior`, siehe Titelbild); Safari verwirft sonst
+  // Bildlaufbefehle, solange die Seite federt, und das Zurueckgleiten ruckelt.
+  const vorlaufLesen = () => parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
+  const zustaendig = () =>
+    window.matchMedia('(orientation: portrait)').matches && !document.body.classList.contains('menue-offen');
   let finger = false;
-  let lauf = 0;
-  const zurueck = () => {
-    window.cancelAnimationFrame(lauf);
-    const schluss = performance.now() + 2000;
-    const schritt = () => {
-      lauf = 0;
-      if (finger || document.body.classList.contains('menue-offen')) return;
-      if (!window.matchMedia('(orientation: portrait)').matches) return;
-      const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
-      const y = Math.max(0, window.scrollY);
-      if (!vorlauf || y >= vorlauf - 1 || performance.now() > schluss) return;
-      const ziel = Math.min(vorlauf, y + Math.max(3, (vorlauf - y) * 0.25));
-      window.scrollTo({ top: ziel, behavior: 'instant' });
-      lauf = window.requestAnimationFrame(schritt);
-    };
-    schritt();
-  };
-  window.addEventListener('touchstart', () => {
+  let startY = 0;
+  let gesperrt: boolean | null = null;
+  let pruefen = 0;
+  window.addEventListener('touchstart', (e) => {
     finger = true;
-    window.cancelAnimationFrame(lauf);
-    lauf = 0;
+    startY = e.touches[0]?.clientY ?? 0;
+    gesperrt = e.touches.length === 1 ? null : false;
+    window.clearTimeout(pruefen);
   }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (gesperrt === null) {
+      const zug = (e.touches[0]?.clientY ?? startY) - startY;
+      if (Math.abs(zug) < 2) return;
+      const vorlauf = vorlaufLesen();
+      gesperrt = zug > 0 && !!vorlauf && window.scrollY <= vorlauf + 1 && zustaendig();
+    }
+    if (gesperrt && e.cancelable) e.preventDefault();
+  }, { passive: false });
+
+  // Kommt die Seite trotzdem oberhalb des Vorlaufs zur Ruhe (Schwung von
+  // weiter unten), gleitet sie gleich zurueck. Ohne Federn nimmt Safari den
+  // Befehl sofort an; zur Sicherheit wird kurz darauf nachgesehen.
+  const zurueck = (versuch = 0) => {
+    if (finger || !zustaendig()) return;
+    const vorlauf = vorlaufLesen();
+    if (!vorlauf || window.scrollY >= vorlauf - 1) return;
+    window.scrollTo({ top: vorlauf, behavior: 'smooth' });
+    window.clearTimeout(pruefen);
+    if (versuch < 2) pruefen = window.setTimeout(() => zurueck(versuch + 1), 400);
+  };
   const loslassen = () => { finger = false; zurueck(); };
   window.addEventListener('touchend', loslassen, { passive: true });
   window.addEventListener('touchcancel', loslassen, { passive: true });
-  // Schwung ohne Finger, der oben ankommt.
-  window.addEventListener('scroll', () => { if (!finger && !lauf) zurueck(); }, { passive: true });
+  window.addEventListener('scrollend', () => { if (!finger) zurueck(); });
   // Zurueck aus dem Verlauf (Safari stellt die alte Position wieder her).
   window.addEventListener('pageshow', (e) => { if (e.persisted) zurueck(); });
 }
