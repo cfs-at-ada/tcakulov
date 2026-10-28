@@ -61,56 +61,48 @@ export function vorlaufEinrichten(): void {
   // Zieht der Besucher die Seite ganz nach oben (etwa zum Neuladen, ohne es
   // auszuloesen), steht sie bei 0 und Safari zeigt wieder den Streifen. Kommt
   // die Seite nach dem Loslassen innerhalb des Vorlaufs zur Ruhe, gleitet sie
-  // zurueck auf den Vorlauf. Safari verwirft Bildlaufbefehle, solange der
-  // Finger liegt oder die Seite noch federt; darum wird erst auf das Ende der
-  // Bewegung gewartet (`scrollend`, sonst eine kurze Ruhepause) und danach
-  // geprueft, ob der Befehl angekommen ist.
+  // zurueck auf den Vorlauf, und zwar gleich beim Loslassen. Safari verwirft
+  // Bildlaufbefehle, solange die Seite noch federt; darum wird jedes Bild
+  // geprueft und der Befehl wiederholt, sobald die Seite stillsteht, ohne am
+  // Vorlauf zu sein.
   let finger = false;
-  let ruhe = 0;
-  let pruefen = 0;
-  let gleitet = false;
-  const zurueck = (versuch = 0) => {
-    if (finger || document.body.classList.contains('menue-offen')) return;
-    if (!window.matchMedia('(orientation: portrait)').matches) return;
-    const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
-    if (!vorlauf || window.scrollY >= vorlauf - 1 || (gleitet && versuch === 0)) return;
-    gleitet = true;
-    window.scrollTo({ top: vorlauf, behavior: 'smooth' });
-    window.clearTimeout(pruefen);
-    pruefen = window.setTimeout(() => {
-      gleitet = false;
-      if (versuch < 3) zurueck(versuch + 1);
-    }, 450);
+  let lauf = 0;
+  const zurueck = () => {
+    window.cancelAnimationFrame(lauf);
+    const schluss = performance.now() + 2000;
+    let vorher = NaN;
+    let still = 0;
+    let gesendet = false;
+    const schritt = () => {
+      lauf = 0;
+      if (finger || document.body.classList.contains('menue-offen')) return;
+      if (!window.matchMedia('(orientation: portrait)').matches) return;
+      const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
+      const y = window.scrollY;
+      if (!vorlauf || y >= vorlauf - 1 || performance.now() > schluss) return;
+      still = y === vorher ? still + 1 : 0;
+      if (!gesendet || still >= 3) {
+        window.scrollTo({ top: vorlauf, behavior: 'smooth' });
+        gesendet = true;
+        still = 0;
+      }
+      vorher = y;
+      lauf = window.requestAnimationFrame(schritt);
+    };
+    schritt();
   };
-  const abwarten = (pause: number) => {
-    window.clearTimeout(ruhe);
-    ruhe = window.setTimeout(() => zurueck(), pause);
-  };
-  const mitEnde = 'onscrollend' in window;
   window.addEventListener('touchstart', () => {
     finger = true;
-    gleitet = false;
-    window.clearTimeout(ruhe);
-    window.clearTimeout(pruefen);
+    window.cancelAnimationFrame(lauf);
+    lauf = 0;
   }, { passive: true });
-  const loslassen = () => { finger = false; abwarten(mitEnde ? 300 : 150); };
+  const loslassen = () => { finger = false; zurueck(); };
   window.addEventListener('touchend', loslassen, { passive: true });
   window.addEventListener('touchcancel', loslassen, { passive: true });
-  // Ruhepause nur als Rueckfall; mit `scrollend` meldet Safari das Ende selbst.
-  window.addEventListener('scroll', () => { if (!finger) abwarten(mitEnde ? 300 : 150); }, { passive: true });
-  if (mitEnde) window.addEventListener('scrollend', () => { if (!finger) zurueck(); });
+  // Schwung ohne Finger, der oben ankommt.
+  window.addEventListener('scroll', () => { if (!finger && !lauf) zurueck(); }, { passive: true });
   // Zurueck aus dem Verlauf (Safari stellt die alte Position wieder her).
   window.addEventListener('pageshow', (e) => { if (e.persisted) zurueck(); });
-
-  // Ganz oben nimmt Safari fuer den Streifen die Grundfarbe der Seite. Steht
-  // die Seite oberhalb des Vorlaufs, traegt sie darum den Ton des oberen
-  // Bildrands (siehe Titelbild); dort deckt das Titelbild den ganzen Schirm.
-  const anfang = () => {
-    const vorlauf = parseFloat(getComputedStyle(wurzel).getPropertyValue('--vorlauf')) || 0;
-    wurzel.classList.toggle('am-anfang', window.scrollY < vorlauf - 1);
-  };
-  anfang();
-  window.addEventListener('scroll', anfang, { passive: true });
 }
 
 /**
