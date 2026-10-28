@@ -87,29 +87,38 @@ export function vorlaufEinrichten(): void {
 
   // Kommt die Seite trotzdem oberhalb des Vorlaufs an (Schwung von weiter
   // unten, Zug, der knapp unterhalb der Grenze begann), gleitet sie sofort
-  // zurueck: selbst gesteuert, je Bild ein gutes Drittel des Restwegs, also
-  // in rund einer Zehntelsekunde und weich auslaufend. Weil oben nichts
-  // federt, nimmt Safari jeden Schritt an; verwirft es doch einen, greift der
-  // naechste. Der Lauf endet erst am Vorlauf oder bei erneuter Beruehrung.
+  // zurueck. Die Bewegung ist selbst gesteuert und folgt nach der Zeit einer
+  // auslaufenden Kurve wie das Zurueckfedern in iOS (rund 0,35 s): erst
+  // zuegig, dann weich. Weil oben nichts federt, nimmt Safari die Schritte
+  // an; verwirft es doch einen, setzt der naechste Schritt erneut. Ganze
+  // Pixel, aufgerundet: Safari kappt Bruchteile, sonst kaeme die Seite nicht
+  // voran. Der Lauf endet erst am Vorlauf oder bei erneuter Beruehrung.
+  const DAUER = 350;
+  const kurve = (t: number) => 1 - Math.pow(1 - t, 3);
   let waechter = 0;
   const zurueck = () => {
     if (waechter) return;
-    const schritt = () => {
+    let von = NaN;
+    let beginn = 0;
+    const schritt = (jetzt: number) => {
       waechter = 0;
       if (finger || !zustaendig()) return;
       const vorlauf = vorlaufLesen();
       const y = Math.max(0, window.scrollY);
-      if (!vorlauf || y >= vorlauf - 1) return;
-      const ziel = Math.min(vorlauf, y + Math.max(2, (vorlauf - y) * 0.35));
+      if (!vorlauf || y >= vorlauf - 0.5) return;
+      if (isNaN(von)) { von = y; beginn = jetzt; }
+      const t = Math.min(1, (jetzt - beginn) / DAUER);
+      const ziel = Math.min(vorlauf, Math.max(Math.ceil(von + (vorlauf - von) * kurve(t)), Math.floor(y) + 1));
       window.scrollTo({ top: ziel, behavior: 'instant' });
       waechter = window.requestAnimationFrame(schritt);
     };
-    schritt();
+    waechter = window.requestAnimationFrame(schritt);
   };
   const loslassen = (e: TouchEvent) => { finger = e.touches.length > 0; zurueck(); };
   window.addEventListener('touchend', loslassen, { passive: true });
   window.addEventListener('touchcancel', loslassen, { passive: true });
   window.addEventListener('scroll', () => { if (!finger) zurueck(); }, { passive: true });
+  window.addEventListener('scrollend', () => { if (!finger) zurueck(); });
   // Zurueck aus dem Verlauf (Safari stellt die alte Position wieder her).
   window.addEventListener('pageshow', (e) => { if (e.persisted) zurueck(); });
 }
