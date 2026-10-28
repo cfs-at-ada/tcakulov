@@ -4,7 +4,7 @@
  * Bildausschnitt und Verankerung sind je Seite eigens gesetzt; darum
  * traegt jede Fassung eine eigene Kennzeichnung.
  */
-import { titelbilder, titelbildFassungen, type Titelseite } from '../inhalte/bilder';
+import { titelbildFassungen, type Titelseite } from '../inhalte/bilder';
 
 interface Props {
   seite: Titelseite;
@@ -12,7 +12,7 @@ interface Props {
 
 const { seite } = Astro.props;
 // Drei Groessen je Bild, jeweils WebP mit JPEG als Rueckfall
-const fassungen = await titelbildFassungen(titelbilder[seite]);
+const fassungen = await titelbildFassungen(seite);
 ---
 
 <div class:list={['titelbild', `titelbild--${seite}`]} style={fassungen}>
@@ -652,7 +652,10 @@ const fassungen = await titelbildFassungen(titelbilder[seite]);
     /* Lehre weiter nach rechts, damit die Schnecke der Bratsche ganz im Bild ist. */
     :global(html.is-mobile) .titelbild.titelbild--lehre { background-position-x: 65.7%; }
     /* Termine: er sitzt mittig. */
-    :global(html.is-mobile) .titelbild.titelbild--termine { background-position-x: 39.6%; }
+    :global(html.is-mobile) .titelbild.titelbild--termine { background-position-x: 39.6%; --titel-bild: var(--titel-hochkant-jpg); }
+    @supports (background-image: image-set(url("x.webp") type("image/webp"))) {
+      :global(html.is-mobile) .titelbild.titelbild--termine { --titel-bild: var(--titel-hochkant); }
+    }
     :global(html.is-mobile) .titelbild .titelbild__kappe { display: none; }
   }
 

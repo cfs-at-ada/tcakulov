@@ -3,6 +3,7 @@ import type { ImageMetadata } from 'astro';
 
 import vita from '../bilder/4.2.jpg';
 import termine from '../bilder/Termine.jpg';
+import termineHochkant from '../bilder/Termine-hochkant.jpg';
 import lehre from '../bilder/Lehre.jpg';
 import media from '../bilder/Media-spiegel.jpg';
 
@@ -22,8 +23,30 @@ export type Titelseite = keyof typeof titelbilder;
  *  Auf dem Telefon fuellt das Bild den ganzen Schirm, darum auch dort 2600. */
 const TITELBREITEN = { klein: 2600, mittel: 3600, gross: 3600 } as const;
 
-export async function titelbildFassungen(bild: ImageMetadata) {
+/**
+ * Telefon hochkant zoomt einzelne Titelbilder stark hinein; die ganze Breite
+ * in noetiger Schaerfe waere viel zu schwer. Dort gilt ein senkrechter
+ * Streifen des Originals, so geschnitten, dass er mit derselben
+ * `background-position` genau denselben Ausschnitt zeigt (Termine:
+ * 42 % der Breite ab 0,396 · 58 %, passend zu 39,6 %).
+ */
+const HOCHKANT: Partial<Record<Titelseite, ImageMetadata>> = { termine: termineHochkant };
+const HOCHKANT_BREITE = 2600;
+
+export async function titelbildFassungen(seite: Titelseite) {
+  const bild = titelbilder[seite];
   const fassungen: Record<string, string> = {};
+  const streifen = HOCHKANT[seite];
+  if (streifen) {
+    const width = Math.min(HOCHKANT_BREITE, streifen.width);
+    const [webp, jpg] = await Promise.all([
+      getImage({ src: streifen, width, format: 'webp', quality: QUALITAET }),
+      getImage({ src: streifen, width, format: 'jpg', quality: QUALITAET }),
+    ]);
+    fassungen['--titel-hochkant'] =
+      `image-set(url("${webp.src}") type("image/webp"), url("${jpg.src}") type("image/jpeg"))`;
+    fassungen['--titel-hochkant-jpg'] = `url("${jpg.src}")`;
+  }
   for (const [klasse, breite] of Object.entries(TITELBREITEN)) {
     const width = Math.min(breite, bild.width);
     const [webp, jpg] = await Promise.all([
